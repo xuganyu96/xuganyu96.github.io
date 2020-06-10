@@ -1,2 +1,4 @@
 # xuganyu96.github.io
-My developer's website
+Stuff to read about:
+
+[Setting up static domain name for SSH](./notes/using-domain-name-for-ssh.md)
