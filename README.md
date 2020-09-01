@@ -7,4 +7,4 @@ Stuff to read about:
 
 
 ## Projects for learning:
-[A To-Do list using JavaScript](https://xuganyu96.github.io/udemy-vanilla-javascript-course/sec06-object-oriented-todo-list/#)
+[A To-Do list using JavaScript](https://xuganyu96.github.io/udemy-vanilla-javascript-course/projects/ToDoList)
