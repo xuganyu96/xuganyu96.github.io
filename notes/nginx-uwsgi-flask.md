@@ -231,4 +231,5 @@ die-on-term = true
 virtualenv = /home/pi/.venv/wslite
 ```
 
-Need to explain `666` and `uid` and `gid`
+* Need to explain `666` and `uid` and `gid`
+* Keep `uwsgi` running with `uwsgi --ini uwsgi.ini &>/dev/null &`
