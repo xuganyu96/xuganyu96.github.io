@@ -233,3 +233,4 @@ virtualenv = /home/pi/.venv/wslite
 
 * Need to explain `666` and `uid` and `gid`
 * Keep `uwsgi` running with `uwsgi --ini uwsgi.ini &>/dev/null &`
+* Edit `/etc/hosts` on a UNIX system so I can access Raspberry Pi using a host name instead of an IP address
