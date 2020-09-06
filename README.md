@@ -5,6 +5,8 @@ Stuff to read about:
 
 [Setting up static domain name for SSH](./notes/using-domain-name-for-ssh.md)
 
+[Deploy a Flask application behind uWSGI and NginX](./notes/nginx-uwsgi-flask.md)
+
 
 ## Projects for learning:
 [A To-Do list using JavaScript](https://xuganyu96.github.io/udemy-vanilla-javascript-course/projects/ToDoList)
