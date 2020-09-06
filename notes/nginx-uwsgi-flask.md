@@ -189,8 +189,8 @@ server {
 `uwsgi.ini`
 ```ini
 [uwsgi]
-chdir = /home/pi/WSLite
-module = wsgi:wslite_app
+chdir = /home/pi/project
+module = wsgi:app
 
 master = true
 
@@ -215,8 +215,8 @@ server {
 `uwsgi.ini`
 ```ini
 [uwsgi]
-chdir = /home/pi/WSLite
-module = wsgi:wslite_app
+chdir = /home/pi/project
+module = wsgi:app
 
 master = true
 
