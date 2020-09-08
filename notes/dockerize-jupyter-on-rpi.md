@@ -53,3 +53,4 @@ ENTRYPOINT ["jupyter", "notebook", "--ip=0.0.0.0"]
 * State snapshotting
 * Kernel in R language
 * Running on multiple Raspberry Pis
+* Running on Jetson Nano with GPU support
