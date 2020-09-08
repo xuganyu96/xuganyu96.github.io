@@ -7,6 +7,9 @@ Stuff to read about:
 
 [Deploy a Flask application behind uWSGI and NginX](./notes/nginx-uwsgi-flask.md)
 
+[Dockerize Jupyter on Raspberry Pi](./notes/dockerize-jupyter-on-rpi.md)
+
+
 
 ## Projects for learning:
 [A To-Do list using JavaScript](https://xuganyu96.github.io/udemy-vanilla-javascript-course/projects/ToDoList)
