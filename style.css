@@ -9,8 +9,8 @@ ul {
 }
 
 .resume-container {
-    border: 1px solid #cccccc;
-    border-radius: 15px;
+    border: 2px solid #cccccc;
+    border-radius: 10px;
     margin: auto;
     width: 50rem;
     display: flex; 
@@ -195,10 +195,19 @@ ul {
 .job-descript-container {
     display: flex;
     flex-direction: column;
+    line-height: 1rem;
+}
+
+.job-descript-item {
+    margin-bottom: 1rem;
 }
 
 .job-descript-text {
     font-size: 0.8rem;
+}
+
+.all-proj-container .project-container:not(:last-child) {
+    margin-bottom: 10px;
 }
 
 .project-container {
@@ -211,7 +220,8 @@ ul {
 }
 
 .project-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    font-weight: 700;
     flex: 1;
 }
 
@@ -222,6 +232,7 @@ ul {
 .project-tech-stack {
     display: flex;
     flex-wrap: wrap;
+    margin: 5px 0rem;
 }
 
 .project-tech-item {
@@ -238,6 +249,7 @@ ul {
 .project-descript-container {
     display: flex;
     flex-direction: column;
+    line-height: 1rem;
 }
 
 .project-descript-text {
