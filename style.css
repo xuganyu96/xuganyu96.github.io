@@ -80,6 +80,7 @@ ul {
     flex-direction: column;
     flex-basis: 15rem;
     border-right: 2px solid #cccccc;
+    padding-right: 8px;
 }
 
 .skills-container {
@@ -101,11 +102,12 @@ ul {
 }
 
 .skills-container > .skills-subsection:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: 0.7rem;
 }
 
 .skills-subsection-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .skills-item {
@@ -118,7 +120,8 @@ ul {
 }
 
 .education-school {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .education-secondary {
@@ -126,7 +129,7 @@ ul {
 }
 
 .experience-projects-container {
-    padding-left: 13px;
+    padding-left: 8px;
     display: flex;
     flex-direction: column;
     flex-basis: 35rem;
@@ -161,18 +164,23 @@ ul {
 
 .job-title-timeline {
     display: flex;
+    align-items: center;
 }
 
 .job-title {
     flex: 1;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .job-timeline {
+    font-size: 0.7rem;
     justify-self: flex-end;
 }
 
 .employer-info-container {
     display: flex;
+    margin-top: -5px;
 }
 
 .employer-name {
