@@ -108,7 +108,7 @@
                 },
                 "tech-stack": ["JavaScript", "HTML/CSS"],
                 "highlights": [
-                    "<b>Scripted JavaScipt app that renders pre-templated resume</br> from JSON object",
+                    "<b>Scripted JavaScipt app that renders pre-templated resume</b> from remote JSON object",
                     "<b>Rendered the resume you are reading right now</b>"
                 ]
             }
