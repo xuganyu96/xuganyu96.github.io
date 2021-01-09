@@ -1,5 +1,6 @@
 body {
     font-family: 'Open Sans', sans-serif;
+    font-size: 0.8rem;
 }
 
 ul {
@@ -12,7 +13,6 @@ ul {
     border: 2px solid #cccccc;
     border-radius: 10px;
     margin: auto;
-    width: 50rem;
     display: flex; 
     flex-direction: column; 
     align-items: center;
@@ -27,13 +27,78 @@ ul {
     padding-bottom: 10px;
 }
 
-.header-left-filler {
+.resume-body-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 8px;
+}
+
+.side-section-container {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    border-right: 2px solid #cccccc;
+    padding-right: 8px;
+}
+
+.skill-section-container {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #cccccc;
+}
+
+.skill-subsection-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem;
+}
+
+.education-subsection-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-section-container {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    padding-left: 8px;
+}
+
+.employment-section-container {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 2px solid #cccccc;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.employment-subsection-container, .project-subsection-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.employment-highlight-container, .project-highlight-container {
+    display: flex;
+    flex-direction: column;
+    line-height: 1rem;
+}
+
+.title-timeline-container {
+    display: flex;
+    align-items: center;
+}
+
+.header-filler {
     display: flex;
     flex-direction: column;
     width: 12rem;
 }
 
-.full-name {
+.full-name-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,14 +106,14 @@ ul {
     width: 26rem;
 }
 
-.full-name-primary {
+.full-name-title {
     font-size: 2.5rem;
     font-weight: 700;
 }
 
 .full-name-secondary {
     font-size: 1.5rem;
-    color: #666666;
+    color: #666
 }
 
 .contact-info {
@@ -58,9 +123,6 @@ ul {
     flex-direction: column;
     justify-content: space-between;
     width: 12rem;
-}
-
-.contact-info {
     font-size: 0.7rem;
 }
 
@@ -68,194 +130,33 @@ ul {
     margin-right: 4px;
 }
 
-.resume-body-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    padding-top: 8px;
-}
-
-.skills-education-container {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 15rem;
-    border-right: 2px solid #cccccc;
-    padding-right: 8px;
-}
-
-.skills-container {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 10px;
-    margin-bottom: 5px;
-    border-bottom: 2px solid #cccccc;
-}
-
-.skills-title {
-    font-weight: 700;
+.section-title {
     font-size: 2rem;
+    font-weight: 700;
 }
 
-.skills-subsection {
-    display: flex;
-    flex-direction: column;
-}
-
-.skills-container > .skills-subsection:not(:last-child) {
-    margin-bottom: 0.7rem;
-}
-
-.skills-subsection-title {
+.section-subtitle {
     font-size: 1rem;
     font-weight: 700;
 }
 
-.skills-item {
+.section-secondary {
     font-size: 0.7rem;
+    color: #666;
 }
 
-.education-title {
-    font-weight: 700;
-    font-size: 2rem;
-}
-
-.education-school {
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.education-secondary {
-    font-size: 0.7rem;
-}
-
-.experience-projects-container {
-    padding-left: 8px;
-    display: flex;
-    flex-direction: column;
-    flex-basis: 35rem;
-}
-
-.all-exp-container {
-    display: flex;
-    flex-direction: column;
-    border-bottom: 2px solid #cccccc;
-    padding-bottom: 10px;
-}
-
-.all-exp-title {
-    font-weight: 700;
-    font-size: 2rem;
-}
-
-.all-proj-title {
-    font-weight: 700;
-    font-size: 2rem;
-}
-
-.exp-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.proj-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.job-title-timeline {
-    display: flex;
-    align-items: center;
-}
-
-.job-title {
-    flex: 1;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.job-timeline {
-    font-size: 0.7rem;
-    justify-self: flex-end;
-}
-
-.employer-info-container {
-    display: flex;
-    margin-top: -5px;
-}
-
-.employer-name {
-    flex-grow: 1;
-}
-
-.employer-info {
-    font-size: 0.7rem;
-    color: #666666;
-}
-
-.job-descript-container {
-    display: flex;
-    flex-direction: column;
-    line-height: 1rem;
-}
-
-.job-descript-item {
-    margin-bottom: 1rem;
-}
-
-.job-descript-text {
-    font-size: 0.8rem;
-}
-
-.all-proj-container .project-container:not(:last-child) {
-    margin-bottom: 10px;
-}
-
-.project-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.project-title-container {
-    display: flex;
-}
-
-.project-title {
-    font-size: 1rem;
-    font-weight: 700;
-    flex: 1;
-}
-
-.project-link {
-    margin: 0rem 0.2rem;
-}
-
-.project-tech-stack {
+.tech-stack {
     display: flex;
     flex-wrap: wrap;
     margin: 5px 0rem;
 }
 
-.project-tech-item {
+.tech-item {
     display: flex;
     align-items: center;
-    height: 24px;
+    height: 1.2rem;
+    border-radius: 0.6rem; /* border-radius is half of height */
     margin: 0px 3px;
     padding: 1px 10px;
-    border-radius: 12px;
     background: #dddddd;
-    font-size: 0.7rem;
-}
-
-.project-descript-container {
-    display: flex;
-    flex-direction: column;
-    line-height: 1rem;
-}
-
-.project-descript-text {
-    font-size: 0.8rem;
-}
-
-.bordered {
-    border: 0px dotted red;
 }
