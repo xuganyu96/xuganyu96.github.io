@@ -71,9 +71,12 @@
                     "aws": "http://chives-exchange.brucexu.live/auth/login",
                     "pypi": "https://pypi.org/project/chives-exchange/"
                 },
-                "tech-stack": ["Flask", "RabbitMQ", "MySQL", "Docker", "NginX"],
+                "tech-stack": ["Flask", "RabbitMQ", "MySQL", "Docker", "NginX", "ChartJS"],
                 "highlights": [
-                    "Electronic stock exchange with horizontally scalable order matching engines and Flask-powered web UI"
+                    "<b>Designed and implemented horizontally-scalable matching engine</b> that can run in a cluster to increase performance and reliability",
+                    "<b>Used Flask to provide web GUI</b> where users can create company, trade stocks, and even view stock charts",
+                    "<b>Deployed containerized services to AWS EC2</b> behind NginX reverse proxy for increased security and web performance",
+                    "Route network traffic through personal domain using <b>AWS Route 53</b>"
                 ]
             },
             {
@@ -81,9 +84,9 @@
                 "links": {
                     "github": "https://github.com/xuganyu96/PyArchive-legacy"
                 },
-                "tech-stack": ["Django", "WebSocket"],
+                "tech-stack": ["Django", "WebSocket", "AWS S3"],
                 "highlights": [
-                    "Hybrid file backup solution resilient against network failure"
+                    "Django"
                 ]
             },
             {
