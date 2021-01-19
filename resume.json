@@ -42,8 +42,8 @@
             {
                 "skill-type": "Developer tools",
                 "skill-items": [
-                    "Python debugger (pdb) for remote Python debugging",
-                    "curl for remotely testing HTTP REST API",
+                    "pdb (Python debugger)",
+                    "curl",
                     "git", "vim", "Jupyter"
                 ]
             },
