@@ -1,13 +1,6 @@
-# xuganyu96.github.io
+# Update resume 
+The JavaScript application used for generating the HTML elements is served by the simple resume generator repository's [GitHub page](https://xuganyu96.github.io/simple-resume-generator/app.js). This repository's GitHub page will load the JavaScript application, then load the [JSON object](https://xuganyu96.github.io/resume.json) served by THIS repository.
 
-## Featured Projects
-* [WSLite](https://github.com/xuganyu96/WSLite)  
-  with a week-by-week journal
-    * [Week 01: Exploring NginX](./wslite-project-journals/01.md)
-* [A To-Do list using JavaScript](https://xuganyu96.github.io/udemy-vanilla-javascript-course/projects/ToDoList)
+To update the resume, first update the JSON object in this repository. After the changes are committed and pushed to GitHub, wait until GitHub page redeploys. The webpage might need to be hard-refreshed to clear previously cached content.
 
-## Miscellaneous notes
-* [Setting up keyless SSH login](./notes/keyless-ssh-for-ec2.md)
-* [Setting up static domain name for SSH](./notes/using-domain-name-for-ssh.md)
-* [Deploy a Flask application behind uWSGI and NginX](./notes/nginx-uwsgi-flask.md)
-* [Dockerize Jupyter on Raspberry Pi](./notes/dockerize-jupyter-on-rpi.md)
+To update the PDF link in the webpage, use the browser to print a PDF version of the resume and save it to the local repository, then commit and push the changes. Again wait for GitHub page to deploy, then refresh to confirm that the PDF has been updated.
