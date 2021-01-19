@@ -1,48 +1,76 @@
 {
-    "resume-width": "50rem",
+    "resume-width": "60rem",
     "resume-header": {
         "full-name": "Ganyu (Bruce) Xu",
-        "title": "Data Engineer",
+        "title": "Software Engineer",
         "contact-info": {
             "phone": "+1-626-327-8890",
             "email": "xuganyu96@gmail.com",
-            "linkedin": "/in/ganyu-bruce-xu-aa4b97112",
+            "linkedin": "/in/ganyu-bruce-xu/",
             "github": "xuganyu96"
         }
     },
     "resume-body": {
         "skills": [
             {
-                "skill-type": "Languages",
+                "skill-type": "Python",
                 "skill-items": [
-                    "Python", "SQL", "JavaScript", "Shell script",
-                    "HTML/CSS", "Go"
+                    "pandas",
+                    "Apache Airflow",
+                    "SQLAlchemy ORM",
+                    "unittest & pytest",
+                    "Flask & uWSGI",
+                    "Django",
+                    "Matplotlib"
                 ]
             },
             {
-                "skill-type": "Data",
+                "skill-type": "Cloud & serverless architecture",
                 "skill-items": [
-                    "MySQL, PostgreSQL", "Pandas", "Presto"
+                    "Docker", "DataDog", 
+                    "AWS Serverless"
                 ]
             },
             {
-                "skill-type": "Framework & Service",
+                "skill-type": "Database",
                 "skill-items": [
-                    "Apache Airflow", "Docker", "Flask", "Django", 
-                    "RabbitMQ"
+                    "MySQL & PostgreSQL",
+                    "Presto (AWS Athena)",
+                    "SQLite"
                 ]
             },
             {
-                "skill-type": "AWS Services",
+                "skill-type": "Developer tools",
                 "skill-items": [
-                    "EC2", "ECS", "Athena", "SQS", "S3", "Route 53"
+                    "Python debugger (pdb) for remote Python debugging",
+                    "curl for remotely testing HTTP REST API",
+                    "git", "vim", "Jupyter"
+                ]
+            },
+            {
+                "skill-type": "Frontend",
+                "skill-items": [
+                    "HTML 5 & CSS 3:</br> Flexbox, Bootstrap, MaterializeCSS",
+                    "JavaScript (ES5, ES6):</br> DOM manipulation, Fetch API"
+                ]
+            },
+            {
+                "skill-type": "Distributed system architecture",
+                "skill-items": [
+                    "RabbitMQ", "Celery", "AWS SQS"
+                ]
+            },
+            {
+                "skill-type": "Hobbyist skills",
+                "skill-items": [
+                    "Golang", "Java", "WebSocket", "NginX"
                 ]
             }
         ],
         "education": [
             {
-                "school-name": "U of California, Berkeley",
-                "timeline": "Aug, 2015 - May, 2019",
+                "school-name": "UC Berkeley",
+                "timeline": "Aug 2015 - May 2019",
                 "highlights": [
                     "B.A. Mathematics", "B.A. Statistics", "GPA 3.464"
                 ]
@@ -55,10 +83,10 @@
                 "employer": "LeanTaaS Inc.",
                 "location": "Santa Clara, CA",
                 "highlights": [
-                    "<b>Onboarded new customer</b> by coordinating with client IT staff to set up automated raw data extraction and scripting ETL pipeline in Airflow DAG",
+                    "<b>Onboarded new customer</b> by coordinating with client IT staff to set up automated raw data extraction and scripting ETL pipeline in Airflow",
                     "<b>Shortened customer onboarding timeline from 12 to 4 weeks</b> by designing, implementing, and maintaining web app module that allowed client IT staff to independently verify raw data schema and data extraction script and reduced manual email exchanges between client IT and product managers",
-                    "<b>Reduced data error incidents and increased deployment confidence</b> by provisioning sandboxed environment that mirrored production infrastructure and configuration and enabled developers to perform end-to-end testing on ETL logic for individual git branches.",
-                    "<b>Increased production Airflow availability and reliability</b> by introducing DataDog for monitoring outage, notifying on-call engineers, and idenifying abnormal performance slowdown.",
+                    "<b>Reduced data error incidents and increased deployment confidence</b> by provisioning sandboxed environment that mirrored production infrastructure/configuration and enabled developers to perform end-to-end testing of ETL logic for individual git branches",
+                    "<b>Increased production Airflow availability and reliability</b> by introducing DataDog for monitoring outage, notifying on-call engineers, and identifying abnormal performance slowdown",
                     "<b>Experimented with fault-injection testing on production Airflow</b> and trained teammates on responding to production outage through simulated Airflow failures"
                 ]
             }
