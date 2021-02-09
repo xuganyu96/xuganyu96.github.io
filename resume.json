@@ -78,8 +78,8 @@
                 "location": "Santa Clara, CA",
                 "highlights": [
                     "<b>Onboarded new customer</b> by coordinating with client IT staff to set up automated raw data extraction and scripting ETL pipeline in Airflow",
-                    "<b>Shortened customer onboarding timeline from 12 to 4 weeks</b> by designing, implementing, and maintaining web app module that allowed client IT staff to independently verify raw data schema and data extraction script and reduced manual email exchanges between client IT and product managers",
-                    "<b>Reduced data error incidents and increased deployment confidence</b> by provisioning sandboxed environment that mirrored production infrastructure/configuration and enabled developers to perform end-to-end testing of ETL logic for individual git branches",
+                    "<b>Halfed customer onboarding timeline</b> by implementing web app module that automated data schema validation and data quality checks",
+                    "<b>Reduced data error incidents and increased deployment confidence</b> by architecting sandboxed environment for end-to-end testing on ETL pipeline",
                     "<b>Automated unit testing</b> by integrating pytest into Jenkins deployment job",
                     "<b>Increased production Airflow availability and reliability</b> by introducing DataDog for monitoring outage, notifying on-call engineers, and identifying abnormal performance slowdown",
                     "<b>Experimented with fault-injection testing on production Airflow</b> and trained teammates on responding to production outage through simulated Airflow failures",
