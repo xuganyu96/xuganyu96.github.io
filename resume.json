@@ -15,27 +15,28 @@
             {
                 "skill-type": "Python",
                 "skill-items": [
-                    "pandas",
-                    "Apache Airflow",
+                    "<b>pandas</b>",
+                    "<b>Apache Airflow</b>",
                     "SQLAlchemy ORM",
                     "unittest & pytest",
                     "Flask & uWSGI",
                     "Django",
+                    "Jupyter",
                     "Matplotlib"
                 ]
             },
             {
-                "skill-type": "Cloud & serverless architecture",
+                "skill-type": "Cloud infrastructure",
                 "skill-items": [
-                    "Docker", "DataDog", 
-                    "AWS Serverless"
+                    "<b>Docker</b>", "DataDog", 
+                    "AWS Serverless: ECS, S3, SQS"
                 ]
             },
             {
                 "skill-type": "Database",
                 "skill-items": [
-                    "MySQL & PostgreSQL",
-                    "Presto (AWS Athena)",
+                    "MySQL, PostgreSQL (AWS RDS)",
+                    "AWS Athena",
                     "SQLite"
                 ]
             },
@@ -43,8 +44,7 @@
                 "skill-type": "Developer tools",
                 "skill-items": [
                     "pdb (Python debugger)",
-                    "curl",
-                    "git", "vim", "Jupyter"
+                    "git", "vim"
                 ]
             },
             {
@@ -55,15 +55,9 @@
                 ]
             },
             {
-                "skill-type": "Distributed system architecture",
+                "skill-type": "Additional",
                 "skill-items": [
-                    "RabbitMQ", "Celery", "AWS SQS"
-                ]
-            },
-            {
-                "skill-type": "Hobbyist skills",
-                "skill-items": [
-                    "Golang", "Java", "WebSocket", "NginX"
+                    "RabbitMQ", "Celery", "Golang", "WebSocket", "NginX"
                 ]
             }
         ],
@@ -87,7 +81,8 @@
                     "<b>Shortened customer onboarding timeline from 12 to 4 weeks</b> by designing, implementing, and maintaining web app module that allowed client IT staff to independently verify raw data schema and data extraction script and reduced manual email exchanges between client IT and product managers",
                     "<b>Reduced data error incidents and increased deployment confidence</b> by provisioning sandboxed environment that mirrored production infrastructure/configuration and enabled developers to perform end-to-end testing of ETL logic for individual git branches",
                     "<b>Increased production Airflow availability and reliability</b> by introducing DataDog for monitoring outage, notifying on-call engineers, and identifying abnormal performance slowdown",
-                    "<b>Experimented with fault-injection testing on production Airflow</b> and trained teammates on responding to production outage through simulated Airflow failures"
+                    "<b>Experimented with fault-injection testing on production Airflow</b> and trained teammates on responding to production outage through simulated Airflow failures",
+                    "<b>Reverse-engineered EHR business metric logic</b> with zero visibility"
                 ]
             }
         ],
