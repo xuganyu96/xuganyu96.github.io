@@ -2,7 +2,7 @@
     "resume-width": "60rem",
     "resume-header": {
         "full-name": "Ganyu (Bruce) Xu",
-        "title": "Software Engineer",
+        "title": "Data Engineer",
         "contact-info": {
             "phone": "+1-626-327-8890",
             "email": "xuganyu96@gmail.com",
@@ -81,7 +81,7 @@
                     "<b>Halfed customer onboarding timeline</b> by implementing web app module that automated data schema validation and data quality checks",
                     "<b>Reduced data error incidents and increased deployment confidence</b> by architecting sandboxed environment for end-to-end testing on ETL pipeline",
                     "<b>Automated unit testing</b> by integrating pytest into Jenkins deployment job",
-                    "<b>Increased production Airflow observability</b> by introducing DataDog for monitoring outage identifying abnormal performance slowdown",
+                    "<b>Increased production Airflow observability</b> by introducing DataDog for monitoring outage and identifying abnormal performance slowdown",
                     "<b>Strengthened ETL pipeline reliability</b> by training teammates to respond to simulated Airflow failures",
                     "<b>Reverse engineered EHR business metric logic</b> with zero visibility into backend code base"
                 ]
