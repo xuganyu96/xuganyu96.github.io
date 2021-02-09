@@ -81,8 +81,8 @@
                     "<b>Halfed customer onboarding timeline</b> by implementing web app module that automated data schema validation and data quality checks",
                     "<b>Reduced data error incidents and increased deployment confidence</b> by architecting sandboxed environment for end-to-end testing on ETL pipeline",
                     "<b>Automated unit testing</b> by integrating pytest into Jenkins deployment job",
-                    "<b>Increased production Airflow availability and reliability</b> by introducing DataDog for monitoring outage, notifying on-call engineers, and identifying abnormal performance slowdown",
-                    "<b>Experimented with fault-injection testing on production Airflow</b> and trained teammates on responding to production outage through simulated Airflow failures",
+                    "<b>Increased production Airflow observability</b> by introducing DataDog for monitoring outage identifying abnormal performance slowdown",
+                    "<b>Strengthened ETL pipeline reliability</b> by training teammates to respond to simulated Airflow failures",
                     "<b>Reverse engineered EHR business metric logic</b> with zero visibility into backend code base"
                 ]
             }
