@@ -20,8 +20,7 @@
                     "SQLAlchemy ORM",
                     "unittest & pytest",
                     "AWS SDK: boto3, AWS CLI",
-                    "Flask & uWSGI",
-                    "Django",
+                    "Flask & Django",
                     "Jupyter",
                     "Supervisor",
                     "Matplotlib"
