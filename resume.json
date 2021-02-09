@@ -19,9 +19,11 @@
                     "<b>Apache Airflow</b>",
                     "SQLAlchemy ORM",
                     "unittest & pytest",
+                    "AWS SDK: boto3, AWS CLI",
                     "Flask & uWSGI",
                     "Django",
                     "Jupyter",
+                    "Supervisor",
                     "Matplotlib"
                 ]
             },
@@ -29,7 +31,7 @@
                 "skill-type": "Cloud infrastructure",
                 "skill-items": [
                     "<b>Docker</b>", "DataDog", 
-                    "AWS Serverless: ECS, S3, SQS"
+                    "AWS Fargate & ECS"
                 ]
             },
             {
@@ -41,23 +43,20 @@
                 ]
             },
             {
+                "skill-type": "Web development",
+                "skill-items": [
+                    "Shell scripting (Bash)",
+                    "HTML 5 & CSS 3:</br> Flexbox, Bootstrap, MaterializeCSS",
+                    "JavaScript (ES5, ES6):</br> DOM manipulation, Fetch API",
+                    "uWSGI", "RabbitMQ", "NginX", "curl",
+                    "AWS EC2 & ELB", "AWS Route 53"
+                ]
+            },
+            {
                 "skill-type": "Developer tools",
                 "skill-items": [
                     "pdb (Python debugger)",
                     "git", "vim"
-                ]
-            },
-            {
-                "skill-type": "Frontend",
-                "skill-items": [
-                    "HTML 5 & CSS 3:</br> Flexbox, Bootstrap, MaterializeCSS",
-                    "JavaScript (ES5, ES6):</br> DOM manipulation, Fetch API"
-                ]
-            },
-            {
-                "skill-type": "Additional",
-                "skill-items": [
-                    "RabbitMQ", "Celery", "Golang", "WebSocket", "NginX"
                 ]
             }
         ],
