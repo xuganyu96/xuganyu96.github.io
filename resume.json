@@ -15,29 +15,27 @@
             {
                 "skill-type": "Python",
                 "skill-items": [
-                    "<b>pandas</b>",
                     "<b>Apache Airflow</b>",
+                    "<b>pandas</b>",
                     "SQLAlchemy ORM",
                     "unittest & pytest",
-                    "AWS SDK: boto3, AWS CLI",
                     "Flask & Django",
-                    "Jupyter",
-                    "Supervisor",
-                    "Matplotlib"
+                    "Jupyter"
                 ]
             },
             {
                 "skill-type": "Cloud infrastructure",
                 "skill-items": [
                     "<b>Docker</b>", "DataDog", 
+                    "AWS EC2 & ELB",
                     "AWS Fargate & ECS"
                 ]
             },
             {
-                "skill-type": "Database",
+                "skill-type": "Database & Data Warehouse",
                 "skill-items": [
-                    "MySQL, PostgreSQL (AWS RDS)",
-                    "AWS Athena",
+                    "MySQL & PostgreSQL",
+                    "AWS Athena & S3",
                     "SQLite"
                 ]
             },
@@ -45,17 +43,9 @@
                 "skill-type": "Web development",
                 "skill-items": [
                     "Shell scripting (Bash)",
-                    "HTML 5 & CSS 3:</br> Flexbox, Bootstrap, MaterializeCSS",
-                    "JavaScript (ES5, ES6):</br> DOM manipulation, Fetch API",
-                    "uWSGI", "RabbitMQ", "NginX", "curl",
-                    "AWS EC2 & ELB", "AWS Route 53"
-                ]
-            },
-            {
-                "skill-type": "Developer tools",
-                "skill-items": [
-                    "pdb (Python debugger)",
-                    "git", "vim"
+                    "HTML 5 & CSS 3",
+                    "JavaScript ES6",
+                    "uWSGI", "RabbitMQ", "NginX", "Java", "Go"
                 ]
             }
         ],
@@ -75,13 +65,13 @@
                 "employer": "LeanTaaS Inc.",
                 "location": "Santa Clara, CA",
                 "highlights": [
-                    "<b>Onboarded new customer</b> by coordinating with client IT staff to set up automated raw data extraction and scripting ETL pipeline in Airflow",
-                    "<b>Halfed customer onboarding timeline</b> by implementing web app module that automated data schema validation and data quality checks",
-                    "<b>Reduced data error incidents and increased deployment confidence</b> by architecting sandboxed environment for end-to-end testing on ETL pipeline",
-                    "<b>Automated unit testing</b> by integrating pytest into Jenkins deployment job",
-                    "<b>Increased production Airflow observability</b> by introducing DataDog for monitoring outage and identifying abnormal performance slowdown",
+                    "<b>Onboarded new customer totalling 90+ operating rooms and ~300k in annual revenue</b>",
+                    "<b>Shortened customer onboarding from 12 weeks to 4 weeks</b> by automating raw data schema validation",
+                    "<b>Eliminated engineer-induced data incidents</b> by enabling data engineers to rapidly validate large quantity of data in sandboxed ETL environment",
+                    "<b>Reduced production service outage</b> by integrating automated unit testing into deployment pipeline",
+                    "<b>Increased production service transparency</b> by introducing DataDog for monitoring performance and collecting logs",
                     "<b>Strengthened ETL pipeline reliability</b> by training teammates to respond to simulated Airflow failures",
-                    "<b>Reverse engineered EHR business metric logic</b> with zero visibility into backend code base"
+                    "<b>Halved production Airflow task scheduling wait time</b> after identifying performance bottleneck and applying appropriate cloud infrastructure redesign"
                 ]
             }
         ],
