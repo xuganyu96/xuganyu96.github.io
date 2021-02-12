@@ -71,7 +71,7 @@
                     "<b>Reduced production service outage</b> by integrating automated unit testing into deployment pipeline",
                     "<b>Increased production service transparency</b> by introducing DataDog for monitoring performance and collecting logs",
                     "<b>Strengthened ETL pipeline reliability</b> by training teammates to respond to simulated Airflow failures",
-                    "<b>Halved production Airflow task scheduling wait time</b> after identifying performance bottleneck and applying appropriate cloud infrastructure redesign"
+                    "<b>Halved production Airflow task scheduling wait time</b> after identifying performance bottleneck and resizing appropriate cloud infrastructure"
                 ]
             }
         ],
