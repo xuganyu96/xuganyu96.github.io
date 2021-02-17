@@ -87,7 +87,7 @@
                 "tech-stack": ["Flask", "RabbitMQ", "MySQL", "Docker", "NginX", "ChartJS"],
                 "highlights": [
                     "Implemented stateless order matching engine that receives orders from RabbitMQ and writes transactions to SQL database",
-                    "Implemented web UI using Flask, featuring simple user authentication, simulated stock trading, and market information with interactive stock chart",
+                    "Implemented web UI using Flask, featuring simple user authentication, simulated stock trading, and market information with interactive stock chart"
                 ]
             },
             {
