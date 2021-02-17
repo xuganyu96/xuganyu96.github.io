@@ -13,39 +13,41 @@
     "resume-body": {
         "skills": [
             {
-                "skill-type": "Python",
+                "skill-type": "Data engineering",
                 "skill-items": [
+                    "<b>Python</b>",
                     "<b>Apache Airflow</b>",
                     "<b>pandas</b>",
                     "SQLAlchemy ORM",
-                    "unittest & pytest",
-                    "Flask & Django",
                     "Jupyter"
                 ]
             },
             {
                 "skill-type": "Cloud infrastructure",
                 "skill-items": [
-                    "<b>Docker</b>", "DataDog", 
-                    "AWS EC2 & ELB",
-                    "AWS Fargate & ECS"
+                    "<b>Docker</b>", 
+                    "AWS EC2, S3, ECS",
+                    "DataDog"
                 ]
             },
             {
-                "skill-type": "Database & Data Warehouse",
+                "skill-type": "Database & data Warehouse",
                 "skill-items": [
-                    "MySQL & PostgreSQL",
-                    "AWS Athena & S3",
-                    "SQLite"
+                    "<b>AWS Athena</b>",
+                    "MySQL & PostgreSQL"
                 ]
             },
             {
                 "skill-type": "Web development",
                 "skill-items": [
-                    "Shell scripting (Bash)",
+                    "Flask & Django",
                     "HTML 5 & CSS 3",
                     "JavaScript ES6",
-                    "uWSGI", "RabbitMQ", "NginX", "Java", "Go"
+                    "UNIX shell scripting",
+                    "Linux (Debian, CentOS)",
+                    "RabbitMQ", 
+                    "NginX",
+                    "Go"
                 ]
             }
         ],
@@ -66,11 +68,10 @@
                 "location": "Santa Clara, CA",
                 "highlights": [
                     "<b>Onboarded new customer totalling 90+ operating rooms and ~300k in annual revenue</b>",
-                    "<b>Shortened customer onboarding from 12 weeks to 4 weeks</b> by automating raw data schema validation",
-                    "<b>Eliminated engineer-induced data incidents</b> by enabling data engineers to rapidly validate large quantity of data in sandboxed ETL environment",
-                    "<b>Reduced production service outage</b> by integrating automated unit testing into deployment pipeline",
-                    "<b>Increased production service transparency</b> by introducing DataDog for monitoring performance and collecting logs",
-                    "<b>Strengthened ETL pipeline reliability</b> by training teammates to respond to simulated Airflow failures",
+                    "<b>Shortened customer onboarding from 12 to 4 weeks</b> by automating raw data schema validation",
+                    "<b>Eliminated engineer-induced data incidents</b> by enabling data engineers to rapidly validate >40 ETL pipelines in sandboxed testing environment",
+                    "<b>Contributed to Airflow AWS executor</b> which launches Airflow task workers as serverless containers in AWS Elastic Container Service",
+                    "<b>Increased on-demand ETL service availability</b> by introducing DataDog for monitoring performance metrics and service outage",
                     "<b>Halved production Airflow task scheduling wait time</b> after identifying performance bottleneck and resizing appropriate cloud infrastructure"
                 ]
             }
@@ -85,9 +86,8 @@
                 },
                 "tech-stack": ["Flask", "RabbitMQ", "MySQL", "Docker", "NginX", "ChartJS"],
                 "highlights": [
-                    "Horizontally scalable order matching service that supports various order types and cancel policies",
-                    "Dynamic stock charts rendered with ChartJS",
-                    "Containerized deployment on AWS EC2 behind reverse proxy"
+                    "Implemented stateless order matching engine that receives orders from RabbitMQ and writes transactions to SQL database",
+                    "Implemented web UI using Flask, featuring simple user authentication, simulated stock trading, and market information with interactive stock chart",
                 ]
             },
             {
@@ -97,18 +97,9 @@
                 },
                 "tech-stack": ["Django", "WebSocket", "AWS S3"],
                 "highlights": [
-                    "Hybrid cloud file backup solution resilient against network failure",
-                    "Web-based Python script execution with real-time output display"
-                ]
-            },
-            {
-                "title": "InquireUSCIS",
-                "links": {
-                    "github": "https://github.com/xuganyu96/InquireUSCIS"
-                },
-                "tech-stack": ["Selenium", "pandas"],
-                "highlights": [
-                    "Multi-worker headless Chrome session for crawling USCIS application status"
+                    "Implemented hybrid cloud file backup solution in which user uploads file through a web interface to a local caching device, which further backs up the file to AWS S3 in the background",
+                    "Achieved effective disaster recovery using multipart file upload/download such that large file transfer can be interrupted with minimal progress loss",
+                    "Integrated WebSocket into webserver and enabled admin users to execute custom Python script and receive real-time console output"
                 ]
             },
             {
@@ -118,8 +109,8 @@
                 },
                 "tech-stack": ["JavaScript", "HTML/CSS"],
                 "highlights": [
-                    "JavaScript app that renders templated resume",
-                    "Rendered the resume you are reading right now"
+                    "Simplified resume writing using JavaScript and HTML for layout and templated JSON for content",
+                    "Rendered this resume that you are reading now"
                 ]
             }
         ]
