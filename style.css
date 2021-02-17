@@ -1,6 +1,10 @@
 body {
     font-family: 'Open Sans', sans-serif;
-    font-size: 0.9rem;
+    font-size: 1rem;
+}
+
+i {
+    font-size: 1.4rem;
 }
 
 p {
@@ -109,7 +113,8 @@ ul {
     flex-direction: column;
     align-items: center;
     justify-self: center;
-    width: 26rem;
+    justify-content: center;
+    width: 33rem;
 }
 
 .full-name-title {
@@ -128,12 +133,15 @@ ul {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 12rem;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
 }
 
 .contact-info i {
-    margin-right: 4px;
+    margin-right: 8px;
+}
+
+.contact-info-item {
+    margin: 0.2rem 0rem;
 }
 
 .section-title {
@@ -142,12 +150,12 @@ ul {
 }
 
 .section-subtitle {
-    font-size: 1rem;
+    font-size: 1.3rem;
     font-weight: 700;
 }
 
 .section-secondary {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     color: #666;
 }
 
@@ -160,8 +168,8 @@ ul {
 .tech-item {
     display: flex;
     align-items: center;
-    height: 1.2rem;
-    border-radius: 0.6rem; /* border-radius is half of height */
+    height: 1.6rem;
+    border-radius: 0.8rem; /* border-radius is half of height */
     margin: 0px 3px;
     padding: 1px 10px;
     background: #dddddd;
