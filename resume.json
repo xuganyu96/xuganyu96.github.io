@@ -1,5 +1,5 @@
 {
-    "resume-width": "60rem",
+    "resume-width": "59rem",
     "resume-header": {
         "full-name": "Ganyu (Bruce) Xu",
         "title": "Data Engineer",
@@ -67,12 +67,11 @@
                 "employer": "LeanTaaS Inc.",
                 "location": "Santa Clara, CA",
                 "highlights": [
-                    "<b>Onboarded new customer totalling 90+ operating rooms and ~300k in annual revenue</b>",
+                    "<b>Onboarded new customer totalling 90+ operating rooms and >$600k in annual revenue</b>",
                     "<b>Shortened customer onboarding from 12 to 4 weeks</b> by automating raw data schema validation",
                     "<b>Eliminated engineer-induced data incidents</b> by enabling data engineers to rapidly validate >40 ETL pipelines in sandboxed testing environment",
                     "<b>Contributed to Airflow AWS executor</b> which launches Airflow task workers as serverless containers in AWS Elastic Container Service",
-                    "<b>Increased on-demand ETL service availability</b> by introducing DataDog for monitoring performance metrics and service outage",
-                    "<b>Halved production Airflow task scheduling wait time</b> after identifying performance bottleneck and resizing appropriate cloud infrastructure"
+                    "<b>Increased on-demand ETL service availability</b> by introducing DataDog for monitoring performance metrics and service outage"
                 ]
             }
         ],
