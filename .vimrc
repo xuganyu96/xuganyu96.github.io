@@ -6,6 +6,7 @@ Plug 'morhetz/gruvbox'
 Plug 'tmhedberg/SimpylFold'
 Plug 'tpope/vim-fugitive'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'mattn/emmet-vim'
 
 " Initialize plugin system
 call plug#end()
@@ -37,6 +38,9 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 highlight default BadWhitespace ctermbg=red guibg=red
 autocmd ColorScheme <buffer> highlight default BadWhitespace ctermbg=red guibg=red   
 match BadWhitespace /\s\+$/
+
+" Language specific settings:
+autocmd FileType html setlocal shiftwidth=2 tabstop=2
 
 " navigating windows
 set splitbelow
@@ -124,4 +128,3 @@ endfunction
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
-
