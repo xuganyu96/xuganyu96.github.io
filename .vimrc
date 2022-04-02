@@ -33,14 +33,10 @@ set nowritebackup
 set undodir=~/.vim/undodir
 set undofile
 set incsearch
-set colorcolumn=119
-highlight ColorColumn ctermbg=0 guibg=lightgrey
+set colorcolumn=80,120
 highlight default BadWhitespace ctermbg=red guibg=red
 autocmd ColorScheme <buffer> highlight default BadWhitespace ctermbg=red guibg=red   
 match BadWhitespace /\s\+$/
-
-" Language specific settings:
-autocmd FileType html setlocal shiftwidth=2 tabstop=2
 
 " navigating windows
 set splitbelow
