@@ -4,5 +4,7 @@ My personal website
 ## Managing dot files
 
 ```bash
-ln -s /path/to/.vimrc ~/.vimrc
+# Suppose you are at project root
+ln -s $(pwd)/vimrc ~/.vimrc
+ln -s $(pwd)/tmux.conf ~/.tmux.conf
 ```
