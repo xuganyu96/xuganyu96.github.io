@@ -1,0 +1,53 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "autoDocstring.docstringFormat": "sphinx",
+    "editor.detectIndentation": false,
+    "editor.suggestSelection": "first",
+    "editor.rulers": [80],
+    "python.languageServer": "Default",
+    "python.showStartPage": false,
+    "workbench.startupEditor": "newUntitledFile",
+    "workbench.colorTheme": "Gruvbox Dark Hard",
+    "workbench.settings.useSplitJSON": true,
+    "workbench.tree.indent": 20,
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "terminal.integrated.inheritEnv": false,
+
+    "[html]": {
+        "editor.rulers": [120],
+        "editor.tabSize": 2,
+        "editor.wordWrap": "on"
+    },
+    "[yaml]": {
+        "editor.tabSize": 2
+    },
+    "[markdown]": {
+        "editor.wordWrap": "on",
+        "editor.quickSuggestions": false,
+        "editor.autoClosingBrackets": "never"
+    },
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "go.toolsManagement.autoUpdate": true,
+    "[json]": {
+        "editor.quickSuggestions": {
+            "strings": true
+        },
+        "editor.suggest.insertMode": "replace"
+    },
+    "[java]": {
+        "editor.rulers": [120]
+    },
+    "[javascript]": {
+        "editor.tabSize": 2
+    },
+    "[css]":{
+        "editor.suggest.insertMode": "replace",
+        "editor.tabSize": 2
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    "remote.SSH.useFlock": false,
+    "git.confirmSync": false
+}
