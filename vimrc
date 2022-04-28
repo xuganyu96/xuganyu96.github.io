@@ -66,7 +66,9 @@ let g:lightline = {
       \   'gitbranch': 'FugitiveHead'
       \ },
       \ }
-
+if !has('gui_running')
+  set t_Co=256
+endif
 " NERDTree
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
