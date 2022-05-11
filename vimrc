@@ -49,6 +49,7 @@ nnoremap <C-H> <C-W><C-H>
 " gruvbox
 colorscheme gruvbox
 set bg=dark
+highlight CocErrorHighlight term=underline cterm=underline gui=underline ctermfg=red
 
 " Code folding
 set foldmethod=indent
