@@ -98,16 +98,6 @@ Now when Noevim starts, it will automatically load and initialize the file tree 
 
 To uninstall the plugin, first remove the `use` statement from `plugins.lua`. Restart Neovim and run `:PackerClean` to uninstall the file tree plugin.
 
-# Keymaps and Commands
-In the [first section](./01-getting-started.md) we:
-1. Installed Neovim
-2. Understood the basics of organizing Lua scripts
-3. Installed a plugin manager "Packer," and installed the first plugin `nvim-tree`
-
-In this section I want to dig a little deeper into:
-1. Define custom commands
-2. Define custom key mappings
-
 ## Commands
 Vim itself already supports custom commands. For example, to shorthand the `:NvimTreeToggle` command, you can define:
 
