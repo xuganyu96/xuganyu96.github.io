@@ -7,14 +7,18 @@ categories: neovim
 
 # TL;DR
 {% highlight bash %}
+brew install neovim  # install brew
+
+git clone https://github.com/xuganyu96/xuganyu96.github.io.git
+ln $(pwd)/xuganyu96.github.io/neovim ~/.config/nvim  # link personal config
+
 git clone --depth 1 https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim  # download Packer
 
-sudo npm install -g pyright
-
-mkdir -p ~/.config/nvim
-ln -s /path/to/xuganyu96.github.io/neovim ~/.config/nvim
+sudo npm install -g pyright  # install Python language server
 {% endhighlight %}
+
+Launch `nvim`, call `:PackerSync` to install plugins, then restart nvim.
 
 If the icons are not showing up, go to Nerd Fonts to get patched fonts
 
