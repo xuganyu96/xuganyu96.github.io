@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Switching to Neovim"
-date:   2022-09-23 21:49:45 -0700
+date:   2022-09-23 22:33:45 -0700
 categories: neovim
 ---
 
