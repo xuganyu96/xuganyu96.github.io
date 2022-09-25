@@ -11,6 +11,6 @@ vim.cmd("set clipboard^=unnamed,unnamedplus")
 vim.cmd("set nowrap")
 vim.cmd("nohlsearch")
 vim.cmd("set incsearch")
-vim.cmd("set colorcolumn=80,120")
+-- vim.cmd("set colorcolumn=80,120")  duplicate of status line
 vim.cmd("set signcolumn=number")
 vim.cmd("set nohlsearch")
