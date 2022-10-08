@@ -4,3 +4,5 @@ _site/
 .jekyll-metadata
 **/__pycache__/
 **/packer_compiled.lua
+
+.python-version
