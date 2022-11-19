@@ -1,3 +1,10 @@
+---
+layout: post
+title:  "Setting up autocomplete on Neovim"
+date:   2022-09-25
+categories: neovim
+---
+
 Add the following plugins to `lua/plugins.lua`:
 
 ```lua
