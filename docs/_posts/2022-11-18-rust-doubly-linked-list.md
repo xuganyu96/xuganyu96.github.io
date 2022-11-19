@@ -5,14 +5,14 @@ date:   2022-11-18 20:12:00 -0700
 categories: rust
 ---
 
-Doubly linked list is a linear data structure in which each node a reference to the node before and the node after. This is a particularly challenging data structure to implement in Rust (for beginners like me) because the borrow-checker prohibits the kind of trivial solutions that one can implement in Python:
+Doubly linked list is a linear data structure in which each node holds a reference to the node before and the node after. This is a particularly challenging data structure to implement in Rust (for beginners like me) because the borrow-checker prohibits the kind of trivial solutions that one can implement in higher-level language (like Python) or memory-unsafe language (like C):
 
 ```python
 class Node:
     def __ini__(self, val):
         self.val = val
         self.prev = None
-        self.next = NOne
+        self.next = None
 
 class Queue:
     def push(self, new):
