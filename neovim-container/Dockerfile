@@ -1,20 +1,17 @@
 # docker build -t neovim:latest -f neovim.Dockerfile .
 # docker run -it --rm neovim:latest
-ARG PYTHON_BASE_IMAGE="python:3.9"
-ARG SYSTEM_REQUIREMENTS="sudo gcc netcat curl gnupg2 dnsutils default-libmysqlclient-dev default-mysql-client libpq-dev make jq postgresql-client"
+ARG BASE_IMAGE="python:3.9"
+ARG SYSTEM_REQUIREMENTS="sudo gcc curl"
 ARG BUILD_REQUIREMENTS="ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen"
-ARG NVIM_GID="501"
-ARG NVIM_HOME_DIR="/opt/nvim"
-ARG NVIM_UID="501"
+ARG NVIM_USER="nvim"
+ARG NVIM_HOME_DIR="/home/nvim"
 
-FROM ${PYTHON_BASE_IMAGE}
+FROM ${BASE_IMAGE}
 
-ARG NVIM_GID="501"
-ARG NVIM_HOME_DIR="/opt/nvim"
-ARG NVIM_UID="501"
-ARG PYTHON_BASE_IMAGE
 ARG SYSTEM_REQUIREMENTS
 ARG BUILD_REQUIREMENTS
+ARG NVIM_USER
+ARG NVIM_HOME_DIR
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ${SYSTEM_REQUIREMENTS} \
@@ -29,35 +26,37 @@ RUN git clone https://github.com/neovim/neovim \
     && make CMAKE_BUILD_TYPE=RelWithDebInfo \
     && make install
 
+# nvim is the less-privileged user
+RUN adduser --home ${NVIM_HOME_DIR} \
+    --shell "/bin/bash" \
+    --disabled-password \
+    ${NVIM_USER} \
+    && usermod -aG sudo ${NVIM_USER} \
+    && echo "ALL ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# NodeJS, npm, and PyRight language server
+# Update Python tool chain
+RUN pip install --upgrade --no-cache-dir pip setuptools wheel
+
+# Below this line are non-root user installations.
+USER nvim
+WORKDIR ${NVIM_HOME_DIR}
+
+# pyright language server
 RUN sudo apt-get install -y nodejs npm \
     && sudo npm install -g pyright
 
-# nvim is the less-privileged user
-RUN groupadd -g ${NVIM_GID} nvim \
-    && useradd -g nvim -u ${NVIM_UID} -d ${NVIM_HOME_DIR} nvim \
-    && usermod -aG sudo nvim \
-    && mkdir ${NVIM_HOME_DIR} \
-    && mkdir ${NVIM_HOME_DIR}/.config \
-    && chown -R nvim: ${NVIM_HOME_DIR} /usr/local
-
-USER nvim
-WORKDIR ${NVIM_HOME_DIR}
-ENV XDG_CONFIG_HOME=${NVIM_HOME_DIR}/.config
-
-RUN pip install --upgrade --no-cache-dir pip setuptools wheel
-
-# Rust toolchain
+# rust-analyzer, which I choose to isntall through rustup
 ENV PATH="${NVIM_HOME_DIR}/.cargo/bin:${PATH}"
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o ./rustup.sh \
     && sh ./rustup.sh -y \
     && rm ./rustup.sh \
     && rustup component add rust-analyzer \
-    && ln -s $(rustup which --toolchain stable rust-analyzer) /usr/local/bin/rust-analyzer
+    && sudo ln -s $(rustup which --toolchain stable rust-analyzer) /usr/local/bin/rust-analyzer
 
-# Personal config + Packer
-RUN git clone https://github.com/xuganyu96/xuganyu96.github.io.git \
+# Create XDG_CONFIG_HOME + Personal config + Packer
+ENV XDG_CONFIG_HOME=${NVIM_HOME_DIR}/.config
+RUN mkdir ${XDG_CONFIG_HOME} \
+    && git clone https://github.com/xuganyu96/xuganyu96.github.io.git \
     && ln -s $(pwd)/xuganyu96.github.io/neovim ~/.config/nvim \
     && git clone --depth 1 https://github.com/wbthomason/packer.nvim \
     && git clone --depth 1 https://github.com/wbthomason/packer.nvim\
