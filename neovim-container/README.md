@@ -20,9 +20,13 @@ docker commit neovim neovim:latest
 docker container rm neovim  # cleanup stopped containers
 ```
 
-Now I can spawn containers with Neovim fully configured.
+Now I can spawn containers with Neovim fully configured:
 
-## Development environment for pandas
+```bash
+docker run -it --rm --name neovim neovim:latest
+```
+
+## Example: development environment for pandas
 First we will run the container. The container was given a name to facilitate the `docker commit` later:
 
 ```bash
