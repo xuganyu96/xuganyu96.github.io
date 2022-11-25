@@ -31,12 +31,12 @@ First we will run the container. The container was given a name to facilitate th
 
 ```bash
 # from pandas project root
-docker run -it --rm -v $(pwd):/home/nvim/pandas --name pandas_dev neovim:latest
+docker run -it -v $(pwd):/home/nvim/pandas --name pandas_dev neovim:latest
 ```
 
 Run the following command to install `mamba` and create the appropriate virtual environment
 
-```
+```bash
 curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"  \
     && bash Mambaforge-$(uname)-$(uname -m).sh \
     && source .bashrc \
@@ -44,22 +44,23 @@ curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Ma
     && mamba env create
 ```
 
-Commit the container back into an image for use later (so we don't have to install mamba repeatedly):
+Exit the container, then commit the container into an image for subsequent uses (so we don't have to install mamba repeatedly):
 
-```
+```bash
 docker commit pandas_dev pandas-dev:latest
+docker container rm pandas_dev  # cleanup stopped container
 ```
 
 To run it again:
 
-```
+```bash
 # from pandas project root
 docker run -it --rm -v $(pwd):/home/nvim/pandas --name pandas_dev pandas-dev:latest
 ```
 
 Inside the container (again), check if things work:
 
-```
+```bash
 cd pandas \
 && mamba activate pandas-dev \
 && python setup.py build_ext -j 4 \
