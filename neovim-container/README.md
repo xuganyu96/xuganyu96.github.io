@@ -31,7 +31,10 @@ First we will run the container. The container was given a name to facilitate th
 
 ```bash
 # from pandas project root
-docker run -it -v $(pwd):/home/nvim/pandas --name pandas_dev neovim:latest
+docker run -it \
+    -v $(pwd):/home/nvim/pandas \ # map source code
+    -v ${HOME}/.ssh:/home/nvim/.ssh \  # map SSH key
+    --name pandas_dev neovim:latest
 ```
 
 Run the following command to install `mamba` and create the appropriate virtual environment
