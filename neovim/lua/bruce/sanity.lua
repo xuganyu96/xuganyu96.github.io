@@ -15,4 +15,4 @@ vim.cmd("set incsearch")
 vim.cmd("set signcolumn=number")
 vim.cmd("set nohlsearch")
 vim.cmd("set cursorline")
-
+vim.opt.relativenumber = true
