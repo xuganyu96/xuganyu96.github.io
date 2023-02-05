@@ -6,7 +6,7 @@ categories: neovim
 ---
 
 # TL;DR
-{% highlight bash %}
+```bash
 brew install neovim  # install brew
 
 git clone https://github.com/xuganyu96/xuganyu96.github.io.git
@@ -16,7 +16,7 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
  ~/.local/share/nvim/site/pack/packer/start/packer.nvim  # download Packer
 
 sudo npm install -g pyright  # install Python language server
-{% endhighlight %}
+```
 
 Launch `nvim`, call `:PackerSync` to install plugins, then restart nvim.
 
@@ -32,35 +32,35 @@ After watching [this video](https://www.youtube.com/watch?v=p0Q3oDY9A5s), I am c
 # Installing Neovim
 Neovim can be easily installed through `brew` on MacOS:
 
-{% highlight bash %}
+```bash
 brew install neovim
 nvim --version  # I got v0.7.2, which has a native lsp client
-{% endhighlight %}
+```
 
 ## Config location
 With MacOS, Neovim first looks in `~/.config/nvim` directory for configuration files. The first script that loads can be either `init.lua` or `init.vim`, although I am switching from Vim to Neovim for the Lua support, so `init.vim` it is.
 
 With Lua, we can separate configurations that serve different purposes into different files. The Lua scripts will be placed in `~/.config/nvim/lua` and accessed by the initialization script using the `require` keyword:
 
-{% highlight lua %}
+```lua
 print("Hello, world!")
 require("plugins") -- runs ~/.config/nvim/lua/plugins.lua
-{% endhighlight %}
+```
 
 `~/.config/nvim/lua/plugins.lua` is where we will specify the plugins.
 
 ## Plugin manager
 Follow the instruction on [Packer's website](https://github.com/wbthomason/packer.nvim):
 
-{% highlight bash %}
+```bash
 git clone --depth 1 https://github.com/wbthomason/packer.nvim\
  ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-{% endhighlight %}
+```
 
 
 At this point Packer is not recognized by Neovim yet (Packer commands don't work). We can fix that by adding the following lines to `~/.config/nvim/lua/plugins.lua`
 
-{% highlight lua %}
+```lua
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
 -- Only required if you have packer configured as `opt`
@@ -70,7 +70,7 @@ return require('packer').startup(function(use)
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
 end)
-{% endhighlight %}
+```
 
 
 Now when we restart Neovim, the packer commands should be recognized, although since we have not specified any plugins, the commands won't do anything
@@ -82,17 +82,17 @@ Let's try our first plugin: a [file tree](https://github.com/kyazdani42/nvim-tre
 
 First add the following lines to `plugins.lua`:
 
-{% highlight lua %}
+```lua
 use 'kyazdani42/nvim-tree.lua'  -- skipping the fancy stuff
-{% endhighlight %}
+```
 
 After that, restart Neovim and run the `:PackerSync` command. A panel should pop up indicating that the installation is completed.
 
 Add the following line to `init.lua`
 
-{% highlight lua %}
+```lua
 require("nvim-tree").setup()
-{% endhighlight %}
+```
 
 Now when Noevim starts, it will automatically load and initialize the file tree plugin. At this point, the commands should work, like `:NvimTreeToggle`.
 
@@ -101,24 +101,24 @@ To uninstall the plugin, first remove the `use` statement from `plugins.lua`. Re
 ## Commands
 Vim itself already supports custom commands. For example, to shorthand the `:NvimTreeToggle` command, you can define:
 
-{% highlight vimscript %}
+```vimscript
 command TT NvimTreeToggle
-{% endhighlight %}
+```
 
 To invoke the declaration of custom command in Lua, you can use the global `vim` object to invoke the `vim.cmd` function.
 
 For now, I will organize all custom commands into a single `lua/custom-commands.lua` module, in which I will add the first batch of commands:
 
-{% highlight lua %}
+```lua
 vim.cmd("command TT NvimTreeToggle")
 vim.cmd("command TF NvimTreeFocus")
-{% endhighlight %}
+```
 
 Of course, to load the `custom-commands.lua`, I will add the following line to `init.lua`:
 
-{% highlight lua %}
+```lua
 require("custom-commands")
-{% endhighlight %}
+```
 
 ## Custom key maps
 If the shorthand commands still aren't fast enough, I can try declaring custom key maps (keys or key combinations).
@@ -129,11 +129,11 @@ There are a variety of commands in Vim that can be used to map key combinations.
 
 For this time, I will organize all key maps into a single `custom-keymaps.lua` and add it to `init.lua`:
 
-{% highlight lua %}
+```lua
 vim.g.mapleader = " "  -- the <leader> key referenced below
 vim.keymap.set("n", "<Leader>t", ":NvimTreeToggle<CR>")
 vim.keymap.set("n", "<Leader>f", ":NvimTreeFocus<CR>")
-{% endhighlight %}
+```
 
 # More plugins
 Let's add plugins that I used in vanilla Vim and add more flares to my Neovim
@@ -143,7 +143,7 @@ First, `nvim-tree` among other plugins make extensive use of icons that are not 
 ## (Fancy) file tree
 I will add the icons to the file tree:
 
-{% highlight lua %}
+```lua
 use {
   'kyazdani42/nvim-tree.lua',
   requires = {
@@ -151,7 +151,7 @@ use {
   },
   tag = 'nightly' -- optional, updated every week. (see issue #1193)
 }
-{% endhighlight %}
+```
 
 ## Status line
 A status line is used to display
@@ -159,33 +159,33 @@ A status line is used to display
 2. git branch
 3. show column/row number
 
-{% highlight lua %}
+```lua
 use {
   'nvim-lualine/lualine.nvim',
   requires = { 'kyazdani42/nvim-web-devicons', opt = true }
 }
-{% endhighlight %}
+```
 
 Then add the initialization requirements to `init.lua`
 
-{% highlight lua %}
+```lua
 require('lualine').setup {options = { theme = 'gruvbox' }}
-{% endhighlight %}
+```
 
 ## Color scheme
 Gruvbox is the greatest color scheme of all times
 
-{% highlight lua %}
+```lua
 use "morhetz/gruvbox"
-{% endhighlight %}
+```
 
 After installing the plugin, we need to activate it using Vim's command `colorscheme gruvbox`. This will be organized into `lua/bruce/colors.lua`. We can also set the background color between `dark` and `light`, which will also be organized there:
 
-{% highlight lua %}
+```lua
 -- lua/bruce/colors.lua
 vim.cmd("colorscheme gruvbox")
 vim.cmd("set bg=bark")
-{% endhighlight %}
+```
 
 # Language support
 For langauge support I want to be able to
@@ -204,6 +204,6 @@ Per `:help lsp-quickstart`:
 
 There is a recommended configuration on `neovim/nvim-lspconfig`, which I will place into `lua/lsp.lua` and source in `init.lua`:
 
-{% highlight lua %}
+```lua
 require("lsp")
-{% endhighlight %}
+```
