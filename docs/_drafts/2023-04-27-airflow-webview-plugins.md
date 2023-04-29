@@ -77,6 +77,7 @@ With the two pieces of code above, we have declared `airflow/plugins/templates` 
 We don't want to write the entire HTML document from scratch for every route, and we want to share the top navigation bar, the footer, and the CSS settings all with the rest of the Airflow web views. To do this we will extend some templates:
 
 ```html
+{% raw %}
 {% extends base_template %}
 
 {% block page_title %} Hi, mom {% endblock %}
@@ -90,6 +91,7 @@ We don't want to write the entire HTML document from scratch for every route, an
     </div>
 </div>
 {% endblock %}
+{% endraw %}
 ```
 
 The `page_title` block corresponds with the `<title>` tag, wile the `content` block will be the between the top menu and the footer. Note that with Airflow 2.5.3, the corresponding version of Flask-Appbuilder ships with Bootstrap 3, so Bootstrap's CSS and JS will work out-of-the-box.
@@ -104,7 +106,13 @@ class ExampleView(BaseView):
         flash("Some message")
 ```
 
+## Upgrading to Bootstrap 5
+While `Flask-Appbuilder` is shipped with Bootstrap 3, the CSS and JS components are neatly packaged in blocks that I can override.
+
+TODO: Need to figure out how
+
 # Form
+
 `Flask-AppBuilder` is shipped with `Flask-WTF`, which can be used to declare HTML forms. We will begin with a simple form with a few common fields:
 
 ```python
@@ -126,17 +134,43 @@ def index(self):
 
 For the template:
 
-```HTML
+```html
+{% raw %}
 <form method="POST">
     {{ form.csrf_token }}
     <div class="input-group">
-        <div>{{ form.count.label }} {{ form.count(class="form-control") }}</div>
-        <div>{{ form.text.label }} {{ form.text(class="form-control") }}</div>
+        <div>{{ form.count.label }} {{ form.count() }}</div>
+        <div>{{ form.text.label }} {{ form.text() }}</div>
         <div>{{ form.select.label }} {{ form.select() }}</div>
         <div>{{ form.submit() }}</div>
     </div>
 </form>
+{% endraw %}
 ```
+
+Without specifying the `action` attribute in the form tag, form data is submitted back into the route it came from. To allow data submission, the route needs to allow the `POST` method:
+
+```python
+@expose("/", methods=("GET", "POST"))
+def index(self):
+    # ...
+```
+
+There are many ways to parse and validate form data. The paradigm that I prefer is to use `request.method` and `form.validate` so as to not depend on `flask` and `wtforms` instead of `flask-wtf`:
+
+```python
+@expose("/", methods=("GET", "POST"))
+def index(self):
+    form = ExampleForm(request.form)
+    
+    if request.method == "POST" and form.validate():
+        # .. process form data ...
+    
+    # ... rest of the stuff ...
+```
+
+## The select widget
+
 
 
 # Query string
