@@ -11,6 +11,4 @@ git config --global core.excludesFile "~/.gitignore"
 ```
 
 ## Personal project ideas
-
-- [ ] Write a JSON parser
-- [ ] Understand OAuth 2.0 by hand-writing a server from scratch
+- [ ] A Redis client and server from scratch [mini-redis](https://github.com/xuganyu96/mini-redis)
