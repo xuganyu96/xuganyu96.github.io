@@ -32,7 +32,75 @@ def check(_):
 ```
 
 ## Proposed change
+The key change is adding the retry logic, which largely looks like this:
 
+```
+def check():
+    initial_check()
+
+    while has_retries:
+        sleep(retry_delay)
+        check_again() and exit if successful
+        decrement the retries remaining
+```
+
+Since `utils.db.check` indicates failure to connect by letting `session.execute` raise unhandled exception, each check's logic can get rather ugly:
+
+```python
+def check():
+    try:
+        db.check()
+    except:
+        pass
+    
+    while has_retries:
+        sleep(...)
+        try:
+            db.check()
+        except:
+            pass
+        retries -= 1
+    
+    # Now what? Re-raise the last exception? SystemExit?
+```
+
+Hence, I've decided to also refactor the `utils.db.check` function so that it catches the `OperationalError` that `session.execute` could throw, and returns a boolean to indicate the status of the database check:
+
+```python
+# airflow.utils.db
+@provide_session
+def check(session: Session = NEW_SESSION) -> bool:
+    try:
+        session.execute(text("select 1 as is_alive;"))
+        log.info("Connection successful.")
+        return True
+    except OperationalError as e:
+        log.debug(e)
+    return False
+```
+
+With that, the CLI command implementation also becomes a lot cleaner:
+
+```python
+@cli_utils.action_cli(check_db=False)
+def check(args):
+    """Runs a check command that checks if db is available."""
+    retries: int = args.retry
+    retry_delay: int = args.retry_delay
+
+    if db.check():
+        raise SystemExit(0)
+
+    while retries > 0:
+        time.sleep(retry_delay)
+        if db.check():
+            raise SystemExit(0)
+        retries -= 1
+        print(f"Warning: will retry in {retry_delay} seconds. {retries} retries left")
+    raise SystemExit(1)
+```
+
+Note that we used `raise SystemExit` because this is how other CLI commands force the program to exit, as well. Also, it makes testing a bit easier since we can used `pytest.raises` to catch `SystemExit` while still retaining the early exit of the function.
 
 ## Unit tests
 With this development I made change to `airflow.utils.db.check` and `airflow.cli.commands.db_commands.check`, so customarily I am responsible for writing the unit tests for the logic that I implemented.
