@@ -5,48 +5,99 @@ date:   2023-06-10 00:00:00
 categories: python
 ---
 
-Recently I raised a [feature request](https://github.com/apache/airflow/issues/31818) on the `apache/airflow` project, and after the core maintainers gave it the informal blessing, I decided to implement the feature and get myself inducted into the list of contributors to Apache Airflow. This blog post documents the development process, which is substantial as Airflow is an equally substantial project with many moving parts, and I want to try GitHub's code space for the first time.
+# Setup
 
-Starting a code space is simple enough. In addition, there are existing dev containers configurations set by the code base, so that is where we will start. Something that I initially found comfusing but later understood was that the terminal inside the code space VSCode instance is a shell into the dev container that runs this instance of `code-server`.
+# Development
+Here are the two functions, before I made the code change:
 
-The dev container uses `/var/run/docker.sock` to execute calls to the Docker engine, which how `breeze` can spin up Airflow cluster for testing purposes. We will get to that later.
+```python
+# airflow.utils.db
+@provide_session
+def check(session: Session = NEW_SESSION):
+    """
+    Checks if the database works.
 
-When the codespace instance first starts, the terminal defaults to the `root` user (why?). I guess we can make do with it for now, but I am sure that sooner than later we will find using `root` to be a bad idea and revert course.
-
-## Setting up the Python environment
-The container is spawned from GitHub's own image `ghcr.io/apache/airflow/main/ci/python3.8`, so we will use the Python 3.8 installed there. Begin with the standard stuff:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip setuptools wheel
+    :param session: session of the sqlalchemy
+    """
+    session.execute(text("select 1 as is_alive;"))
+    log.info("Connection successful.")
 ```
 
-Then we use `setup.py` to install the local copy of `airflow`:
-
-```bash
-pip install --no-cache -e ".[devel]"
+```python
+# airflow.cli.commands.db_command
+@cli_utils.action_cli(check_db=False)
+def check(_):
+    """Runs a check command that checks if db is available."""
+    db.check()
 ```
 
-Next we will need to install and configure `breeze`:
+## Proposed change
 
-```bash
-pip install pipx
-pipx ensurepath
-pipx install -e ./dev/breeze
+
+## Unit tests
+With this development I made change to `airflow.utils.db.check` and `airflow.cli.commands.db_commands.check`, so customarily I am responsible for writing the unit tests for the logic that I implemented.
+
+With `airflow.utils.db.check`, the tests are relatively straightforward: the function has three possible outcomes:
+
+1. Return `True` when the session successfully executes the trivial query
+2. Return `False` when the session raises `sqlalchemy.exc.OperationalError` at query execution
+3. Raise any other exceptions that `session` raises
+
+This means to mock a session whose `execute` method either runs without issues, raises `OperationalError`, or raise some other error:
+
+```python
+def test_check(...):
+    session_mock = MagicMock()
+    assert check(session_mock)
+    session_mock.execute = mock.Mock(side_effect=OperationalError("FOO", None, None))
+    assert not check(session_mock)
+    session_mock.execute = mock.Mock(side_effect=DatabaseError("BAR", None, None))
+    with pytest.raises(DatabaseError, match="BAR"):
+        check(session_mock)
 ```
 
-Before we can run `breeze`, we need to install `docker-compose`, is not shipped with this dev container by default:
+The test case for `db_commands.check` is more involved, in no small part because this function makes call to `time.sleep`, and `exit`, both which I will need to mock, patch, then check whether they are called with the correct argument for the correct number of times, without invoking the actual functions, the first of which will make the test very slow, and the latter of which will simply cause the test session to exit.
 
-```bash
-sudo apt update
-sudo apt upgrade
-# NOTE: the latest version at the time of writing this post is 1.28.1, but it could change
-curl -L "https://github.com/docker/compose/releases/download/2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-chmox +x /usr/local/bin/docker-compose
-docker-compose --version
+Patching functions is achieved using the `patch` function within the `unittest.mock` module, with the target being a valid import path:
 
-breeze
+```python
+def check():
+    ...
+    time.sleep(x)
+    ...
+
+def test_check():
+    with patch("time.sleep"):
+        # The "time.sleep" call is patched with a call to a mock
+        check()
 ```
 
-At this point, the codespace instance crashed. My guess is that the instance is out of memory.
+A `new` argument can be supplied with a named mock variable, which can then be used for call assertion:
+
+```python
+def test_check():
+    mock_sleep = MagicMock()
+    with patch("time.sleep", new=mock_sleep):
+        check()
+    mock_sleep.assert_called()
+```
+
+A particularly neat method in the `mock` module is `assert_calls`, which can be used to assert successive calls:
+
+```python
+from unitttest.mock import patch, call, MagicMock
+
+def check():
+    time.sleep(1)
+    time.sleep(2)
+    time.sleep(3)
+    time.sleep(4)
+
+def test_check():
+    mock_sleep = MagicMock()
+    with patch("time.sleep", new=mock_sleep):
+        check()
+    mock_sleep.assert_calls([
+        call(1), call(2), call(3), call(4)
+    ])
+```
