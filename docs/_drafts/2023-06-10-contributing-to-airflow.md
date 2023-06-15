@@ -8,6 +8,59 @@ categories: python
 # Setup
 
 # Development
+## Updated proposal
+Thanks to the [feedback](https://github.com/apache/airflow/pull/31836#discussion_r1227648936) from other contributor(s), I've learned that the Apache Airflow project actually uses retry logic from another more mature project called [tenacity](https://github.com/jd/tenacity).
+
+The core data structure of `tenacity` is the `Retrying` object, which can be instantiated alone or be created through the `retry` decorator. `tenacity` uses unhandled exceptions as indication for whether a function call succeeds or not, so I reverted my code change on `airflow.utils.db.check` back to its original implementation. This has the nice effect of reducing the amount of unit tests that I have to write.
+
+In the end, my updated code change only affects `airflow.cli.commands.db_command.check`:
+
+```python
+@cli_utils.action_cli(check_db=False)
+def check(args):
+    """Runs a check command that checks if db is available."""
+    retries: int = args.retry
+    retry_delay: int = args.retry_delay
+
+    def _warn_remaining_retries(retrystate: RetryCallState):
+        remain = retries - retrystate.attempt_number
+        log.warning(f"{remain} retries remain, will retry after {retry_delay} seconds")
+
+    for attempt in Retrying(
+        stop=stop_after_attempt(1 + retries),
+        wait=wait_fixed(retry_delay),
+        reraise=True,
+        before_sleep=_warn_remaining_retries,
+    ):
+        with attempt:
+            db.check()
+```
+
+And my unit tests still mock `sleep` and `airflow.utils.db.check` to count the number of times they are called and the arguments they are called with:
+
+```python
+def test_check(self):
+    retry, retry_delay = 6, 9  # arbitrary but distinct number
+    args = self.parser.parse_args(
+        ["db", "check", "--retry", str(retry), "--retry-delay", str(retry_delay)])
+    sleep = MagicMock()
+    always_pass = Mock()
+    always_fail = Mock(side_effect=OperationalError("", None, None))
+
+    with patch("time.sleep", new=sleep), patch("airflow.utils.db.check", new=always_pass):
+        db_command.check(args)
+        always_pass.assert_called_once()
+        sleep.assert_not_called()
+
+    with patch("time.sleep", new=sleep), patch("airflow.utils.db.check", new=always_fail):
+        with pytest.raises(OperationalError):
+            db_command.check(args)
+        # With N retries there are N+1 total checks, hence N sleeps
+        always_fail.assert_has_calls([call()] * (retry + 1))
+        sleep.assert_has_calls([call(retry_delay)] * retry)
+```
+
+## Original proposal
 Here are the two functions, before I made the code change:
 
 ```python
