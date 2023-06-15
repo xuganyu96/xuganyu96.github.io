@@ -15,7 +15,6 @@ return require('packer').startup(function(use)
     }
     use "morhetz/gruvbox"
     use "neovim/nvim-lspconfig"
-    use "NLKNguyen/papercolor-theme" -- a nicer light theme than gruvbox light
 
     -- used for nvim-cmp
     use "hrsh7th/cmp-nvim-lsp"
