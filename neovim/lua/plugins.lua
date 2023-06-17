@@ -13,7 +13,7 @@ return require('packer').startup(function(use)
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
-    use "morhetz/gruvbox"
+    use "ellisonleao/gruvbox.nvim"
     use "neovim/nvim-lspconfig"
 
     -- used for nvim-cmp
