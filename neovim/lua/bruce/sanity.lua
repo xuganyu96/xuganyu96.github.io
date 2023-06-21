@@ -1,6 +1,6 @@
 -- Sane defaults
 vim.cmd("set mouse=a")
-vim.cmd("set laststatus=2")
+vim.cmd("set laststatus=3")
 vim.cmd("set number")
 vim.cmd("set tabstop=4")
 vim.cmd("set shiftwidth=4")
