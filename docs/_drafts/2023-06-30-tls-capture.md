@@ -277,25 +277,25 @@ length: 0000
 ```
 
 ```
-tag: 0005
+tag: 0005 (status request)
 length: 0005
 content: 0100000000
 
-tag: 0000
+tag: 0000 (server name)
 length: 0016
 content: 00140000117777772e727573742d6c616e672e6f7267
 
-tag: 0012
+tag: 0012 (signed_certificate_timestamp)
 length: 0000
 
-tag: 0033
+tag: 0033 (key_share)
 length: 0026
 content: 0024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757
 
-tag: 002d
+tag: 002d (psk_key_exchange_modes)
 length: 0002
 content: 0101
 
-tag: 0023
+tag: 0023 (???)
 length: 0000
 ```
