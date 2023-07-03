@@ -100,8 +100,6 @@ fn main() {
 }
 ```
 
-The capture is written [here](./tls-capture.log).
-
 ## The Client Hello?
 This is the hexadecimal encoding of the first message, which was sent by the client and is presumably the ClientHello.
 
@@ -211,7 +209,7 @@ struct Extension {
 }
 ```
 
-Each extension is serialized using the `tag || length || content` format, where each tag is encoded with 2 bytes, and the length is encoded with 2 bytes, as well. With this, we know that the first extension has a tag value of `0x002b` and a length of `0x0005`:
+Each extension is serialized using the `tag || length || content` format, where each tag is encoded with 2 bytes, and the length is encoded with 2 bytes, as well. Knowing this, we can first read and tokenize each extension without parsing the content of the extensions.
 
 ```
 0x002b, 0x0005
@@ -299,3 +297,5 @@ content: 0101
 tag: 0023 (???)
 length: 0000
 ```
+
+This is exactly the end of the message, meaning that the message it well-formed.
