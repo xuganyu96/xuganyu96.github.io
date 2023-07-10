@@ -1,5 +1,5 @@
 # xuganyu96.github.io
-My personal website
+My personal website: xuganyu96.github.io
 
 ## Managing dot files
 
