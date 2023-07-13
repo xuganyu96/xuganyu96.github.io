@@ -9,6 +9,7 @@ vim.cmd("set autoindent")
 vim.cmd("set backspace=indent,eol,start")
 vim.cmd("set clipboard^=unnamed,unnamedplus")
 vim.cmd("set nowrap")
+vim.cmd("set noswapfile")
 vim.cmd("nohlsearch")
 vim.cmd("set incsearch")
 -- vim.cmd("set colorcolumn=80,120")  duplicate of status line
