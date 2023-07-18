@@ -1,11 +1,101 @@
 ---
 layout: post
-title:  "TLS v1.3 Client Hello capture"
-date:   2023-06-30 00:00:00
+title:  "Decomposing a TLS 1.3 ClientHello"
+date:   2023-07-18 00:00:00
 categories: tls-from-scratch
 ---
 
-One thing that I found useful for learning more about TLS is to watch how other TLS library does what it does, so I wrote a wrapper around Rust's `std::net::TcpStream` to capture the bytes that are sent and received, with the TLS client code copied from the simple client in `rustls/rustls`.
+Recently I had the idea to learn more about the TLS protocol, and read up on TLS v1.3's specification. While there is an enormous amount of details that any production implementation needs to pay attention to, for the most fundamental features, the protocol itself it actually not very complex. I was encouraged by the apparent straightforwardness of the protocol and would like to write a toy implementation on my own.
+
+Before delving deep into the implementation, I first used a production-grade TLS library `rustls` to capture the inputs and outputs of a TLS handshake (the source code can be found at the end of this post), and in this post we will deconstruct the first message, which is the `ClientHello`.
+
+The raw bytes, encoded in hexadecimal, are as follows:
+
+```
+16030100f3010000ef03030c1968ab2bbd60205f2a40c7f0d492168535d0298c37d998e5eb01e55b61021e20135f1cec7cd5321636bd64411984fd58603bf896d1ef53820869160c6b068a840014130213011303c02cc02bcca9c030c02fcca800ff01000092002b00050403040303000b00020100000a00080006001d00170018000d00140012050304030807080608050804060105010401001700000005000501000000000000001600140000117777772e727573742d6c616e672e6f726700120000003300260024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757002d0002010100230000
+```
+
+# The record layer
+The first layer of abstraction is the "Record Layer," and since the `ClientHello` is not a protected message, the record layer follows the structure of a `TLSPlaintext`, which roughly looks like the following:
+
+```rust
+/// Structure of unprotected messages such as ClientHello, ServerHello, and
+/// HelloRetryRequest
+struct TLSPlaintext {
+    /// A single byte that encodes the type of message, which can be one of:
+    /// Invalid: 0x00
+    /// ChangeCipherSpec: 0x14
+    /// Alert: 0x15
+    /// Handshake: 0x16
+    /// ApplicationData: 0x17
+    content_type: ContentType,
+
+    /// A two-byte wide encoding of the TLS protocol version that this message
+    /// follows. For TLS v1.3, this value is either 0x0301 (TLS v1.0) or 0x0303
+    /// (TLS v1.2) for backward compatibility reason
+    legacy_protocol_version: ProtocolVersion,
+
+    /// Plaintext fragment can contain up to 2^14 bytes. The length value is
+    /// encoded with big-endian byte order (also called network byte order,
+    /// where the more significant digit is placed at lower-value memory
+    /// address)
+    length: u16,
+
+    /// The actual content of the message
+    fragment: Opaque
+}
+```
+
+The first a few bytes of the captured `ClientHello` indeed conforms the structure described above, where:
+
+1. first byte is `0x16`, encoding the content type `Handshake`
+2. second and third bytes are `0x0301`, encoding the protocol version TLS v1.0
+3. third and fourth bytes are `0x00f3`, correctly encoding the length of the content to be 243 bytes
+
+From this we also know that we have correctly captured a complete and valid `ClientHello` and we can safely decompose the content of the record.
+
+# The handshake message
+The second layer of abstraction is the handshake message, whose header encodes the handshake message type and the length of the content:
+
+```rust
+struct HandshakeMessage {
+    /// Each message type is a one-byte encoding of the possible types of
+    /// handshake messages, such as ClientHello (0x01), ServerHello (0x02), etc
+    msg_type: HandshakeType,
+
+    /// Three-byte encoding of the length of the content
+    length: U24,
+
+    /// The content of the handshake message
+    payload: Payload
+}
+```
+
+Of the remaining bytes, the first byte `0x01` encodes the handshake type `ClientHello`, and the next three bytes `0x0000ef` correctly encodes the number of bytes (239) in the remaining content.
+
+# The client hello message
+The third layer of abstraction is the `ClientHello` itself, whose structure is as follows:
+
+```rust
+struct ClientHello {
+    /// Same as Record Layer's legacy_record_version: a single byte encoding the
+    /// TLS version
+    legacy_version: ProtocolVersion,
+
+    /// 32 bytes of cryptographically generated random values
+    random: [u8; 32],
+
+    /// A variable-length vector between 0 and 32 bytes
+    legacy_session_id: Vec<u8>,
+    cipher_suites: Vec<CipherSuite>,
+    legacy_compression_methods: Vec<CompressionMethod>,
+    extensions: Vec<Extensions>,
+}
+```
+
+
+# Additional notes
+The code I used to capture the outgoing ClientHello encoding:
 
 ```rust
 use rustls::{OwnedTrustAnchor, RootCertStore};
@@ -100,11 +190,16 @@ fn main() {
 }
 ```
 
+
 ## The Client Hello?
 This is the hexadecimal encoding of the first message, which was sent by the client and is presumably the ClientHello.
 
 ```
-16030100f3010000ef03030c1968ab2bbd60205f2a40c7f0d492168535d0298c37d998e5eb01e55b61021e20135f1cec7cd5321636bd64411984fd58603bf896d1ef53820869160c6b068a840014130213011303c02cc02bcca9c030c02fcca800ff01000092002b00050403040303000b00020100000a00080006001d00170018000d00140012050304030807080608050804060105010401001700000005000501000000000000001600140000117777772e727573742d6c616e672e6f726700120000003300260024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757002d0002010100230000
+16 0301 00f3 (record layer)
+
+01 0000ef (handshake message)
+
+03030c1968ab2bbd60205f2a40c7f0d492168535d0298c37d998e5eb01e55b61021e20135f1cec7cd5321636bd64411984fd58603bf896d1ef53820869160c6b068a840014130213011303c02cc02bcca9c030c02fcca800ff01000092002b00050403040303000b00020100000a00080006001d00170018000d00140012050304030807080608050804060105010401001700000005000501000000000000001600140000117777772e727573742d6c616e672e6f726700120000003300260024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757002d0002010100230000
 ```
 
 Before we break it down, let's first review the layers of abstraction.
