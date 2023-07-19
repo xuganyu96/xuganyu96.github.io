@@ -78,14 +78,8 @@ The third layer of abstraction is the `ClientHello` itself, whose structure is a
 
 ```rust
 struct ClientHello {
-    /// Same as Record Layer's legacy_record_version: a single byte encoding the
-    /// TLS version
     legacy_version: ProtocolVersion,
-
-    /// 32 bytes of cryptographically generated random values
     random: [u8; 32],
-
-    /// A variable-length vector between 0 and 32 bytes
     legacy_session_id: Vec<u8>,
     cipher_suites: Vec<CipherSuite>,
     legacy_compression_methods: Vec<CompressionMethod>,
@@ -93,9 +87,75 @@ struct ClientHello {
 }
 ```
 
+The `ProtocolVersion` is the same as found in the record layer. In the captured message, the protocol version came out to be `0x0303`, which correpsonds to TLS v1.2, again, for compatibility reason. With TLS v1.3, the actual protocol version negotiation is moved to an extension called `supported_versions`, which will be covered at a later section.
 
-# Additional notes
-The code I used to capture the outgoing ClientHello encoding:
+The `random` field is a fixed-length vector, meaning that in all possible TLS v1.3 messages that uses this field, the number of bytes that this field takes up is the same. This means that the length of the vector is not encoded in the byte stream, so we simply take the next 32 bytes to be the value of the `random` field.
+
+On the other hand, the remaining four fields (legacy session ID, ciphers suites, compression methods, and extensions) are all **variable-length vectors**, meaning that the number of bytes can vary from message to message and that the length of the vector is encoded in the serialization of the vector itself. We can quickly verify that the remaining message is well formed by checking the length values and make sure that the remaining four fields correctly consume the remainder of the message:
+
+* The maximal length of `session_id` is 32 bytes, so the length value is 1-byte wide. In our message this byte is `0x20`, so we take the next 32 bytes to be the value of the session ID
+* The maximal length of `cipher_suites` is $2^{16}-2$ bytes, so the length value is 2-byte wide. In the captured message, the two bytes are `0x0014`, so we take the next 20 bytes
+* The maximal length of `legacy_compression_methods` is $2^8-1$ bytes, so the length value is 1-byte wide. In the captured message, this byte is `0x01`, so we take the next byte
+* The maximal length of `extensions` is $2^{16}-1$ bytes, so the length value is 2-byte wide. In the captured message, the two bytes are `0x0092`, so we take the next 146 bytes. After taking 146 bytes, we have reached exactly the end of the message, meaning that the message itself is indeed well-formed
+
+For a brief summary before we further dive into individual fields, here are the byte values of each field in the captured `ClientHello`:
+
+```yaml
+# ClientHello payload
+legacy_protocol: 0x0303
+random: 0x0c1968ab2bbd60205f2a40c7f0d492168535d0298c37d998e5eb01e55b61021e
+legacy_session_id:
+    - 0x20
+    - 0x135f1cec7cd5321636bd64411984fd58603bf896d1ef53820869160c6b068a84
+cipher_suites:
+    - 0x0014
+    - 0x130213011303c02cc02bcca9c030c02fcca800ff
+legacy_compression_methods:
+    - 0x01
+    - 0x00
+extensions: 
+    - 0x0092
+    - 0x002b00050403040303000b00020100000a00080006001d00170018000d00140012050304030807080608050804060105010401001700000005000501000000000000001600140000117777772e727573742d6c616e672e6f726700120000003300260024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757002d0002010100230000
+```
+
+## Legacy session IDs
+Legacy session IDs are a compatibility baggage from pre-TLSv1.3 specificaitons. If the server correctly implements TLS v1.3, then this field should be a zero-length vector, but in the real world there are many sloppy implementations of TLS v1.2 and prior that will misbehave if this field is not filled out, so for compatibility reason it's probably a good idea to generate a new 32-byte session ID.
+
+The session ID should still try to be "random", although it does not need to be cryptographically random.
+
+## Cipher suites
+The `cipher_suites` field contains a list of encoded cipher suites, where each cipher suite is encoded with two bytes. From the specification, the following cipher suites can be identified, although there are more cipher suites added beyond the spec, which can be found in the [`rustls` source code](https://github.com/rustls/rustls/blob/3d121b9d6254a4326a9b92a1c40cb002a84f8188/rustls/src/enums.rs#L117):
+
+- `0x1301`: TLS_AES_128_GCM_SHA256
+- `0x1302`: TLS_AES_256_GCM_SHA384
+- `0x1303`: TLS_CHACHA20_POLY1305_SHA256
+
+## Compression methods
+Like legacy session IDs, the compression methods are a compatibility baggage, but unlike legacy session IDs, there is no need to bend backward for bad prior implementations. For TLS v1.3, this field is a list of a single compression method `NULL`, encoded with the value `0x00`.
+
+## Extensions
+The `extensions` field is a list of extensions, where each extension is encoded following the tag-length-value structure. Each extension can contain up to `2^{16}-1` bytes of extension data, so the length value is two-byte in width. Each extension type's encoded value can be up to 65535 ($2^{16}$), so each 
+
+We can begin by identifying the tags and lengths without parsing out the values:
+
+|tag|length|value|
+|:---|:---|:--|
+|002b (supported versions)|0005|0403040303|
+|000b|0002|0100|
+|000a|0008|0006001d00170018|
+|000d|0014|0012050304030807080608050804060105010401|
+|0017|0000||
+|0005|0005|0100000000|
+|0000|0016|00140000117777772e727573742d6c616e672e6f7267|
+|0012|0000||
+|0033|0026|0024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757|
+|002d|0002|0101|
+|0023|0000||
+
+Among the extension encodings above, I can recognize the followings from the official spec:
+
+# Appendix
+The code I used to capture the outgoing ClientHello encoding (written in Rust, btw):
 
 ```rust
 use rustls::{OwnedTrustAnchor, RootCertStore};
@@ -189,208 +249,3 @@ fn main() {
     // stdout().write_all(&plaintext).unwrap();
 }
 ```
-
-
-## The Client Hello?
-This is the hexadecimal encoding of the first message, which was sent by the client and is presumably the ClientHello.
-
-```
-16 0301 00f3 (record layer)
-
-01 0000ef (handshake message)
-
-03030c1968ab2bbd60205f2a40c7f0d492168535d0298c37d998e5eb01e55b61021e20135f1cec7cd5321636bd64411984fd58603bf896d1ef53820869160c6b068a840014130213011303c02cc02bcca9c030c02fcca800ff01000092002b00050403040303000b00020100000a00080006001d00170018000d00140012050304030807080608050804060105010401001700000005000501000000000000001600140000117777772e727573742d6c616e672e6f726700120000003300260024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757002d0002010100230000
-```
-
-Before we break it down, let's first review the layers of abstraction.
-
-The first layer of is the record layer, where the data is structured as follows:
-
-```rust
-struct TLSPlaintext {
-    content_type: ContentType,
-    legacy_protocol_version: ProtocolVersion,
-    length: u16,
-    fragment: Vec<u8>,
-}
-```
-
-Then, `fragment` is structured with the second layer of abstraction:
-
-```rust
-struct HandshakeMessage {
-    msg_type: HandshakeType,
-    length: u24,
-    payload: HandshakeMessagePayload,
-}
-```
-
-The payload in this case is a `ClientHello`:
-
-```rust
-struct ClientHello {
-    legacy_version: ProtocolVersion,
-    random: Random,  // fixed-length vector
-    legacy_session: [u8; 32],  // variable-length vector
-    cipher_suites: Vec<CipherSuite>,  // variable-length vector,
-    legacy_compression_method: [u8],  // variable-length vector
-    extensions: Vec<Extension>, // variable-length
-}
-```
-
-Since there are a variety of extensions, we will not cover all of them at once; instead, we will read through them one at a time when deconstructing the client hello message.
-
-## Deconstructing the client hello
-Let's start with the "header" of the record, which overs the first five bytes `0x16030100f3`:
-
-```
-0x16    => ContentType::Handshake
-0x0301  => TLS v1.0, but only for compatibility reason
-0x00f3  => the remainer of the message has 243 bytes
-```
-
-Then we have "header" for the handshake message, which contains four bytes `0x010000ef`:
-
-```
-0x01      => HandshakeType::ClientHello
-0x0000ef  => the remainder of the message has 239 bytes; this checks out with the length above since
-             the header took up 4 of the 243 bytes
-```
-
-The header of the client hello takes up the next X bytes:
-
-```
-0x0303
-=> TLS v1.2 (2)
-
-0x0c1968ab2bbd60205f2a40c7f0d492168535d0298c37d998e5eb01e55b61021e
-=> 32 random bytes. Since "random" is a fixed length vector there is no need to encode the length
-
-0x20 35f1cec7cd5321636bd64411984fd58603bf896d1ef53820869160c6b068a84
-=> first, the length is encoded in 1 byte, indicating the session id to have 0x20 bytes (32 bytes)
-=> then the actual legacy session ID
-
-0x0014 1302 1301 1303 c02c c02b cca9 c030 c02f cca8 00ff
-=> first, the cipher suite vector takes 0x0014 bytes (20 bytes)
-=> then we have the following cipher suites encoded:
-    0x1302: TLS_AES_256_GCM_SHA384
-    0x1301: TLS_AES_128_GCM_SHA256
-    0x1303: TLS_CHACHA20_POLY1305_SHA256
-    0xc02c: ???
-    0xc02b: ???
-    0xcca9: ???
-    0xc030: ???
-    0xc02f: ???
-    0xcca8: ???
-    0x00ff: ???
-
-0x0100:
-=> legacy compression method, which, is set to a single elemt of 0x00 (null) in TLS V1.3
-```
-
-The remainder of the message is the variable-length vector that encodes the set of extensions. This variable length vector can have up to $2^{16} - 1$ bytes, so the first two bytes are used to encode the length `0x92`
-
-```
-0x0092
-=> length of the extension vector
-```
-
-Before we deconstruct the extensions, let's review the struct of each extension:
-
-```rust
-struct Extension {
-    extension_type: ExtensionType,  // 2 bytes each
-    extension_data: Vec<u8>, // variable length with up to 2^16 - 1 bytes
-}
-```
-
-Each extension is serialized using the `tag || length || content` format, where each tag is encoded with 2 bytes, and the length is encoded with 2 bytes, as well. Knowing this, we can first read and tokenize each extension without parsing the content of the extensions.
-
-```
-0x002b, 0x0005
-=> extension "supported_versions", content has 5 bytes
-```
-
-In the client version of the `supported_versions` extension, the content is a variable-length vector up to 254 bytes, meaning that the length of the vector is encoded in 1 byte:
-
-```
-0x04, 0x0304, 0x0303
-=>  the content of the "supported_version" extension take up 4 bytes
-=>  0x0304 encodes to TLS v1.3
-    0x0303 encodes to TLS v1.2
-```
-
-The next extension's tag and length are `0x000b` and `0x0002`
-
-```
-tag: 0x000b
-length: 0x0002
-=> not sure what it is...
-
-content: 0x0100
-```
-
-```
-tag: 0x000a
-length: 0x0008
-=> supported_groups
-
-content: 0x0006001d00170018
-=> 0x0006 encodes the length of the variable-length vector "named_group_list"
-=> 0x001d encodes "x25519"
-   0x0017 encodes "secp256r1"
-   0x0018 encodes "secp384r1"
-   all three are in the elliptic curve groups
-```
-
-```
-tag: 0x000d
-length: 0x0014
-=> signature algorithms, content is 20 bytes
-
-content: 0x0012
-[
-    0x0503 => ecdsa_secp384r1_sha384,
-    0x0403 => ecdsa_secp256r1_sha256
-    0x0807 => ed25519
-    0x0806 => rsa_pss_rsae_sha512
-    0x0805 ...
-    0x0804 ...
-    0x0601 ...
-    0x0501 ...
-    0x0401 ...
-]
-```
-
-```
-tag: 0x0017 (???)
-length: 0000
-
-???? What ????
-```
-
-```
-tag: 0005 (status request)
-length: 0005
-content: 0100000000
-
-tag: 0000 (server name)
-length: 0016
-content: 00140000117777772e727573742d6c616e672e6f7267
-
-tag: 0012 (signed_certificate_timestamp)
-length: 0000
-
-tag: 0033 (key_share)
-length: 0026
-content: 0024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757
-
-tag: 002d (psk_key_exchange_modes)
-length: 0002
-content: 0101
-
-tag: 0023 (???)
-length: 0000
-```
-
-This is exactly the end of the message, meaning that the message it well-formed.
