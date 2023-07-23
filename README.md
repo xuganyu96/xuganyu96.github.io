@@ -16,4 +16,4 @@ git config --global core.excludesFile "~/.gitignore"
 - [ ] Documents about running Airflow on ECS Fargate [aws-ecs-fargate](https://github.com/xuganyu96/airflow-ecs-fargate)
 - [ ] Build another Flask application [openjielong](https://github.com/xuganyu96/openjielong)  
 This time focus on building out some boilerplate stuff that can be used in subsequent projects
-- [ ] Refactor Flask-AppBuilder's logging behavior [link](https://github.com/dpgaspar/Flask-AppBuilder/issues/2062)
+- [ ] Learn about self-hosting `code-server`
