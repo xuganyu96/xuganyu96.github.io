@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Decomposing a TLS 1.3 ClientHello"
-date:   2023-07-18 00:00:00
+date:   2023-07-24 00:00:00
 categories: tls-from-scratch
 ---
 
@@ -140,19 +140,58 @@ We can begin by identifying the tags and lengths without parsing out the values:
 
 |tag|length|value|
 |:---|:---|:--|
-|002b (supported versions)|0005|0403040303|
-|000b|0002|0100|
-|000a|0008|0006001d00170018|
-|000d|0014|0012050304030807080608050804060105010401|
-|0017|0000||
-|0005|0005|0100000000|
-|0000|0016|00140000117777772e727573742d6c616e672e6f7267|
-|0012|0000||
-|0033|0026|0024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757|
-|002d|0002|0101|
-|0023|0000||
+|[`0x002b`](#supported-versions-0x002b)|`0x0005`|`0x0403040303`|
+|`0x000b`|`0x0002`|`0x0100`|
+|[`0x000a`](#supported-groups-0x000a)|`0x0008`|`0x0006001d00170018`|
+|[`0x000d`](#signature-algorithms-0x000d)|`0x0014`|`0x0012050304030807080608050804060105010401`|
+|`0x0017`|`0x0000`||
+|[`0x0005`](#status-request-0x0005)|`0x0005`|`0x0100000000`|
+|[`0x0000`](#server-name-0x0000|`0x0016`|`0x00140000117777772e727573742d6c616e672e6f7267`|
+|[`0x0012`](#signed-certificate-timestamp-0x0012|`0x0000`||
+|[`0x0033`](#key-share-0x0033)|`0x0026`|`0x0024001d0020a04d556163020ff655beeacccf1bbc39c1acdf781551caec45e0e145b7995757`|
+|[`0x002d`](#pre-shared-key-exchange-modes-0x002d)|`0x0002`|`0x0101`|
+|`0x0023`|`0x0000`||
 
 Among the extension encodings above, I can recognize the followings from the official spec:
+
+### Supported versions `0x002b`
+`0x0403040303` encodes a variable length vector: the length is `0x04`, and there are two elements in the vector `0x0304` and `0x0303`. Together, this extension specified that the client supports TLS v1.2 and TLS v1.3.
+
+### Supported groups `0x000a`
+`0x0006001d00170018` encodes a variable length vector whose length value is 2-byte wide, so the length of the elements sum to `0x0006`, and there are 3 elements encoding the groups used for key exchange:
+
+* `0x001d`: x25519
+* `0x0017`: secp256r1
+* `0x0018`: secp384r1
+
+### Signature algorithms `0x000d`
+`0x0012050304030807080608050804060105010401` encodes a variable length vector whose length value is 2-byte wide, so the length of the elements sum to `0x12`, and there are 9 elements each encoding the signature algorithm that the client supports:
+
+* `0x0503`: ecdsa_secp384r1_sha384
+* `0x0403`: ecdsa_secp256r1_sha256
+* `0x0807`: ed25519
+* `0x0806`: rsa_pss_rsae_sha512
+* `0x0805`: rsa_pss_rsae_sha384
+* `0x0804`: rsa_pss_rsae_sha256
+* `0x0601`: rsa_pkcs1_sha512
+* `0x0501`: rsa_pkcs1_sha384
+* `0x0401`: rsa_pkcs1_sha256
+
+### Status request (`0x0005`)
+I can recognize the tag, but the structure of this extension is beyond the TLS v1.3 spec.
+
+### Server name `0x0000`
+[link](https://datatracker.ietf.org/doc/html/rfc6066)
+
+### Signed certificate timestamp `0x0012`
+[link](https://datatracker.ietf.org/doc/html/rfc6962)
+
+### Key Share `0x0033`
+More reading is needed
+
+### Pre-shared Key Exchange Modes `0x002d`
+More reading is needed
+
 
 # Appendix
 The code I used to capture the outgoing ClientHello encoding (written in Rust, btw):
