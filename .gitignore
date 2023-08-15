@@ -4,3 +4,4 @@ _site/
 .jekyll-metadata
 **/__pycache__/
 **/packer_compiled.lua
+**/lazy-lock.json

@@ -1,6 +1,0 @@
-vim.cmd("command TT NvimTreeToggle")
-vim.cmd("command TF NvimTreeFocus")
-vim.cmd("command FF Telescope find_files")
-vim.cmd("command GF Telescope git_files")
-vim.cmd("command GS Telescope grep_string")
-vim.cmd("command LG Telescope live_grep")

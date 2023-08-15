@@ -1,11 +1,8 @@
+Welcome to my Neovim setup. It is largely copied from [`kickstart.nvim`](https://github.com/nvim-lua/kickstart.nvim) with minor modification to make it my own setup.
+
+To get started, create a symlink from this directory to `~/.config/nvim`:
+
 ```bash
-git clone --depth 1 https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-
-sudo npm install -g pyright
-
-mkdir -p ~/.config/nvim
-ln -s /path/to/this/dir ~/.config/nvim
+# from the repository root:
+ln -s $(pwd)/neovim ~/.config/nvim
 ```
-
-If the icons are not showing up, go to Nerd Fonts to get patched fonts
