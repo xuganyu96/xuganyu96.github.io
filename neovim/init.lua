@@ -42,6 +42,9 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+-- Disable netrw to avoid conflict with nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -159,6 +162,30 @@ require('lazy').setup({
         transparent_mode = true,
       })
       vim.cmd.colorscheme 'gruvbox'
+    end,
+  },
+
+  {
+    -- nvim-tree
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("nvim-tree").setup({
+        sort_by = "case_sensitive",
+        view = {
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true,
+        },
+      })
     end,
   },
 
@@ -289,6 +316,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Keymaps for nvim-tree
+vim.keymap.set('n', '<leader>t', require('nvim-tree.api').tree.toggle, { desc = 'Open or close the tree.'})
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
