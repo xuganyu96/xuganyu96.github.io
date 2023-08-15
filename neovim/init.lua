@@ -272,6 +272,9 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
+-- Global statusline
+vim.o.laststatus = 3
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
