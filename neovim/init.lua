@@ -272,6 +272,9 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
+-- Do not use swap files
+vim.o.swapfile = false
+
 -- Global statusline
 vim.o.laststatus = 3
 
