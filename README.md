@@ -2,20 +2,16 @@
 My personal website: xuganyu96.github.io
 
 ## Managing dot files
+From the project root, run the following commands:
 
 ```bash
-# From project root
+# Copy over neovim config
 ln -s $(pwd)/neovim ~/.config/nvim
+
+# Copy over tmux config
 ln -s $(pwd)/tmux.conf ~/.tmux.conf
+
+# Copy over global gitignore
 ln -s $(pwd)/global.gitignore ~/.gitignore
 git config --global core.excludesFile "~/.gitignore"
 ```
-
-## Personal project ideas
-- [ ] Cryptopals challenges
-- [ ] Toy TLS implementation [tls-core](https://github.com/xuganyu96/rust-tls-core) (temporarily de-prioritized due to personal circumstances)
-- [ ] Documents about running Airflow on ECS Fargate [aws-ecs-fargate](https://github.com/xuganyu96/airflow-ecs-fargate)
-- [ ] Build another Flask application [openjielong](https://github.com/xuganyu96/openjielong)  
-This time focus on building out some boilerplate stuff that can be used in subsequent projects
-- [ ] Learn about self-hosting `code-server`
-- [x] A Redis client and server from scratch [mini-redis](https://github.com/xuganyu96/mini-redis)
