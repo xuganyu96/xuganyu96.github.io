@@ -16,6 +16,42 @@ ln -s $(pwd)/global.gitignore ~/.gitignore
 git config --global core.excludesFile "~/.gitignore"
 ```
 
+## AWS setup
+Connect to AWS EC2 instance (Amazon Linux 2023, t2.medium) with SSH:
+
+```bash
+chmod 400 ~/.ssh/key.pem
+ssh -i ~/.ssh/key.pem ec2-user@<hostname>
+```
+
+First need to install Docker
+
+```bash
+sudo yum update -y
+sudo yum install -y docker
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+docker ps
+```
+
+Install Neovim so I have a development environment
+
+```bash
+# Install 
+sudo yum install -y git cmake gcc
+git clone https://github.com/neovim/neovim.git
+cd neovim
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+sudo make install
+
+# clone my setup
+cd ~
+git clone https://github.com/xuganyu96/xuganyu96.github.io.git
+cd xuganyu96.github.io
+mkdir ~/.config
+ln -s $(pwd)/neovim ~/.config/nvim
+```
+
 # What's next: cryptography engineering
 I really like cryptography. Mathematics and engineering mix at just the right ratio in this field, and making a career in engineering cryptographic software is less competitive than traditional web dev while being simultaneous more promising. I consider myself extremely lucky to have found a professional interest that can pay well and that I, fingers crossed, enjoy tremendously.
 
