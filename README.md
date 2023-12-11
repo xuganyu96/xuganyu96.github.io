@@ -17,40 +17,24 @@ git config --global core.excludesFile "~/.gitignore"
 ```
 
 ## AWS setup
-Connect to AWS EC2 instance (Amazon Linux 2023, t2.medium) with SSH:
+- Setup the environment variables
+- Copy the setup script to remote
+- SSH into the remote and run the setup script
+- Log out, then log in again
 
 ```bash
-chmod 400 ~/.ssh/key.pem
-ssh -i ~/.ssh/key.pem ec2-user@<hostname>
+PEM_PATH="/path/to/key"
+REMOTE_USER="ec2-user"
+REMOTE_HOST="your.hostname.amazon.com"
+scp -i ${PEM_PATH} ./amazon-linux-setup.sh ${REMOTE_USER}@${REMOTE_HOST}:/home/ec2-user/setup.sh
+ssh -i ${PEM_PATH} ${REMOTE_USER}@${REMOTE_HOST}
+
+./setup.sh  # takes about 13 minutes on t3.medium
 ```
 
-First need to install Docker
-
-```bash
-sudo yum update -y
-sudo yum install -y docker
-sudo service docker start
-sudo usermod -a -G docker ec2-user
-docker ps
-```
-
-Install Neovim so I have a development environment
-
-```bash
-# Install 
-sudo yum install -y git cmake gcc
-git clone https://github.com/neovim/neovim.git
-cd neovim
-make CMAKE_BUILD_TYPE=RelWithDebInfo
-sudo make install
-
-# clone my setup
-cd ~
-git clone https://github.com/xuganyu96/xuganyu96.github.io.git
-cd xuganyu96.github.io
-mkdir ~/.config
-ln -s $(pwd)/neovim ~/.config/nvim
-```
+TODO's:
+- [ ] Install `neovim` from `yum` instead of compiling it from source
+- [ ] Trim down the system requirements from `yum install ...`
 
 # What's next: cryptography engineering
 I really like cryptography. Mathematics and engineering mix at just the right ratio in this field, and making a career in engineering cryptographic software is less competitive than traditional web dev while being simultaneous more promising. I consider myself extremely lucky to have found a professional interest that can pay well and that I, fingers crossed, enjoy tremendously.
