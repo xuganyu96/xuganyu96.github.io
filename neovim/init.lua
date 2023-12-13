@@ -203,7 +203,10 @@ require('lazy').setup({
     },
   },
 
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {
+    indent = { char = "┆"},
+    scope = { enabled = false},
+  } },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
