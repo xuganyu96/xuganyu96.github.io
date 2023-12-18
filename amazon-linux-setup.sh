@@ -66,11 +66,6 @@ git clone --depth 1 git@github.com:neovim/neovim.git  # shallow clone for better
 cd neovim
 make CMAKE_BUILD_TYPE=RelWithDebInfo
 sudo make install
-nvim --headless -c ":MasonInstall rust-analyzer --force" -c "qall"
-nvim --headless -c ":MasonInstall pyright --force" -c "qall"
-nvim --headless -c ":MasonInstall dockerfile-language-server --force" -c "qall"
-nvim --headless -c ":MasonInstall bash-language-server --force" -c "qall"
-nvim --headless -c ":MasonInstall clangd --force" -c "qall"
 cd ~
 
 # pyenv
