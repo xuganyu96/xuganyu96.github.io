@@ -144,6 +144,7 @@ require('lazy').setup({
         underline = true,
         bold = true,
         italic = {
+          emphasis = true,
           strings = true,
           comments = true,
           operators = false,
@@ -164,6 +165,12 @@ require('lazy').setup({
       vim.cmd.colorscheme 'gruvbox'
     end,
   },
+
+  -- Catpuccin, as a light colored alternative
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+
+  -- NightFox and its light alternatives
+  { "EdenEast/nightfox.nvim" },
 
   {
     -- nvim-tree
