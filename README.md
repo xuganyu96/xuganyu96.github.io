@@ -45,8 +45,8 @@ There are two main areas that I find to intrigue me the most. One is lattice-bas
 
 Based on personal experience, I can also identify a few key technologies commonly used: a system-leveling programming language like C/C++, and a high-level computer algebraic system such as SageMath. While I don't have time to learn all of them at the same time, I do know Rust and have used `sympy` a few times, so I can begin by working in the RustCrypto ecosystem and familiarize myself with `sympy` for doing algebra on a computer.
 
-- Make contribution to the RustCrypto ecosystem
-    - [Minor issues](https://github.com/RustCrypto/crypto-bigint/issues/268) for `RustCrypto/crypto-bigint`
-- Self-study lattice cryptography
-- Self-study elliptic curve cryptography
-- Learn C/C++
+- [ ] Implement NTT with Rust
+- [ ] Consider reading up on TLS proxy stuff
+- [ ] Self-study elliptic curve cryptography
+- Learn C/C++ (lower priority)
+- [x] Make contribution to the RustCrypto ecosystem (accomplished with [this PR](https://github.com/RustCrypto/crypto-bigint/pull/489))
