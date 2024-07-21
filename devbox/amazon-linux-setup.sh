@@ -21,7 +21,7 @@ setup_rust() {
 }
 
 setup_neovim() {
-    git clone --depth 1 https://github.com/neovim/neovim.git
+    git clone --depth 1 --branch v0.9.5 https://github.com/neovim/neovim.git
     cd neovim
     make CMAKE_BUILD_TYPE=RelWithDebInfo
     sudo make install
