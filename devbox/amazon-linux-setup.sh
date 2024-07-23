@@ -62,12 +62,22 @@ install_sys_deps() {
         libffi-devel xz-devel openssl-devel npm
 }
 
-######## The main setup ########
-install_sys_deps
-install_personal_config
-setup_docker
-setup_neovim
-setup_pyenv
-setup_rust
-# TODO: maybe code-server is also a good idea
+setup_all() {
+    install_sys_deps
+    install_personal_config
+    setup_docker
+    setup_neovim
+    setup_pyenv
+    setup_rust
+}
 
+if [[ $1 == "all" ]]; then
+    echo -n "Setup all?"
+    read user_input
+    if [[ $user_input == "Y" ]]; then
+        setup_all
+    else
+        "Setup aborted"
+        exit 0
+    fi
+fi

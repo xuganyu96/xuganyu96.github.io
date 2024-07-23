@@ -25,6 +25,6 @@ time {
     scp -i $PEM_PATH \
         ~/.ssh/id_rsa.pub \
         ${REMOTE_USER}@${REMOTE_HOST}:/home/${REMOTE_USER}/.ssh/id_rsa.pub
-    ssh -i $PEM_PATH ${REMOTE_USER}@${REMOTE_HOST} "sudo chmod +x ~/setup.sh && sudo ~/setup.sh"
+    ssh -i $PEM_PATH ${REMOTE_USER}@${REMOTE_HOST} "sudo chmod +x ~/setup.sh && sudo ~/setup.sh all"
 }
 ssh -i $PEM_PATH ${REMOTE_USER}@${REMOTE_HOST}
