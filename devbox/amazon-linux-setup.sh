@@ -36,30 +36,35 @@ setup_docker() {
     echo "Finished installing Docker."
 }
 
+install_personal_config() {
+    git clone https://github.com/xuganyu96/xuganyu96.github.io.git
+    cd xuganyu96.github.io
+    if [ -d ~/.config ]; then
+        echo "~/.config already exists"
+    else
+        mkdir ~/.config
+        echo "Created directory ~/.config"
+    fi
+    ln -s $(pwd)/neovim ~/.config/nvim
+    ln -s $(pwd)/tmux.conf ~/.tmux.conf
+    ln -s $(pwd)/global.gitignore ~/.gitignore
+    git config --global core.excludesFile "~/.gitignore"
+    git config --global user.name "Ganyu (Bruce) Xu"
+    git config --global user.email "xuganyu@berkeley.edu"
+    cd ~
+}
+
+install_sys_deps() {
+    sudo yum update -y
+    sudo yum install -y git gcc cmake tmux npm clang
+    sudo yum groupinstall "Development Tools" -y
+    sudo yum install -y zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel tk-devel \
+        libffi-devel xz-devel openssl-devel npm
+}
+
 ######## The main setup ########
-sudo yum update -y
-sudo yum install -y git gcc cmake tmux npm clang
-sudo yum groupinstall "Development Tools" -y
-sudo yum install -y zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel tk-devel \
-	libffi-devel xz-devel openssl-devel npm
-
-# Personal dotfiles
-git clone https://github.com/xuganyu96/xuganyu96.github.io.git
-cd xuganyu96.github.io
-if [ -d ~/.config ]; then
-    echo "~/.config already exists"
-else
-    mkdir ~/.config
-    echo "Created directory ~/.config"
-fi
-ln -s $(pwd)/neovim ~/.config/nvim
-ln -s $(pwd)/tmux.conf ~/.tmux.conf
-ln -s $(pwd)/global.gitignore ~/.gitignore
-git config --global core.excludesFile "~/.gitignore"
-git config --global user.name "Ganyu (Bruce) Xu"
-git config --global user.email "xuganyu@berkeley.edu"
-cd ~
-
+install_sys_deps
+install_personal_config
 setup_docker
 setup_neovim
 setup_pyenv
