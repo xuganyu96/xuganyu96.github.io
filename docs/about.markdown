@@ -15,3 +15,5 @@ My favorite tech stack (updated July, 2024)
 - Neovim for most of programming. VSCode for HTML/Markdown/LaTeX. I personally prefer compiling LaTeX locally instead of using Overleaf, but sometimes there are collaborative projects or complicated templates that force my hands
 - Some passing knowledge of web development. Can probably make a solid Flask/Django backend with some assistance from ChatGPT
 - Would really like to learn Go for 2024's [AoC](https://adventofcode.com), would like to get some passing knowledge of C++
+
+I also recently got into [ergonomic keyboard](https://zsa.io/moonlander). Still learning the [default layout](/assets/moonlander.pdf)
