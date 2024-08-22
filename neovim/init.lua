@@ -352,6 +352,7 @@ require('telescope').setup {
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
+        ['<C-Q>'] = require("telescope.actions").send_selected_to_qflist + require("telescope.actions").open_qflist
       },
     },
   },
