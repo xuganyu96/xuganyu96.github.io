@@ -4,6 +4,8 @@ title: About me
 permalink: /about/
 ---
 
+[My resume](/assets/resume/main.pdf)
+
 I started graduate school at the <bold style="font-weight:bold; color: #5D0096; padding-left: 2pt; padding-right: 2pt">University of Waterloo</bold> in September, 2023. While my program started out as a course-based Master's, in May 2024 I have transferred into a research program. I currently work with the [Communication Security Lab](https://uwaterloo.ca/communications-security-lab/) and conduct research about lattice-based cryptography.
 
 In a previous chapter, I studied pure mathematics and statistics at <bold style="background-color: #003262; color: #FDB515; padding-left: 2pt; padding-right: 2pt">UC Berkeley</bold> (Go Bears!). After finishing college, I worked at [LeanTaaS](https://leantaas.com) as a software engineer, where I built data warehouse and pipeline using AWS, Apache Airflow, and Python. 
