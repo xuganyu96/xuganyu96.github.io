@@ -18,4 +18,10 @@ My favorite tech stack (updated July, 2024)
 - Some passing knowledge of web development. Can probably make a solid Flask/Django backend with some assistance from ChatGPT
 - Would really like to learn Go for 2024's [AoC](https://adventofcode.com), would like to get some passing knowledge of C++
 
-I also recently got into [ergonomic keyboard](https://zsa.io/moonlander). Still learning the [default layout](/assets/moonlander.pdf)
+
+# Ergonomic keyboard
+I also recently got into [ergonomic keyboard](https://zsa.io/moonlander). After a few weeks of tweaking, got my layout down to 34 keys.
+
+<div style="padding-top: 60%; position: relative;">
+	<iframe src="https://configure.zsa.io/embed/moonlander/layouts/9pREN/latest/0" style="border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%"></iframe>
+</div>
