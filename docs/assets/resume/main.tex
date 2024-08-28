@@ -249,12 +249,12 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Automated business analytics and legacy manual workflow for operioperative management in 100+ healthcare systems throughout the US
-                \item Improved ETL pipeline scalability by migrating data ingestion from PostgreSQL to AWS S3 and moving Airflow's workers from EC2 to ECS
-                \item Accelerated enterprise customer onboarding by automating manual data quality review, cutting onboarding timeline from 4 months to 1 month
-                \item Increased developer productivity by containerizing development environment, building unit testing framework, and integrating CI/CD practices
-                \item Reduced pipeline downtime by implementing service availability monitoring and engineer on-call alarms via DataDog
-                \item Recruited and mentored junior developers through project design review, pair programming, and technical workshops
+                \item Automated customer data ingestion and preprocessing using \textbf{Apache Airflow}
+                \item Resolved data storage scalability and optimized for analytical queries by migrating from PostgreSQL to AWS S3 for storage and AWS Athena for query engine
+                \item Improved data pipeline observability and reduced production down time using \textbf{DataDog} for monitoring service health and \textbf{PagerDuty} for paging on-call engineer
+                \item Accelerated customer onboarding process by implementing web service that automates manual data review
+                \item Implemented data analytics that helped hospital admins identify inefficiency in elective surgery scheduling
+                \item Mentored junior developers through project design review, pair programming, and technical workshops
             \end{highlights}
         \end{onecolentry}
         \vspace{0.2 cm}
@@ -281,36 +281,27 @@
     
     \section{Projects}
         \begin{onecolentry}
-            \href{https://github.com/RustCrypto/crypto-bigint/pull/489}
-            {\textbf{RustCrypto/crypto-bigint}}
+            \href{https://github.com/RustCrypto}{\textbf{RustCrypto}}
         \end{onecolentry}
         \vspace{0.1cm}
         \begin{onecolentry}
+            In November 2023, \href{https://people.redhat.com/~hkario/marvin/}{\emph{a timing variability side-channel}} was discovered for major RSA implementations including \href{https://github.com/RustCrypto/RSA}{\textbf{RustCrypto/RSA}}. I participated in the effort to mitigate this side channel vulnerability by migrating dependency on generic big integer library to constant-time big integer library \href{https://github.com/RustCrypto/crypto-bigint}{\textbf{RustCrypto/crypto-bigint}}. Specifically:
+
             \begin{highlights}
-                \item Implemented \textbf{finite field arithmetics} for heap-allocated big integers
+                \item \href{https://github.com/RustCrypto/crypto-bigint/pulls?q=is%3Apr+is%3Aclosed+author%3Axuganyu96++is%3Amerged}{Implemented \textbf{finite field arithmetics} for heap-allocated big integers}
                 \item \href{https://github.com/entropyxyz/crypto-primes/pull/40}{Ported stack-only random prime generation to heap-allocated big integers}
+                \item \href{https://github.com/RustCrypto/RSA/pull/400}{Integrated Marvin toolkit for detecting timing variability in RSA implementation} 
             \end{highlights}
         \end{onecolentry}
         \vspace{0.2cm}
 
         \begin{onecolentry}
-            \href{https://github.com/RustCrypto/RSA/pull/400}{\textbf{RustCrypto/RSA}}
+            \href{https://github.com/rustls/rustls}{\textbf{rustls}}
         \end{onecolentry}
         \vspace{0.1cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Integrated \href{https://github.com/tomato42/marvin-toolkit.git}{Marvin toolkit} for detecting timing variability in RSA implementation
-            \end{highlights}
-        \end{onecolentry}
-        \vspace{0.2cm}
-
-        \begin{onecolentry}
-            \href{https://github.com/rustls/rustls/pull/1328}{\textbf{rustls}}
-        \end{onecolentry}
-        \vspace{0.1cm}
-        \begin{onecolentry}
-            \begin{highlights}
-               \item Identified incorrect TLS termination at google.com and fixed the example binaries to connect to other properly working TLS server 
+               \item \href{https://github.com/rustls/rustls/pull/1328}{Identified incorrect TLS termination at google.com and fixed the example binaries to connect to other properly working TLS server} 
             \end{highlights}
         \end{onecolentry}
         \vspace{0.2cm}
@@ -327,5 +318,15 @@
             \end{highlights}
         \end{onecolentry}
         \vspace{0.2cm}
+
+        \begin{onecolentry}
+            \href{https://github.com/aelzeiny/airflow-aws-executors/tree/master}{\textbf{Airflow Fargate Executor}}
+        \end{onecolentry}
+        \vspace{0.1cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item An alternative task executor that launches AWS Fargate container per Airflow task instance instead of keeping long-running workers. Fargate executor saves users from paying for idling worker instances on AWS while also increasing the cluster's parallel execution capacity
+            \end{highlights}
+        \end{onecolentry}
     
 \end{document}
