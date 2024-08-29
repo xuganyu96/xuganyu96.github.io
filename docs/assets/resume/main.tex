@@ -203,6 +203,9 @@
         \textbf{U of Waterloo}, MASc in Electrical and Computer Engineering,
         GPA 94.6/100
         \end{twocolentry}
+        \begin{onecolentry}
+            \emph{Courses:} public-key cryptography, applied cryptography, post-quantum cryptography
+        \end{onecolentry}
         \vspace{0.10 cm}
 
         \begin{twocolentry}{
@@ -231,7 +234,7 @@
         \begin{twocolentry}{
             May, 2024 - Present
         }
-            \textbf{Research assistant}, University of Waterloo -- Waterloo, Ontario, Canada
+            \textbf{Graduate research assistant}, University of Waterloo -- Waterloo, Ontario, Canada
         \end{twocolentry}
         \vspace{0.10 cm}
         \begin{onecolentry}
@@ -249,11 +252,10 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Automated customer data ingestion and preprocessing using \textbf{Apache Airflow}
-                \item Resolved data storage scalability and optimized data warehouse for analytical queries by migrating from PostgreSQL to AWS S3 for storage and AWS Athena for query engine
-                \item Improved data pipeline observability and reduced production down time using \textbf{DataDog} for monitoring service health and \textbf{PagerDuty} for paging on-call engineer
-                \item Accelerated customer onboarding process by implementing web service that automates manual data review
-                \item Implemented data analytics that helped hospital admins identify inefficiency in elective surgery scheduling
+                \item Improved developer experience with nightly customer data ingestion and preprocessing by migrating from CRON jobs on a single server to an \textbf{Apache Airflow} cluster on AWS Elastic Container Service
+                \item Designed and implemented serverless and cost-effective data warehouse. Raw data is parsed and written to AWS S3 in columnar format (\textbf{Apache Parquet}), then queried using distributed SQL query engine \textbf{AWS Athena}
+                \item Improved data pipeline observability by using \textbf{DataDog} for service health monitoring and log aggregation; shortened production outage response time by connecting DataDog health checks with \textbf{PagerDuty}
+                % \item Implemented data analytics that helped hospital admins identify inefficiency in elective surgery scheduling
                 \item Mentored junior developers through project design review, pair programming, and technical workshops
             \end{highlights}
         \end{onecolentry}
