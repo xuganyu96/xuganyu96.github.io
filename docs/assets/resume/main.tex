@@ -252,7 +252,7 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Improved developer experience with nightly customer data ingestion and preprocessing by migrating from CRON jobs on a single server to an \textbf{Apache Airflow} cluster on AWS Elastic Container Service
+                \item Overhauled nightly data ingestion and preprocessing pipeline: migrated CRON jobs on a single EC2 server to an \textbf{Apache Airflow} cluster on \textbf{AWS Elastic Container Service}
                 \item Designed and implemented serverless and cost-effective data warehouse. Raw data is parsed and written to AWS S3 in columnar format (\textbf{Apache Parquet}), then queried using distributed SQL query engine \textbf{AWS Athena}
                 \item Improved data pipeline observability by using \textbf{DataDog} for service health monitoring and log aggregation; shortened production outage response time by connecting DataDog health checks with \textbf{PagerDuty}
                 % \item Implemented data analytics that helped hospital admins identify inefficiency in elective surgery scheduling
