@@ -104,4 +104,18 @@ We refer readers to the original paper for the proof (it's not hard). In a secur
 
 This way we can argue that even though the game has been modified, the game's behavior will only change with negligible probability, so the adversary will retain its advantage with overwhelming likelihood. From here, we can construct a proof that begins with the standard security game (but that cannot be simulated), make incremental changes that introduce only negligible difference until the game becomes independent from secret information, then construct the second adversary who simulates the final game.
 
-In the next post we will state the transformation and prove its security.
+# The Random Oracle Model (ROM)
+The concept of random oracle was first introduced in theoretical computer science, then incorporated into the theory of cryptography by Bellare and Rogaway (later the authors of OAEP) in 1993. Within the context of cryptography, random oracle is a way to model a hash function as a stateful probabilistic turing machine. The random oracle answers each unique query with a uniformly random sample from the set of all possible hash values and keeps track of each query-answer pair so that the identical queried will be answered with identical values. Conventionally we denote the oracle by $$\mathcal{O}: q \mapsto h$$, which maintains a query-answer tape $$\mathcal{L}$$. The pseudocode of a hash oracle is as follows:
+
+$$\mathcal{O}(q)$$:
+- If there is $$(\tilde{q}, \tilde{h}) \in \mathcal{L}$$ such that $$\tilde{q} = q$$:  
+    - `Return` $$\tilde{h}$$
+- Else:  
+    - Sample a random $$h \stackrel{\$}{\leftarrow} \mathcal{H}$$ from the set of all possible hash values
+    - Add $$(q, h)$$ to the tape of query-answer pairs: $$\mathcal{L} \leftarrow \mathcal{L} \cup \{(q, h)\}$$
+    - `Return` $$h$$
+
+The random oracle model is a powerful tool in theoretical cryptography because of the existence of the tape. From the querying party's (usually some adversary) point of view, it's impossible to tell "who the random oracle is": it could be a challenger administrating an honest game, but **it could also be another adversary trying to use this adversary to win some other game**, as we will see the the second part of this series. It is important to note that, it is an open problem whether the random oracle model is a realistic assumption of hash functions. On one hand, real-world hash functions clearly do not behave like an oracle, since they are not black boxes, their outputs are pseudorandom at best, not truly random, and they can be evaluated offline. On the other hand, many of today's most widely used primitives, such as RSA-OAEP and many Fiat-Shamir signatures (e.g. EdDSA), all rely on the ROM for their security proofs. The concensus today seemed to be that the ROM provides a convenient theoretical test environment that can be useful when developing a new algorithm, but is insufficient when assessing the real-world security of the scheme.
+
+# Next
+> In the next post we will state the transformation and prove its security.
