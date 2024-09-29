@@ -26,12 +26,14 @@ It's easy to see that if discrete log is easy, then CDH and DDH are both hard. H
 The hardness of CDH and DDH problem serves as the security backbone of the Diffie-Hellman key exchange, which is the only supported method of key exchange in TLS 1.3. The key exchange workflow is as follows:
 
 1. Alice and Bob agree on the choice of $$G$$ and $$g$$
-1. Alice samples its secret value $$a \stackrel{\$}{\leftarrow}$$ and computes its public value $$g^a$$. Bob likewise samples its secret value $$b \stackrel{\$}{\leftarrow}$$ and computes its public value $$g^b$$.
+1. Alice samples its secret value $$a \stackrel{\$}{\leftarrow} \mathbb{Z}_q$$ and computes its public value $$g^a$$. Bob likewise samples its secret value $$b \stackrel{\$}{\leftarrow} \mathbb{Z}_q$$ and computes its public value $$g^b$$.
 1. Alice sends Bob its public value. Bob sends Alice its public value.
 1. Alice uses its secret value $$a$$ and Bob's public value $$g^b$$ to compute $$g^{ab} \leftarrow (g^b)^a$$. Bob uses its secret value $$b$$ and Alice's public value $$g^a$$ to compute $$g^{ab} \leftarrow (g^a)^b$$.
 1. Alice and Bob have derived a shared secret $$g^{ab}$$.
 
 From the adversary's perspective, the adversary is given $$g, g^a, g^b$$. Under the CDH and DDH assumption, the adversary cannot recover $$g^{ab}$$ or infer anything information about $$g^{ab}$$.
+
+Observe that since $$g^a, g^b$$ are already public, if any of $$a$$ or $$b$$ is somehow compromised, then the shared secret $$g^{ab}$$ can be trivially recovered. From here, the adversary can completely recover everything encrypted by the symmetric keys derived from this shared secret. However, we can limit the amount of information leak by making sure that every session is encrypted using a shared secret from a fresh key exchange, so that the symmetric keys of different sessions are all independent of each other. This means that at every new session, Alice and Bob continue using the same group $$G$$ and generator $$g$$, but will each sample a new $$a, b \stackrel{\$}{\leftarrow} \mathbb{Z}_q$$. Since Alice and Bob will be using the symmetric key for the rest of the session, they have no use for their respective Diffie-Hellman secret keys, which can be safely discarded to further reduce the risk of them being stolen. Generating new keypairs for each key exchange is called **ephemeral Diffie-Hellman key exchange**. The property that "the loss of one session's symmetric key does not compromise the security of other session" is called **forward secrecy**. It is interesting to note that there is no formal proof that ephemeral Diffie-Hellman is IND-CCA2 secure, but it remains the only supported key exchange method in TLS 1.3.
 
 # ElGamal cryptosystem
 We can extend the Diffie-Hellman key exchange to build a public-key encryption scheme. There are two key insights:
@@ -105,4 +107,22 @@ $$
 $$
 
 # Zero-knowledge proof
-WIP
+Discrete log also spawns one of the most classical examples of a zero-knowledge proof. Peggy (the prover) and Victor (the verifier) first agree on some cyclic group $$G = \langle g \rangle$$ of prime order $$q$$. Peggy wants to convince Victor that she knows some secret value $$x \in \mathbb{Z}_q$$ that corresponds to some public value $$g^x$$, but she does not wish to give away any information about $$x$$.
+
+This can be accomplished in the following procedure:
+- Peggy announces what she wants to prove: that she knows the secret that corresponds to some public value $$g^x$$. This is called a **statement**
+- Peggy samples another $$y \stackrel{\$}{\leftarrow} \mathbb{Z}_q$$ and computes $$w \leftarrow g^y$$. Peggy publishes $$w$$, which is called a **commitment**
+- Victor samples some random $$c \stackrel{\$}{\leftarrow} \mathbb{Z}_q$$ and sends to Peggy. This is called the **challenge**
+- Peggy computes $$c \cdot x + y$$ and sends it to Victor. This is called the **response**
+- Victor verifies that $$(g^x)^c \cdot w = g^{c\cdot x + y}$$
+
+The protocol containing statement, commitment, challenge, and response is called a **sigma protocol**:
+
+<img src="/assets/sigma-protocol.png" width="50%"/>
+
+There are three key properties of a zero-knowledge proof:
+- **completeness**: an honest prover can convince an honest verifier
+- **soundness**: a dishonest prover cannot convince an honest verifier with non-negligible probability
+- **zero-knowledge**: the proof does not reveal any additional information about the secret knowledge
+
+It is very straightforward to show that the protocol above achieves completeness.
