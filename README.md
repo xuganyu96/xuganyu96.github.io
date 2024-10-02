@@ -32,6 +32,20 @@ ssh -i ${PEM_PATH} ${REMOTE_USER}@${REMOTE_HOST}
 ./setup.sh  # takes about 13 minutes on t3.medium
 ```
 
+## Java setup
+Download OpenJDK from [here](https://jdk.java.net/23/), then decompress
+
+```bash
+curl https://download.java.net/java/GA/jdk23/3c5b90190c68498b986a97f276efd28a/37/GPL/openjdk-23_macos-aarch64_bin.tar.gz -o ~/openjdk23.tar.gz
+tar -xvzf openjdk23.tar.gz
+rm openjdk23.tar.gz
+cd jdk-23.jdk/Contents/Home
+echo "export JAVA_HOME=\"$(pwd)\"" >> ~/.zshrc
+source ~/.zshrc  # or open a new terminal
+javac --version
+java --version
+```
+
 TODO's:
 - [ ] Install `neovim` from `yum` instead of compiling it from source
 - [ ] Trim down the system requirements from `yum install ...`
