@@ -12,16 +12,12 @@ In a previous chapter, I studied pure mathematics and statistics at <bold style=
 
 My favorite tech stack (updated July, 2024)
 - Rust is my go-to language, though I am still a noob
-- I have a very rudimentary understanding of C, but could not build large project on my own, mostly because I haven't taken the time to learn `make`
+- I have a very rudimentary understanding of C, but could not build large project on my own
 - Python is my favorite scripting language for whipping out a quick proof-of-concept
 - Neovim for most of programming. VSCode for HTML/Markdown/LaTeX. I personally prefer compiling LaTeX locally instead of using Overleaf, but sometimes there are collaborative projects or complicated templates that force my hands
 - Some passing knowledge of web development. Can probably make a solid Flask/Django backend with some assistance from ChatGPT
-- Would really like to learn Go for 2024's [AoC](https://adventofcode.com), would like to get some passing knowledge of C++
-
 
 # Ergonomic keyboard
-I also recently got into [ergonomic keyboard](https://zsa.io/moonlander). After a few weeks of tweaking, got my layout down to 34 keys.
+I am experimenting with small split keyboards. Here is my 34-key layout
 
-<div style="padding-top: 60%; position: relative;">
-	<iframe src="https://configure.zsa.io/embed/moonlander/layouts/9pREN/latest/0" style="border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%"></iframe>
-</div>
+<embed src="/assets/34-key-layout.pdf" width="100%" height="375" type="application/pdf">
