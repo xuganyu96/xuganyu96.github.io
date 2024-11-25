@@ -25,3 +25,20 @@ In practice, $$G$$ is either a prime field (see [RFC7919](https://www.rfc-editor
 We've seen remarkable progress toward 
 
 [Kyber timing variability](https://groups.google.com/a/list.nist.gov/g/pqc-forum/c/hqbtIGFKIpU)
+
+
+# Estimates of performance impact for code-based KEMs
+
+|KEM|encapsulation|decapsulation|conjectured decapsulation after EtM|
+|:---|:---|:---|:---|
+|Kyber-512|154524|187960|35436 (-81.14%)|
+|Kyber-768|235260|274900|41640 (-84.85%)|
+|Kyber-768|346648|396584|51936 (-86.90%)|
+|mceliece348864|36457|127140|92683 (-27.10%)|
+|mceliece460896|76086|263046|188960 (-28.16%)|
+|mceliece6688128 (SUS!)|171442|306212|137070 (-55.23%)|
+|mceliece6960119|114678|286596|173918 (-39.32%)|
+|mceliece8192128|156945|310097|155152 (-49.97%)|
+|hqc-128|419k|833k|416k (-50.06%)|
+|hqc-192|946k|1662k|718k (-56.80%)|
+|hqc-256|1833k|3343k|1512k (-54.77%)|
