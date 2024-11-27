@@ -89,7 +89,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -113,7 +113,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -127,7 +127,8 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
+          { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
         vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
@@ -156,7 +157,7 @@ require('lazy').setup({
         invert_tabline = false,
         invert_intend_guides = false,
         inverse = true, -- invert background for search, diffs, statuslines and errors
-        contrast = "", -- can be "hard", "soft" or empty string
+        contrast = "",  -- can be "hard", "soft" or empty string
         palette_overrides = {},
         overrides = {},
         dim_inactive = false,
@@ -167,7 +168,7 @@ require('lazy').setup({
   },
 
   -- Catpuccin, as a light colored alternative
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim",       name = "catppuccin", priority = 1000 },
 
   -- NightFox and its light alternatives
   { "EdenEast/nightfox.nvim" },
@@ -210,10 +211,14 @@ require('lazy').setup({
     },
   },
 
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {
-    indent = { char = "┆"},
-    scope = { enabled = false},
-  } },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+      indent = { char = "┆" },
+      scope = { enabled = false },
+    }
+  },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -272,10 +277,10 @@ vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 -- when editing c/cpp/h files, set shiftwidth to 2
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = {"c", "cpp", "h"},
-    callback = function()
-        vim.o.shiftwidth = 2
-    end,
+  pattern = { "c", "cpp", "h" },
+  callback = function()
+    vim.o.shiftwidth = 2
+  end,
 })
 vim.o.softtabstop = 4
 vim.o.expandtab = true
@@ -338,7 +343,7 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Keymaps for nvim-tree
-vim.keymap.set('n', '<leader>t', require('nvim-tree.api').tree.toggle, { desc = 'Open or close the tree.'})
+vim.keymap.set('n', '<leader>t', require('nvim-tree.api').tree.toggle, { desc = 'Open or close the tree.' })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -533,6 +538,14 @@ local servers = {
   dockerls = {},
 }
 
+-- Format using LSP on filesave
+-- Create an autocommand to run :Format on file save (:w)
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function()
+    -- Run :Format and ignore any errors
+    pcall(vim.cmd, "Format")
+  end,
+})
 -- Setup neovim lua configuration
 require('neodev').setup()
 
