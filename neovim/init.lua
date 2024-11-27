@@ -270,6 +270,13 @@ require('lazy').setup({
 -- Default to 4 spaces per tab
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
+-- when editing c/cpp/h files, set shiftwidth to 2
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = {"c", "cpp", "h"},
+    callback = function()
+        vim.o.shiftwidth = 2
+    end,
+})
 vim.o.softtabstop = 4
 vim.o.expandtab = true
 
