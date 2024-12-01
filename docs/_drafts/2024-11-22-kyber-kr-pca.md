@@ -1,10 +1,47 @@
 ---
 layout: post
-title:  "Working with Kyber/ML-KEM"
+title:  "Key-Recovery Plaintext-Checking Attack against Kyber/ML-KEM"
 date: 2024-11-22 11:55:43 -0400
 categories: cryptography
 ---
+Because of the search-decision equivalence of the Learning with Error (LWE) problem (see [Pei16 Section 4.2.2](https://eprint.iacr.org/2015/939.pdf) for details), Kyber/ML-KEM and many other lattice cryptosystems are known to be vulnerable to plaintext-checking attacks (PCA). Even with Fujisaki-Okamoto transformation, timing variability in implementation can be converted into a plaintext-checking oracle and subsequently a devastating side-channel attacks that can recover the entire secret key using only a few thousand traces ([Ueno21](https://eprint.iacr.org/2021/849)). In this blog post, we will review the mathematics of the plaintext-checking attack, then go through a few recently discovered side-channel attacks against Kyber/ML-KEM.
 
+# Mathematical description
+Kyber/ML-KEM constructs an IND-CCA secure key encapsulation mechanism (KEM) in two steps. First it defines an IND-CPA secure public key encryption (PKE) scheme, then the Fujisaki-Okamoto transformation is applied to convert the IND-CPA PKE into an IND-CCA KEM. In this section, we will focus on attacking the IND-CPA PKE (which we will call CPAPKE for the rest of the post).
+
+A CPAPKE ciphertext contains two components: a polynomial vector $$\mathbf{u} \in R^k$$ and a polynomial $$v \in R$$, where $$R = \mathbb{Z}_q[x]/\langle x^n + 1\rangle$$. The secret key is also a polynomial vector $$\mathbf{s} \in R^k$$, although the coefficients are all very small (for ML-KEM-512 they range from -3 to 3; for ML-KEM-768/1024 they range from -2 to 2). At decryption, we first compute $$\hat{m} \leftarrow v - \langle \mathbf{s}, \mathbf{u} \rangle$$, then round the coefficients of $$\hat{m}$$ based on whether they are closer to $$q/2$$ (rounds to 1) or $$0$$ (rounds to 0). After rounding $$\hat{m}$$ has 256 coefficients that are either 0 or 1, which encodes a 256-bit secret.
+
+This decryption routine has no resistance to active attacks. An active adversary can craft malicious ciphertext, then observe the behavior of the decryption routine and learn something about the secret key. Specifically for ML-KEM, a malicious ciphertext can be crafted as follows:
+
+1. Pick some integer $$1 \leq i^\ast \leq k$$ and some integer $$1 \leq j^\ast \leq n$$
+1. Pick some integer $$u^\prime \in \mathbb{Z}_q$$, set the polynomial vector $$\mathbf{u} \in R^k$$ to be all zeros except for the $$i^\ast$$-th polynomial, which is set to the constant $$u^\prime$$
+1. Pick some integer $$v^\prime \in \mathbb{Z}_q$$, set the $$j^\ast$$-th coefficient of $$v$$ to be $$v^\prime$$ and all other coefficients to zero
+
+Given this malformed ciphertext, we can observe the decryption computation:
+
+TODO: write this part
+
+```
+compressed_u: 0b01000000, u: 208
+compressed_v: 0b0000, v:     0, pattern: [0, 0, 0, 0, 0, 0, 0]
+compressed_v: 0b0001, v:   208, pattern: [0, 0, 0, 0, 0, 0, 0]
+compressed_v: 0b0010, v:   416, pattern: [1, 0, 0, 0, 0, 0, 0]
+compressed_v: 0b0011, v:   624, pattern: [1, 1, 0, 0, 0, 0, 0]
+compressed_v: 0b0100, v:   832, pattern: [1, 1, 1, 0, 0, 0, 0]
+compressed_v: 0b0101, v:  1040, pattern: [1, 1, 1, 1, 0, 0, 0]
+compressed_v: 0b0110, v:  1248, pattern: [1, 1, 1, 1, 1, 0, 0]
+compressed_v: 0b0111, v:  1456, pattern: [1, 1, 1, 1, 1, 1, 0]
+compressed_v: 0b1000, v:  1664, pattern: [1, 1, 1, 1, 1, 1, 1]
+compressed_v: 0b1001, v: -1456, pattern: [0, 1, 1, 1, 1, 1, 1]
+compressed_v: 0b1010, v: -1248, pattern: [0, 0, 1, 1, 1, 1, 1]
+compressed_v: 0b1011, v: -1040, pattern: [0, 0, 0, 1, 1, 1, 1]
+compressed_v: 0b1100, v:  -832, pattern: [0, 0, 0, 0, 1, 1, 1]
+compressed_v: 0b1101, v:  -624, pattern: [0, 0, 0, 0, 0, 1, 1]
+compressed_v: 0b1110, v:  -416, pattern: [0, 0, 0, 0, 0, 0, 1]
+compressed_v: 0b1111, v:  -208, pattern: [0, 0, 0, 0, 0, 0, 0]
+```
+
+# Development setup
 I have had a few projects that require me to work with the source code of Kyber/ML-KEM. After a few attempts at setting up a development environment with which I can work within and/or on top of Kyber/ML-KEM, I have come to the following setup process for programming in C.
 
 For doing a C project involving Kyber, I use the reference implementation found on [GitHub](https://github.com/pq-crystals/kyber). The best way to get it is as a git submodule, which can be set up using the following commands:

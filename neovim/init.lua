@@ -280,6 +280,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "c", "cpp", "h" },
   callback = function()
     vim.o.shiftwidth = 2
+    vim.o.textwidth = 80
   end,
 })
 vim.o.softtabstop = 4
