@@ -18,13 +18,11 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: amateur cryptographer Xu (密码菜🐔小徐)
+title: 密码菜🐔小徐
 email: xuganyu96@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  I am a graduate student at the University of Waterloo. In the previous chapter
-  I am a software engineer at leantaas.com. I am currently interested in cryptography
-  and would like to share what I've learned about cryptography, mathematics, and
-  programming with everyone.
+  Graduate student at University of Waterloo. Amateur Cryptographer.
+  滑铁卢大学在读硕士生。菜🐔密码人
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "xuganyu96.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
