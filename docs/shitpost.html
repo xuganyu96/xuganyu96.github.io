@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Title</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background-color: #f0f0f0;
+      padding: 10px 0;
+      font-size: 0.9em;
+      color: #555;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+  <script>
+    // Function to get query parameter by name
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    // Function to sanitize user input
+    function sanitizeInput(input) {
+      const div = document.createElement('div');
+      div.innerText = input;
+      return div.innerHTML;
+    }
+
+    // Function to redirect with a query parameter
+    function redirectToQuery(inputText) {
+      const sanitizedInput = encodeURIComponent(inputText);
+      const newUrl = `${window.location.origin}${window.location.pathname}?inputtext=${sanitizedInput}`;
+      window.location.href = newUrl;
+    }
+
+    // Function to redirect to URL without query string
+    function redirectToBaseUrl() {
+      const baseUrl = `${window.location.origin}${window.location.pathname}`;
+      window.location.href = baseUrl;
+    }
+
+    // Function to update the title and page content or show input form
+    function updatePageContent() {
+      const inputText = getQueryParam('inputtext');
+      const h1Element = document.getElementById('dynamic-title');
+      const inputForm = document.getElementById('input-form');
+      const backButton = document.getElementById('back-button');
+
+      if (inputText && inputText.trim()) {
+        // Sanitize and update page title and content
+        const sanitizedText = sanitizeInput(inputText);
+        document.title = sanitizedText;
+        h1Element.innerHTML = sanitizedText;
+        inputForm.style.display = 'none'; // Hide the input form
+        backButton.style.display = 'block'; // Show the back button
+      } else {
+        // Show input form if no valid query parameter
+        h1Element.innerHTML = 'Please enter text below:';
+        inputForm.style.display = 'block';
+        backButton.style.display = 'none'; // Hide the back button
+      }
+    }
+
+    // Function to handle button click and redirect
+    function handleButtonClick() {
+      const textBox = document.getElementById('text-box');
+      const userInput = textBox.value.trim();
+      if (userInput) {
+        redirectToQuery(userInput);
+      } else {
+        alert('Please enter some text.');
+      }
+    }
+
+    // Attach an event listener for the Enter key
+    function setupEnterKeyListener() {
+      const textBox = document.getElementById('text-box');
+      textBox.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          handleButtonClick();
+        }
+      });
+    }
+
+    // Run the update function and set up Enter key listener when the page loads
+    window.onload = function () {
+      updatePageContent();
+      setupEnterKeyListener();
+    };
+  </script>
+</head>
+<body>
+  <h1 id="dynamic-title">Welcome!</h1>
+  <div id="input-form" style="display: none;">
+    <input type="text" id="text-box" placeholder="Enter text here">
+    <button onclick="handleButtonClick()">Submit</button>
+  </div>
+  <button id="back-button" style="display: none;" onclick="redirectToBaseUrl()">Go Back</button>
+  <footer style="margin-top: 20px; text-align: center; font-size: 0.9em; color: #555;">
+    Made with code generated with ChatGPT
+  </footer>
+</body>
+</html>
