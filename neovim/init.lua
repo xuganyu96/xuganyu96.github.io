@@ -541,12 +541,12 @@ local servers = {
 
 -- Format using LSP on filesave
 -- Create an autocommand to run :Format on file save (:w)
-vim.api.nvim_create_autocmd("BufWritePre", {
-  callback = function()
-    -- Run :Format and ignore any errors
-    pcall(vim.cmd, "Format")
-  end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   callback = function()
+--     -- Run :Format and ignore any errors
+--     pcall(vim.cmd, "Format")
+--   end,
+-- })
 -- Setup neovim lua configuration
 require('neodev').setup()
 
