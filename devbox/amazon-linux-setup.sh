@@ -28,6 +28,7 @@ setup_pyenv() {
     pyenv install 3.12.4
     pyenv global 3.12.4
     python -m pip install --upgrade pip setuptools wheel
+    cd ~
     print_success "Installed Python 3.12.4 <<<<<<<<<<"
 }
 
@@ -40,12 +41,12 @@ setup_rust() {
 
 setup_neovim() {
     print_info ">>>>>>>> Installing Neovim"
-    git clone --depth 1 --branch v0.9.5 https://github.com/neovim/neovim.git
+    git clone --depth 1 --branch stable https://github.com/neovim/neovim.git
     cd neovim
     print_info "Compiling Neovim ........"
-    make CMAKE_BUILD_TYPE=Release > /dev/null
+    make CMAKE_BUILD_TYPE=Release
     print_info "Installing Neovim ........"
-    sudo make install > /dev/null
+    sudo make install
     cd ~
     print_success "Installed Neovim <<<<<<<<<<"
 }
@@ -74,6 +75,8 @@ install_personal_config() {
     git config --global core.excludesFile "~/.gitignore"
     git config --global user.name "Ganyu (Bruce) Xu"
     git config --global user.email "xuganyu@berkeley.edu"
+    eval "$(ssh-agent -s)" && sleep 1
+    ssh-add ~/.ssh/id_rsa
     print_success "Installed xuganyu96.github.io <<<<<<<<<<"
 }
 
