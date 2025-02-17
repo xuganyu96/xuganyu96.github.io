@@ -198,7 +198,7 @@
 
     \section{Education}
         \begin{twocolentry}{
-            Expecting May 2025
+            Expecting August 2025
         }
         \textbf{U of Waterloo}, MASc in Electrical and Computer Engineering,
         GPA 94.6/100
@@ -223,7 +223,8 @@
         \end{onecolentry}
         \vspace{0.2 cm}
         \begin{onecolentry}
-            \textbf{Cryptography \& communication security:} TLS, ECC, RSA, DSA, Diffie-Hellman key exchange, OpenSSL
+            \textbf{Cryptography \& network security:} post-quantum cryptography, finite-field arithmetic, TLS
+            % \textbf{Cryptography \& network security:} TLS, ECC, RSA, DSA, Diffie-Hellman key exchange, OpenSSL
         \end{onecolentry}
         \vspace{0.2 cm}
         \begin{onecolentry}
@@ -239,7 +240,7 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Designed and implemented post-quantum cryptographic primitives and secure communication protocols
+                \item Designed and implemented a post-quantum key encapsulation mechanism based on ML-KEM with an alternative CCA transformation, achieving IND-1CCA security for ephemeral key exchange (e.g., TLS handshake), optimizing decapsulation speed by up to 70\%, and reducing round-trip time by up to 50\%.
             \end{highlights}
         \end{onecolentry}
         \vspace{0.2 cm}
@@ -294,7 +295,7 @@
             In November 2023, \href{https://people.redhat.com/~hkario/marvin/}{\emph{a timing variability side channel}} was discovered for major RSA implementations including \href{https://github.com/RustCrypto/RSA}{\textbf{RustCrypto/RSA}}. I participated in the effort to mitigate this side channel vulnerability by migrating dependency on generic big integer library to constant-time big integer library \href{https://github.com/RustCrypto/crypto-bigint}{\textbf{RustCrypto/crypto-bigint}}. Specifically:
 
             \begin{highlights}
-                \item \href{https://github.com/RustCrypto/crypto-bigint/pulls?q=is%3Apr+is%3Aclosed+author%3Axuganyu96++is%3Amerged}{Implemented \textbf{finite field arithmetics} for heap-allocated big integers}
+                % \item \href{https://github.com/RustCrypto/crypto-bigint/pulls?q=is%3Apr+is%3Aclosed+author%3Axuganyu96++is%3Amerged}{Implemented \textbf{finite field arithmetics} for heap-allocated big integers}
                 \item \href{https://github.com/entropyxyz/crypto-primes/pull/40}{Ported stack-only random prime generation to heap-allocated big integers}
                 \item \href{https://github.com/RustCrypto/RSA/pull/400}{Integrated Marvin toolkit for detecting timing variability in RSA implementation} 
             \end{highlights}
