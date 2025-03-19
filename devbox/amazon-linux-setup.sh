@@ -90,6 +90,11 @@ install_sys_deps() {
     print_success "Installed system dependencies <<<<<<<<<<"
 }
 
+install_bash_it() {
+    git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
+    ~/.bash_it/install.sh
+}
+
 setup_all() {
     install_sys_deps
     install_personal_config
@@ -97,6 +102,7 @@ setup_all() {
     setup_neovim
     setup_pyenv
     setup_rust
+    install_bash_it
 }
 
 export -f print_info
@@ -104,6 +110,7 @@ export -f print_success
 export -f print_warning
 export -f install_sys_deps
 export -f install_personal_config
+export -f install_bash_it
 export -f setup_docker
 export -f setup_neovim
 export -f setup_pyenv
