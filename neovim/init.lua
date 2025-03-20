@@ -283,6 +283,15 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.o.textwidth = 80
   end,
 })
+-- when editing tsx/jsx files, set indent to 2
+-- Set shiftwidth for JSX and TSX file types
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "javascriptreact", "typescriptreact" },
+  callback = function()
+    vim.opt.shiftwidth = 2
+    vim.opt.tabstop = 2
+  end,
+})
 vim.o.softtabstop = 4
 vim.o.expandtab = true
 
