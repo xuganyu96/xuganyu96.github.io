@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 print_info() {
     echo -e "\033[1;34m$1\033[0m"
 }
@@ -36,18 +38,16 @@ setup_rust() {
     print_info ">>>>>>>> Installing Rust"
     curl https://sh.rustup.rs -sSf | sh -s -- -y
     source ~/.cargo/env
+    cargo install ripgrep
     print_success "Installed Rust <<<<<<<<<<"
 }
 
 setup_neovim() {
     print_info ">>>>>>>> Installing Neovim"
-    git clone --depth 1 --branch stable https://github.com/neovim/neovim.git
-    cd neovim
-    print_info "Compiling Neovim ........"
-    make CMAKE_BUILD_TYPE=Release
-    print_info "Installing Neovim ........"
-    sudo make install
-    cd ~
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    sudo rm -rf /opt/nvim
+    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+    echo 'export PATH="/opt/nvim-linux-x86_64/bin:$PATH"' >> ~/.bashrc
     print_success "Installed Neovim <<<<<<<<<<"
 }
 
@@ -92,7 +92,7 @@ install_sys_deps() {
 
 install_bash_it() {
     git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
-    ~/.bash_it/install.sh
+    ~/.bash_it/install.sh --silent --append-to-config
 }
 
 setup_all() {
