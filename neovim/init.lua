@@ -279,8 +279,9 @@ vim.o.shiftwidth = 4
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "c", "cpp", "h" },
   callback = function()
+    vim.o.tabstop = 2
     vim.o.shiftwidth = 2
-    vim.o.textwidth = 80
+    vim.o.textwidth = 99
   end,
 })
 -- when editing tsx/jsx files, set indent to 2
@@ -472,6 +473,8 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+-- virtual text is disabled by default starting 0.11
+vim.diagnostic.config({ virtual_text = true })
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
