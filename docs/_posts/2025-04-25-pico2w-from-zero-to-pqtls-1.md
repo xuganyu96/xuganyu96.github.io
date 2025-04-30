@@ -68,16 +68,21 @@ set(PICO_BOARD pico2_w CACHE STRING "Board type")
 # this file should be copied into project root from 
 # $PICO_SDK_PATH/external/pico_sdk_import.cmake
 include(pico_sdk_import.cmake)
-
-project(myproject C CXX ASM)
+project(embedded-pqtls C CXX ASM)
 pico_sdk_init()
 
-add_executable(blink src/blink.c)
-target_link_libraries(blink
+include_directories(${CMAKE_CURRENT_LIST_DIR})
+include_directories(${CMAKE_CURRENT_LIST_DIR}/config)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
+
+add_executable(part1 src/part1.c)
+pico_enable_stdio_uart(part1 0)
+pico_enable_stdio_usb(part1 1)
+target_link_libraries(part1
     pico_stdlib 
     pico_cyw43_arch_none
 )
-pico_add_extra_outputs(blink)
+pico_add_extra_outputs(part1)
 ```
 
 We can verify that Pico-SDK and cmake are good to go with a first test build:
@@ -108,7 +113,7 @@ CompileFlags:
   ]
   CompilationDatabase: build/
 ```
-
+ng 
 Restart LSP with `:LspRestart` and the standard libraries should be recognized:
 
 ![Clangd recognizing stdio header](/assets/imgs/neovim-recognizing-stdlib.png)
