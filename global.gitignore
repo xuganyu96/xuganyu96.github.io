@@ -2,4 +2,5 @@
 .python-version
 .*.env
 .clangd
+.clang-format
 .DS_Store
