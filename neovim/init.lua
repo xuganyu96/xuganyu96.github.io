@@ -279,8 +279,8 @@ vim.o.shiftwidth = 4
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "c", "cpp", "h" },
   callback = function()
-    vim.o.tabstop = 2
-    vim.o.shiftwidth = 2
+    vim.o.tabstop = 4
+    vim.o.shiftwidth = 4
     vim.o.textwidth = 99
   end,
 })
