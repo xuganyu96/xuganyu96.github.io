@@ -223,8 +223,7 @@
         \end{onecolentry}
         \vspace{0.2 cm}
         \begin{onecolentry}
-            \textbf{Cryptography \& network security:} post-quantum cryptography (PQC), public-key infrastructure (PKI)
-            % \textbf{Cryptography \& network security:} TLS, ECC, RSA, DSA, Diffie-Hellman key exchange, OpenSSL
+            \textbf{Cryptography:} Post Quantum Cryptography, Public Key Infrastructure, Transport Layer Security
         \end{onecolentry}
         \vspace{0.2 cm}
         \begin{onecolentry}
@@ -240,7 +239,7 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Designed and implemented a post-quantum key encapsulation mechanism based on ML-KEM with an alternative CCA transformation, achieving IND-1CCA security for ephemeral key exchange (e.g., TLS handshake), optimizing decapsulation speed by up to 70\%, and reducing round-trip time by up to 50\%.
+                \item Designed and implemented a post-quantum key encapsulation mechanism based on ML-KEM with an alternative CCA transformation, achieving IND-1CCA security and reducing decapsulation time by more than 50\%
             \end{highlights}
         \end{onecolentry}
         \vspace{0.2 cm}
@@ -284,6 +283,19 @@
     
     \section{Projects}
         \begin{twocolentry}
+            {\href{https://github.com/xuganyu96/embedded-pqtls}{xuganyu96/embedded-pqtls}}
+            {\bf Post-quantum TLS on embedded devices}
+        \end{twocolentry}
+        \vspace{0.1cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Integrated post-quantum cryptography schemes into \href{https://github.com/xuganyu96/wolfssl}{\bf WolfSSL} and benchmarked handshake on Pi Pico 2 W
+                \item Implemented KEM certificate chain generation and KEMTLS handshake control flow on top of WolfSSL
+            \end{highlights}
+        \end{onecolentry}
+        \vspace{0.3cm}
+
+        \begin{twocolentry}
             {\href{https://github.com/RustCrypto}{github.com/RustCrypto}}
             {\textbf{RustCrypto}}
         \end{twocolentry}
@@ -300,19 +312,19 @@
                 \item \href{https://github.com/RustCrypto/RSA/pull/400}{Integrated Marvin toolkit for detecting timing variability in RSA implementation} 
             \end{highlights}
         \end{onecolentry}
-        \vspace{0.2cm}
+        \vspace{0.3cm}
 
-        \begin{twocolentry}
-            {\href{https://github.com/rustls/rustls}{github.com/rustls/rustls}}
-            \textbf{rustls}
-        \end{twocolentry}
-        \vspace{0.1cm}
-        \begin{onecolentry}
-            \begin{highlights}
-               \item \href{https://github.com/rustls/rustls/pull/1328}{Identified incorrect TLS termination at google.com and redirected the example binaries to connect to other correct TLS server implementations} 
-            \end{highlights}
-        \end{onecolentry}
-        \vspace{0.2cm}
+        % \begin{twocolentry}
+        %     {\href{https://github.com/rustls/rustls}{github.com/rustls/rustls}}
+        %     \textbf{rustls}
+        % \end{twocolentry}
+        % \vspace{0.1cm}
+        % \begin{onecolentry}
+        %     \begin{highlights}
+        %        \item \href{https://github.com/rustls/rustls/pull/1328}{Identified incorrect TLS termination at google.com and redirected the example binaries to connect to other correct TLS server implementations} 
+        %     \end{highlights}
+        % \end{onecolentry}
+        % \vspace{0.2cm}
 
         \begin{twocolentry}
             {\href{https://github.com/apache/airflow}{github.com/apache/airflow}}
