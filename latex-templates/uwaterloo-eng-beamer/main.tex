@@ -1,0 +1,59 @@
+\documentclass{beamer}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{graphicx}
+
+\usetheme{Madrid}
+% University of Waterloo black and gold
+\definecolor{uwaterlooblack}{RGB}{0,0,0}  % Example: Dark Blue
+\definecolor{uwaterloogold}{RGB}{235,171,0} % Example: Gold
+\definecolor{uwaterlooengpurple}{RGB}{93,0,150}
+
+% Apply custom colors
+\setbeamercolor{structure}{fg=uwaterlooengpurple} % Main color
+\setbeamercolor{frametitle}{fg=white, bg=uwaterlooengpurple} % Frame title
+\setbeamercolor{title}{fg=white} % Title color
+\setbeamercolor{author}{fg=uwaterlooblack} % Author color
+\setbeamercolor{date}{fg=uwaterlooblack} % Date color
+
+% Change itemize bullet colors
+\setbeamercolor{item}{fg=uwaterlooengpurple} 
+
+% Change sidebar colors (if used)
+\setbeamercolor{sidebar}{bg=uwaterlooblack, fg=white}
+
+% Information to be included in the title page:
+\title[Short tile]{Full title}
+
+\author[short authors]
+{
+    Author Uno\inst{1}
+}
+
+\institute[] % (optional)
+{
+    \inst{1}%
+    Some institute
+}
+
+\date{August 7, 2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Frame title}
+    \begin{itemize}
+        \item Some content \cite{DBLP:conf/eurocrypt/Grieu00}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+    \bibliographystyle{alpha}
+    \bibliography{biblio}
+\end{frame}
+\end{document}
