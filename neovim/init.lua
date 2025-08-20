@@ -27,7 +27,7 @@ Kickstart Guide:
 I have left several `:help X` comments throughout the init.lua
 You should run that command and read that help section for more information.
 
-In addition, I have some `NOTE:` items throughout the file.
+In addition, I have some `NOTE` items throughout the file.
 These are for you, the reader to help understand what is happening. Feel free to delete
 them once you know what you're doing, but they should serve as a guide for when you
 are first encountering a few different constructs in your nvim config.
@@ -37,6 +37,7 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -113,7 +114,8 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim',     opts = {} },
+
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -168,10 +170,10 @@ require('lazy').setup({
   },
 
   -- Catpuccin, as a light colored alternative
-  { "catppuccin/nvim",       name = "catppuccin", priority = 1000 },
+  -- { "catppuccin/nvim",       name = "catppuccin", priority = 1000 },
 
   -- NightFox and its light alternatives
-  { "EdenEast/nightfox.nvim" },
+  -- { "EdenEast/nightfox.nvim" },
 
   {
     -- nvim-tree
@@ -221,7 +223,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',    opts = {} },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -472,8 +474,10 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.get_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.get_next, { desc = 'Go to next diagnostic message' })
+vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1, float = true }) end,
+  { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1, float = true }) end,
+  { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 -- virtual text is disabled by default starting 0.11
