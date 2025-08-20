@@ -126,12 +126,12 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
-      on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
-          { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
-        vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
-        vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
-      end,
+      -- on_attach = function(bufnr)
+      --   vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
+      --     { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+      --   vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
+      --   vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
+      -- end,
     },
   },
 
@@ -222,6 +222,9 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
+
+  -- Highlight todo, notes, etc in comments
+  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -469,8 +472,8 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+vim.keymap.set('n', '[d', vim.diagnostic.get_prev, { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.get_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 -- virtual text is disabled by default starting 0.11
@@ -548,6 +551,7 @@ local servers = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
+      diagnostics = { disable = { 'missing-fields' } },
     },
   },
   bashls = {},
