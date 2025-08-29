@@ -86,12 +86,12 @@ require('lazy').setup({
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
       -- FIX: Pinned Mason/Mason-lspconfig version for now, but need to understand better
-      { 'williamboman/mason.nvim', commit='7dc4facc', config = true },
+      { 'williamboman/mason.nvim',           commit = '7dc4facc', config = true },
       { 'williamboman/mason-lspconfig.nvim', tag = 'v1.32.0' },
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',                 tag = 'legacy',    opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -115,7 +115,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',     opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
 
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
@@ -129,12 +129,14 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
-      -- on_attach = function(bufnr)
-      --   vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
-      --     { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
-      --   vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
-      --   vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
-      -- end,
+      on_attach = function(bufnr)
+        -- :Gitsigns nav_hunk <next|prev>
+        vim.keymap.set('n', '<leader>gp', function() require('gitsigns').nav_hunk('prev') end,
+          { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+        vim.keymap.set('n', '<leader>gn', function() require('gitsigns').nav_hunk('next') end,
+          { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
+        vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
+      end,
     },
   },
 
@@ -224,7 +226,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',    opts = {} },
+  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Highlight todo, notes, etc in comments
   {
