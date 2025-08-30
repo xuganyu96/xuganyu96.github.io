@@ -91,7 +91,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',                 tag = 'legacy',    opts = {} },
+      { 'j-hui/fidget.nvim',                 tag = 'legacy',      opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -130,12 +130,15 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
+        local gitsigns = require('gitsigns')
+        -- :Gitsigns setqflist all
+        -- :Gitsigns toggle_current_line_blame|blame_line
         -- :Gitsigns nav_hunk <next|prev>
-        vim.keymap.set('n', '<leader>gp', function() require('gitsigns').nav_hunk('prev') end,
+        vim.keymap.set('n', '<leader>gp', function() gitsigns.nav_hunk('prev') end,
           { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
-        vim.keymap.set('n', '<leader>gn', function() require('gitsigns').nav_hunk('next') end,
+        vim.keymap.set('n', '<leader>gn', function() gitsigns.nav_hunk('next') end,
           { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
-        vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
+        vim.keymap.set('n', '<leader>ph', gitsigns.preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
     },
   },
