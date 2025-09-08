@@ -86,7 +86,7 @@ install_sys_deps() {
     sudo yum install -y -q git gcc cmake tmux npm clang
     sudo yum groupinstall "Development Tools" -y -q
     sudo yum install -y -q zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel tk-devel \
-        libffi-devel xz-devel openssl-devel npm
+        libffi-devel xz-devel openssl-devel npm ninja-build
     print_success "Installed system dependencies <<<<<<<<<<"
 }
 
