@@ -5,3 +5,4 @@
 .clang-format
 .DS_Store
 wolfSSL-Manual.pdf
+.gitmessage
