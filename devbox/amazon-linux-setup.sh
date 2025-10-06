@@ -102,7 +102,7 @@ setup_all() {
     setup_neovim
     setup_pyenv
     setup_rust
-    install_bash_it
+    # install_bash_it
 }
 
 export -f print_info
