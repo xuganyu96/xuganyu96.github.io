@@ -90,6 +90,7 @@ install_sys_deps() {
     print_success "Installed system dependencies <<<<<<<<<<"
 }
 
+# TODO: figure out how to change the theme to "bobby-python" in script
 install_bash_it() {
     git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
     ~/.bash_it/install.sh --silent --append-to-config
@@ -102,7 +103,7 @@ setup_all() {
     setup_neovim
     setup_pyenv
     setup_rust
-    # install_bash_it
+    install_bash_it
 }
 
 export -f print_info
