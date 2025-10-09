@@ -4,7 +4,7 @@ title: About me
 permalink: /about/
 ---
 
-[How many days since I re-wrote my Neovim config?](/days-since-rewrite.html)
+[How many days since I re-wrote my Neovim config?](/rewrite.html)
 
 [My resume](/assets/resume/main.pdf)
 
