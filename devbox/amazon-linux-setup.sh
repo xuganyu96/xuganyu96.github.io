@@ -94,6 +94,7 @@ install_sys_deps() {
 install_bash_it() {
     git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
     ~/.bash_it/install.sh --silent --append-to-config
+    echo "I prefer BASH_IT_THEME='robbyrussell'"
 }
 
 setup_all() {
