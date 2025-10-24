@@ -588,6 +588,12 @@ local servers = {
   bashls = {},
   pyright = {},
   dockerls = {},
+
+  -- NOTE: I am not sure if I want to ensure black to be installed at Neovim
+  -- start time. Instead, where the `black` binary is available, use command:
+  -- :!black %
+  -- to format the current buffer.
+  -- black = {},
 }
 
 -- Format using LSP on filesave
