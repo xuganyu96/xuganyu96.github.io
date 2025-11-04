@@ -63,3 +63,18 @@ $$
 
 So $$\zeta^k$$ is a primitive n-th root of unity if and only if $$\gcd(k, n) = 1$$.
 In other words, there are $$\phi(n)$$ distinct primitive n-th roots of unity.
+
+As an example, consider the following corollary:
+
+> Let $$F$$ be a finite field of odd order $$q$$, then $$-1 \in F$$ has square roots if and only if $$q \equiv 1 \mod 4$$
+
+If $$-1$$ has a square root $$i\in F$$, then $$i$$ is a 4-th root of unity, but $$i^2 = -1 \neq 1$$ for odd $$q$$, so $$i$$ is a primitive 4-th root of unity.
+From the results above, we know that such $$i$$ exists if and only if $$4 \vert (q-1)$$, which is equivalent to $$q \equiv 1 \mod 4$$.
+A curious consequence of this corollary is that for odd $$q$$ such that $$q \equiv 3 \mod 4$$, $$F_q$$ has no square root of $$-1$$ 
+(in other words $$i \not\in F$$).
+Equivalently, $$x^2 + 1 \in F_q[x]$$ is irreducible in $$F_q$$
+We can construct $$F_{q^2}$$ by adjoining $$F_{q}$$ with $$i$$:
+
+$$
+F_{q^2} \cong F_q(i) \cong F_q[y] / \langle y^2 + 1 \rangle
+$$
