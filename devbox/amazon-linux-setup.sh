@@ -76,7 +76,12 @@ install_personal_config() {
     git config --global user.name "Ganyu (Bruce) Xu"
     git config --global user.email "xuganyu@berkeley.edu"
     eval "$(ssh-agent -s)" && sleep 1
-    ssh-add ~/.ssh/id_rsa
+    if [[ -f ~/.ssh/id_ed25519 ]]; then
+        ssh-add ~/.ssh/id_ed25519
+    fi
+    if [[ -f ~/.ssh/id_rsa ]]; then
+        ssh-add ~/.ssh/id_rsa
+    fi
     print_success "Installed xuganyu96.github.io <<<<<<<<<<"
 }
 
