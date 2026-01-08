@@ -328,24 +328,6 @@ require('lazy').setup({
 -- Default to 4 spaces per tab
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
--- when editing c/cpp/h files, set shiftwidth to 2
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "c", "cpp", "h" },
-  callback = function()
-    vim.o.tabstop = 4
-    vim.o.shiftwidth = 4
-    vim.o.textwidth = 99
-  end,
-})
--- when editing tsx/jsx files, set indent to 2
--- Set shiftwidth for JSX and TSX file types
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "javascriptreact", "typescriptreact" },
-  callback = function()
-    vim.opt.shiftwidth = 2
-    vim.opt.tabstop = 2
-  end,
-})
 vim.o.softtabstop = 4
 vim.o.expandtab = true
 
@@ -395,6 +377,32 @@ vim.o.termguicolors = true
 -- A few more sanity options
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
+
+-- when editing c/cpp/h files, set shiftwidth to 4
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp", "h" },
+  callback = function()
+    vim.o.tabstop = 4
+    vim.o.shiftwidth = 4
+    vim.o.textwidth = 99
+  end,
+})
+-- when editing tsx/jsx files, set indent to 2
+-- Set shiftwidth for JSX and TSX file types
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "javascriptreact", "typescriptreact" },
+  callback = function()
+    vim.opt.shiftwidth = 2
+    vim.opt.tabstop = 2
+  end,
+})
+-- when editing Python files, set colorcolumns at 80 and 100
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function()
+    vim.opt_local.colorcolumn = "80,100"
+  end,
+})
 
 -- [[ Basic Keymaps ]]
 
