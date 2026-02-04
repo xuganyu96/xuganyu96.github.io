@@ -1,128 +1,89 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-set -e
+if [[ -t 1 ]]; then
+    RESET="\033[0m"
+    BLUE="\033[1;34m"
+    GREEN="\033[1;32m"
+    YELLOW="\033[1;33m"   # orange-ish / warning
+    RED="\033[1;31m"      # error
+else
+    RESET=""
+    BLUE=""
+    GREEN=""
+    YELLOW=""
+    RED=""
+fi
 
-print_info() {
-    echo -e "\033[1;34m$1\033[0m"
+printinfo() {
+    printf "%b\n" "${BLUE}ℹ $1${RESET}"
 }
 
-print_success() {
-    echo -e "\033[1;32m$1\033[0m"
+printsuccess() {
+    printf "%b\n" "${GREEN}✔ $1${RESET}"
 }
 
-print_warning() {
-    echo -e "\033[1m\033[91m$1\033[0m"
+printwarning() {
+    printf "%b\n" "${YELLOW}⚠ $1${RESET}"
 }
 
-setup_pyenv() {
-    print_info ">>>>>>>> Installing pyenv"
-    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-    cd ~/.pyenv && src/configure && make -C src
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-    echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
-    echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
-    echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
-    source ~/.bashrc
-    print_success "Installed pyenv <<<<<<<<<<"
-    print_info ">>>>>>>> Installing Python 3.12.4"
-    pyenv install 3.12.4
-    pyenv global 3.12.4
-    python -m pip install --upgrade pip setuptools wheel
-    cd ~
-    print_success "Installed Python 3.12.4 <<<<<<<<<<"
+printerror() {
+    printf "%b\n" "${RED}✖ $1${RESET}" >&2
 }
 
-setup_rust() {
-    print_info ">>>>>>>> Installing Rust"
-    curl https://sh.rustup.rs -sSf | sh -s -- -y
-    source ~/.cargo/env
-    cargo install ripgrep
-    print_success "Installed Rust <<<<<<<<<<"
-}
+# Minimal setup to get Docker to work
+sudo dnf update -y \
+    && sudo dnf install -y git docker \
+    && sudo systemctl enable docker \
+    && sudo systemctl start docker \
+    && sudo usermod -aG docker "$USER" \
+    && sudo docker run hello-world
+printsuccess "Docker installed successfully."
+printinfo "Log out for docker group changes to take effect."
 
-setup_neovim() {
-    print_info ">>>>>>>> Installing Neovim"
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-    sudo rm -rf /opt/nvim
-    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-    echo 'export PATH="/opt/nvim-linux-x86_64/bin:$PATH"' >> ~/.bashrc
-    print_success "Installed Neovim <<<<<<<<<<"
-}
+# Add SSH keys
+# TODO: figure out how to use SSH agent forwarding to avoid copying keys
+eval "$(ssh-agent -s)" && sleep 1
+if [[ -f ~/.ssh/id_ed25519 ]]; then
+    ssh-add ~/.ssh/id_ed25519
+fi
+if [[ -f ~/.ssh/id_rsa ]]; then
+    ssh-add ~/.ssh/id_rsa
+fi
 
-setup_docker() {
-    print_info ">>>>>>>> Setting up Docker"
-    sudo yum install -y -q docker
-    sudo service docker start
-    sudo usermod -a -G docker ec2-user
-    sudo docker run --rm hello-world
-    print_success "Installed Docker <<<<<<<<<<"
-}
+# Set up bash-it to have nice terminal
+printinfo "Installing bash-it" 
+preferredtheme="clean" # robbyrussell is nice, too
+if [ -d ~/.bash_it ]; then
+    printwarning "~/.bash_it already exists; skipping setup"
+else
+    git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
+    ~/.bash_it/install.sh --silent --append-to-config
+    cp ~/.bashrc ~/.bashrc.bak
+    sed -i "s/bobby/${preferredtheme}/g" ~/.bashrc
+fi
 
-install_personal_config() {
-    print_info ">>>>>>>> Installing xuganyu96.github.io"
+# Install personl config
+printinfo "Installing xuganyu96.github.io"
+if [ -d ~/.config ]; then
+    printwarning "~/.config already exists"
+else
+    mkdir ~/.config
+    printinfo "Created directory ~/.config"
+fi
+if [ -d ~/xuganyu96.github.io ]; then
+    printwarning "~/xuganyu96.github.io already exists; skipping setup"
+else
     git clone https://github.com/xuganyu96/xuganyu96.github.io.git
-    if [ -d ~/.config ]; then
-        print_warning "~/.config already exists"
-    else
-        mkdir ~/.config
-        print_success "Created directory ~/.config"
-    fi
     ln -s ~/xuganyu96.github.io/neovim ~/.config/nvim
     ln -s ~/xuganyu96.github.io/tmux.conf ~/.tmux.conf
     ln -s ~/xuganyu96.github.io/global.gitignore ~/.gitignore
     git config --global core.excludesFile "~/.gitignore"
     git config --global user.name "Ganyu (Bruce) Xu"
     git config --global user.email "xuganyu@berkeley.edu"
-    eval "$(ssh-agent -s)" && sleep 1
-    if [[ -f ~/.ssh/id_ed25519 ]]; then
-        ssh-add ~/.ssh/id_ed25519
-    fi
-    if [[ -f ~/.ssh/id_rsa ]]; then
-        ssh-add ~/.ssh/id_rsa
-    fi
-    print_success "Installed xuganyu96.github.io <<<<<<<<<<"
-}
-
-install_sys_deps() {
-    print_info ">>>>>>>> Installing system dependencies"
-    sudo yum update -y
-    sudo yum install -y -q git gcc cmake tmux npm clang
-    sudo yum groupinstall "Development Tools" -y -q
-    sudo yum install -y -q zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel tk-devel \
-        libffi-devel xz-devel openssl-devel npm ninja-build valgrind-devel
-    print_success "Installed system dependencies <<<<<<<<<<"
-}
-
-# TODO: figure out how to change the theme to "bobby-python" in script
-install_bash_it() {
-    git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
-    ~/.bash_it/install.sh --silent --append-to-config
-    cp ~/.bashrc ~/.bashrc.bak
-    sed -i 's/bobby/bobby-python/g' ~/.bashrc
-    # echo "I prefer BASH_IT_THEME='robbyrussell'"
-}
-
-setup_all() {
-    install_sys_deps
-    install_personal_config
-    setup_docker
-    setup_neovim
-    setup_pyenv
-    setup_rust
-    install_bash_it
-}
-
-export -f print_info
-export -f print_success
-export -f print_warning
-export -f install_sys_deps
-export -f install_personal_config
-export -f install_bash_it
-export -f setup_docker
-export -f setup_neovim
-export -f setup_pyenv
-export -f setup_rust
-export -f setup_all
+    printsuccess "Installed xuganyu96.github.io"
+    printinfo "Neovim config:       $HOME/.config/nvim"
+    printinfo "Tmux config:         $HOME/.tmux.conf"
+    printinfo "Global Git ignore:   $HOME/.gitignore"
+fi
 

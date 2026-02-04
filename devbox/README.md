@@ -1,2 +1,6 @@
-# Cloud dev box
-Run `./run.sh`. On a `t2.micro` installing everything took 11-12 minutes.
+# Dev box
+```bash
+export REMOTE_HOST="..."
+./run.sh
+ssh -A -i $PEM_PATH $REMOTE_USER@$REMOTE_HOST
+```
