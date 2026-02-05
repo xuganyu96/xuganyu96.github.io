@@ -74,7 +74,7 @@ fi
 if [ -d ~/xuganyu96.github.io ]; then
     printwarning "~/xuganyu96.github.io already exists; skipping setup"
 else
-    git clone https://github.com/xuganyu96/xuganyu96.github.io.git
+    git clone --branch code-server --depth 1 https://github.com/xuganyu96/xuganyu96.github.io.git
     ln -s ~/xuganyu96.github.io/neovim ~/.config/nvim
     ln -s ~/xuganyu96.github.io/tmux.conf ~/.tmux.conf
     ln -s ~/xuganyu96.github.io/global.gitignore ~/.gitignore
@@ -85,5 +85,11 @@ else
     printinfo "Neovim config:       $HOME/.config/nvim"
     printinfo "Tmux config:         $HOME/.tmux.conf"
     printinfo "Global Git ignore:   $HOME/.gitignore"
+
+    # build code-server container
+    sudo docker build \
+        -t devbox:latest \
+        -f xuganyu96.github.io/devbox/code-server/Dockerfile \
+        xuganyu96.github.io/devbox/code-server
 fi
 

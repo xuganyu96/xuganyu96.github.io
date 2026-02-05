@@ -34,6 +34,8 @@ if [[ "$confirmation" != "yes" ]]; then
     exit 1
 fi
 
+# TODO: figure out how to do SSH agent forwarding
+# TODO: figure out how to disable strict host name checking
 scp -i $PEM_PATH \
     amazon-linux-setup.sh \
     $REMOTE_USER@$REMOTE_HOST:/home/ec2-user/setup.sh
