@@ -33,7 +33,13 @@ printerror() {
 
 # Minimal setup to get Docker to work
 sudo dnf update -y \
-    && sudo dnf install -y git docker \
+    && sudo dnf install -y \
+        git \
+        docker \
+        gcc \
+        clang \
+        cmake \
+        nodejs npm \
     && sudo systemctl enable docker \
     && sudo systemctl start docker \
     && sudo usermod -aG docker "$USER" \
@@ -63,6 +69,12 @@ else
     sed -i "s/bobby/${preferredtheme}/g" ~/.bashrc
 fi
 
+# Install latest stable Neovim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo rm -rf /opt/nvim
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+echo 'export PATH="/opt/nvim-linux-x86_64/bin:$PATH"' >> ~/.bashrc
+
 # Install personl config
 printinfo "Installing xuganyu96.github.io"
 if [ -d ~/.config ]; then
@@ -74,7 +86,7 @@ fi
 if [ -d ~/xuganyu96.github.io ]; then
     printwarning "~/xuganyu96.github.io already exists; skipping setup"
 else
-    git clone --branch code-server --depth 1 https://github.com/xuganyu96/xuganyu96.github.io.git
+    git clone --depth 1 https://github.com/xuganyu96/xuganyu96.github.io.git
     ln -s ~/xuganyu96.github.io/neovim ~/.config/nvim
     ln -s ~/xuganyu96.github.io/tmux.conf ~/.tmux.conf
     ln -s ~/xuganyu96.github.io/global.gitignore ~/.gitignore

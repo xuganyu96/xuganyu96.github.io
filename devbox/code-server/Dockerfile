@@ -19,21 +19,26 @@ RUN apt-get update \
         python3-pip \
         python3-venv \
         zsh \
+        openssl libssl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m devbox && \
-    echo "devbox ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN useradd -m devbox \
+    && echo "devbox ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers \
+    && chsh -s /usr/bin/zsh devbox
 USER devbox
 WORKDIR /home/devbox
 
-# Oh-My-Zsh!
-RUN sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
-    && sudo chsh -s $(which zsh)
+# Oh-My-Zsh
+RUN RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Code-server
 RUN curl -fsSL https://code-server.dev/install.sh | sh \
-    && code-server --install-extension vscodevim.vim
+    && code-server --install-extension vscodevim.vim \
+    && code-server --install-extension ms-python.python \
+    && code-server --install-extension llvm-vs-code-extensions.vscode-clangd \
+    && code-server --install-extension rust-lang.rust-analyzer \
+    && code-server --install-extension jdinhlife.gruvbox
 
 # Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y

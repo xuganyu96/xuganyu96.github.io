@@ -3,6 +3,7 @@
 docker build -t devbox:latest .
 
 docker run -d \
+    --rm \
     --name dev-container \
     -v "$(pwd):/home/devbox/project" \
     -e SSH_AUTH_SOCK=/ssh-agent \
