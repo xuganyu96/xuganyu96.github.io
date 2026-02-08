@@ -49,12 +49,15 @@ printinfo "Log out for docker group changes to take effect."
 
 # Add SSH keys
 # TODO: figure out how to use SSH agent forwarding to avoid copying keys
+printinfo "Adding SSH keys"
 eval "$(ssh-agent -s)" && sleep 1
 if [[ -f ~/.ssh/id_ed25519 ]]; then
     ssh-add ~/.ssh/id_ed25519
+    printsuccess "Added ~/.ssh/id_ed25519"
 fi
 if [[ -f ~/.ssh/id_rsa ]]; then
     ssh-add ~/.ssh/id_rsa
+    printsuccess "Added ~/.ssh/id_rsa"
 fi
 
 # Set up bash-it to have nice terminal
@@ -70,22 +73,49 @@ else
 fi
 
 # Install latest stable Neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-sudo rm -rf /opt/nvim
-sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-echo 'export PATH="/opt/nvim-linux-x86_64/bin:$PATH"' >> ~/.bashrc
+if [ -d /opt/nvim-linux-x86_64/bin ]; then
+    printwarning "Neovim already installed"
+else
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    sudo rm -rf /opt/nvim
+    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+    echo 'export PATH="/opt/nvim-linux-x86_64/bin:$PATH"' >> ~/.bashrc
+fi
+
+# Install Rust
+if [ -d ~/.cargo ]; then
+    printwarning "Rust already installed"
+else
+    curl https://sh.rustup.rs -sSf | sh -s -- -y
+    source ~/.cargo/env
+    cargo install ripgrep
+fi
+
+# Install pyenv
+if [ -d ~/.pyenv ]; then
+    printwarning "~/.pyenv already installed"
+else
+    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+    cd ~/.pyenv && src/configure && make -C src
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+    echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
+    echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
+    echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+fi
 
 # Install personl config
 printinfo "Installing xuganyu96.github.io"
-if [ -d ~/.config ]; then
-    printwarning "~/.config already exists"
-else
-    mkdir ~/.config
-    printinfo "Created directory ~/.config"
-fi
 if [ -d ~/xuganyu96.github.io ]; then
     printwarning "~/xuganyu96.github.io already exists; skipping setup"
 else
+    if [ -d ~/.config ]; then
+        printwarning "~/.config already exists"
+    else
+        mkdir ~/.config
+        printinfo "Created directory ~/.config"
+    fi
     git clone --depth 1 https://github.com/xuganyu96/xuganyu96.github.io.git
     ln -s ~/xuganyu96.github.io/neovim ~/.config/nvim
     ln -s ~/xuganyu96.github.io/tmux.conf ~/.tmux.conf
