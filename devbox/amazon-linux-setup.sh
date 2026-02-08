@@ -103,6 +103,7 @@ else
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
     echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
     echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+    cd ~
 fi
 
 # Install personl config
@@ -133,5 +134,22 @@ else
         -t devbox:latest \
         -f xuganyu96.github.io/devbox/code-server/Dockerfile \
         xuganyu96.github.io/devbox/code-server
+
+    if command -v devbox >/dev/null 2>&1; then
+        printwarning "devbox already defined"
+    else
+        cat << EOF >> ~/.bashrc
+devbox() {
+    docker run -d \
+        --rm \
+        --name dev-container \
+        -v \$1:/home/devbox/project \
+        -v ~/.ssh:/home/devbox/.ssh \
+        -p 8080:8080 \
+        devbox:latest
+}
+export -f devbox
+EOF
+    fi
 fi
 
