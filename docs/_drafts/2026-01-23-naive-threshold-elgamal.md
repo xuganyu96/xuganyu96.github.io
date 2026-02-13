@@ -5,6 +5,8 @@ date:   2026-01-23 13:09:20 -0500
 categories: cryptography
 ---
 
+<embed src="/assets/notes-on-threshold-diffie-hellman.pdf" width="100%" height="375" type="application/pdf">
+
 Let $$(G, g)$$ be cyclic group of prime order $$q$$.
 
 # Shamir Secret Sharing
