@@ -91,7 +91,7 @@ else
     cargo install ripgrep
 fi
 
-# Install pyenv
+# Install pyenv and Python
 if [ -d ~/.pyenv ]; then
     printwarning "~/.pyenv already installed"
 else
@@ -104,6 +104,19 @@ else
     echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
     echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
     cd ~
+fi
+
+# Install OCaml and OCaml Package Manager
+read -p "Enter YES to install OCaml: " answer
+if [ "$answer" = "YES" ]; then
+    sudo dnf install -y ocaml bubblewrap gmp-devel m4 pcre2-devel perl-Pod-Html \
+        && sudo bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)" \
+        && opam init \
+        && eval $(opam env --switch=default) \
+        && opam install utop
+    # TODO: `opam install hol_light` currently fails
+else
+    printinfo "OCaml skipped"
 fi
 
 # Install personl config
