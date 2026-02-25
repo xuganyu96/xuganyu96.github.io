@@ -106,19 +106,6 @@ else
     cd ~
 fi
 
-# Install OCaml and OCaml Package Manager
-read -p "Enter YES to install OCaml: " answer
-if [ "$answer" = "YES" ]; then
-    sudo dnf install -y ocaml bubblewrap gmp-devel m4 pcre2-devel perl-Pod-Html \
-        && sudo bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)" \
-        && opam init \
-        && eval $(opam env --switch=default) \
-        && opam install utop
-    # TODO: `opam install hol_light` currently fails
-else
-    printinfo "OCaml skipped"
-fi
-
 # Install personl config
 printinfo "Installing xuganyu96.github.io"
 if [ -d ~/xuganyu96.github.io ]; then
