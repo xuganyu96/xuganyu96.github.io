@@ -33,6 +33,8 @@ theme: minima
 plugins:
   - jekyll-feed
 
+# site.header_pages works with Minima 2.x
+# This setting has moved in Minima 3.x
 header_pages:
   - about.markdown
 
