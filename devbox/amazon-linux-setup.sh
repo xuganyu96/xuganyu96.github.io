@@ -39,7 +39,10 @@ sudo dnf update -y \
         gcc \
         clang \
         cmake \
-        nodejs npm \
+        nodejs \
+        npm \
+        openssl-devel \
+        ninja-build \
     && sudo systemctl enable docker \
     && sudo systemctl start docker \
     && sudo usermod -aG docker "$USER" \
