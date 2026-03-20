@@ -41,8 +41,10 @@ sudo dnf update -y \
         cmake \
         nodejs \
         npm \
-        openssl-devel \
-        ninja-build \
+    && sudo dnf groupinstall "Development Tools" -y \
+    && sudo dnf install -y \
+        zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel \
+        tk-devel libffi-devel xz-devel openssl-devel ninja-build valgrind-devel \
     && sudo systemctl enable docker \
     && sudo systemctl start docker \
     && sudo usermod -aG docker "$USER" \
