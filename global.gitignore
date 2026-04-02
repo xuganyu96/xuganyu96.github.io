@@ -3,6 +3,7 @@
 .*.env
 .clangd
 .clang-format
+.cache/
 .DS_Store
 wolfSSL-Manual.pdf
 .gitmessage
