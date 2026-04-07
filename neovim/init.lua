@@ -409,6 +409,14 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- commit message title at 50 characters, body at 72 characters
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "gitcommit",
+  callback = function()
+    vim.opt_local.colorcolumn = "50,72"
+  end,
+})
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
