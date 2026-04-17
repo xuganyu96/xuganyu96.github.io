@@ -1,13 +1,14 @@
 .venv/
 .python-version
-
-# Per-project environment files can contain secrets, also a good place to
-# store repeatedly used snippets. Use `touch .$(git branch --show-current).env`
-# to create a per-branch env file
-.*.env
 .clangd
 .clang-format
 .cache/
 .DS_Store
 wolfSSL-Manual.pdf
 .gitmessage
+
+# Per-project environment files can contain secrets, also a good place to
+# store repeatedly used snippets. Use `touch .$(git branch --show-current).env`
+# to create a per-branch env file
+.*.env
+.devenv/
