@@ -4,3 +4,5 @@
 
 layout: home
 ---
+
+<!-- TODO: move some of my abouts and sub-route information here -->
