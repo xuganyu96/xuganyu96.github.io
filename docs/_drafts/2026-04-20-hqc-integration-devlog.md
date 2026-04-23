@@ -11,7 +11,7 @@ Some clarification on the vocabulary used here:
 - A parameter set is a <!-- TODO: define a parameter set -->
 - An implementation is a <!-- TODO: define what an implementation is -->
 
-# Development setup
+# Pulling from official repository
 liboqs utilizes a Python script for automatically cloning the source files from a specified git repository. The same script also handles generating the CMake list file and some C code that glues the upstream code into liboqs' API. As of April 2026, the GitLab repository does not contain the necessary metadata files (such as [this one](https://github.com/pq-code-package/mlkem-native/blob/5d6774a56c90b5a0c02573a56d95d35c3c106ec5/integration/liboqs/ML-KEM-512_META.yml) for ML-KEM-512), which makes it difficult to work directly with the original repository. Instead, I created a GitHub repository under my own account and push-pulled the commits from the official repository, effectively making a fork/mirror of the official repository.
 
 ```bash
@@ -30,23 +30,13 @@ foreach(var IN LISTS VARIANTS)
     string(REPLACE "-" "_" safe ${var})
     # ... stuff ...
     add_library(${safe}_${HQC_ARCH} STATIC
-            ${COMMON_SOURCES}
-            ${ARCH_COMMON_TOP_SOURCES}
-            ${ARCH_COMMON_VARIANT_SOURCES}
-            ${PLATFORM_SOURCES}
-            ${VARIANT_SOURCES}
+        # ... source files ...
     )
     target_include_directories(${safe}_${HQC_ARCH} PUBLIC
-            "${CMAKE_SOURCE_DIR}/src/common"
-            "${CMAKE_SOURCE_DIR}/src/common/${var}"
-            "${ARCH_COMMON_DIR}"
-            "${ARCH_COMMON_DIR}/${var}"
-            "${PLATFORM_DIR}"
-            "${VAR_DIR}"
-            "${CMAKE_SOURCE_DIR}/lib/fips202"
+        # ... includes ...
     )
     target_link_libraries(${safe}_${HQC_ARCH} PUBLIC
-            fips202
+        # ... link fips 202 ...
     )
 endforeach()
 ```
@@ -99,7 +89,10 @@ void code_encode(uint64_t *em, const uint64_t *m) {
 }
 ```
 
-The size of `tmp` depends on the macro `VEC_N1_SIZE_64`, which evaluates to 46 in HQC-1 (`src/ref/hqc-1/parameters.h`), 56 in HQC-3, and 90 in HQC-5. What happens when we have duplicate symbols? Here is a small example: `foo.c` and `bar.c` both implement a function `int foo(void)` but each implementation returns a different number:
+The size of `tmp` depends on the macro `VEC_N1_SIZE_64`, which evaluates to 46 in HQC-1 (`src/ref/hqc-1/parameters.h`), 56 in HQC-3, and 90 in HQC-5. 
+
+## A small detour on duplicate symbols
+What happens when we have duplicate symbols? Here is a small example: `foo.c` and `bar.c` both implement a function `int foo(void)`, though `foo.c`'s implementation returns 0 and `bar.c`'s impl returns 1.
 
 ```shell
 # outputs foo.o and bar.o
@@ -149,7 +142,28 @@ int main(void) {
     return 0;
 }
 ```
-<!-- TODO: why is that -->
+
+Why is that? When we created `libfoo.a`, `foo.o` is placed before `bar.o`, so in `libfoo.a`, `foo.c`'s `foo` is placed before `bar.c`'s implementation. Then when the linker tries to find the `foo` symbol while linking `main.c` against `libfoo.a`, the linker uses the first one.
+
+This means that if we swap the two source files and compile with `cc -c bar.c foo.c`, then the final binary will print `bar.c`'s implementation:
+
+```bash
+# Recall foo.c's impl returns 0, bar.c's impl returns 1
+gcc -c bar.c foo.c
+ar rcs libfoo.a foo.o bar.o
+gcc -o main main.c libfoo.a
+# Should print 1
+./main
+```
+
+On the other hand, compiling all source files together will produce a "duplicate symbol" error:
+
+```bash
+gcc -o main main.c foo.c bar.c
+```
+
+## Namespacing internal symbols
+Circling back to the task of namespacing internal routines of HQC: every symbol that is used in more than one source file should be namespaced, and everything else should be declared `static`.
 
 # Replacing fips202 and randombytes
 
@@ -158,5 +172,7 @@ int main(void) {
 # Fixing `1UL` width inconsistency on Windows
 
 # Switching from fork to patching
+
+# Strange SHA3 failure
 
 # Deliverables
