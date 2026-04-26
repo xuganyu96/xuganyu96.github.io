@@ -3,7 +3,7 @@ layout: page
 title: Home Lab Setup
 ---
 
-# Prevent suspension when lid is closed
+# Prevent suspension on Fedora Desktop
 On Fedora 43, a default systemd configuration is located at `/usr/lib/systemd/logind.conf`.
 It starts with the following instruction:
 
@@ -24,6 +24,21 @@ sed "s/#HandleLidSwitch=suspend/HandleLidSwitch=ignore/" logind.conf.bak \
     > logind.conf
 mkdir -p /etc/systemd/logind.conf.d
 cp logind.conf /etc/systemd/logind.conf.d/logind.conf
+```
+
+For a headless desktop (in my case a ThinkCentre tiny), GNOME also tries to suspend the system when idle, which will cause SSH session to be forcefully disconnected. While masking suspend/sleep targets via systemd is a viable solution, it is not elegant and can disrupt legitimate suspends.
+
+```bash
+# masking works but is inelegant
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+
+# Elegant solution: 
+gsettings get org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 0
+gsettings get org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+gsettings get org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type
 ```
 
 # Format external SSD as bulk cloud storage on Fedora Linux
