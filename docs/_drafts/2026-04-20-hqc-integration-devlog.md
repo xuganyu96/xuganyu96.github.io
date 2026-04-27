@@ -67,6 +67,8 @@ Without namespacing, each of `libhqc_<1|3|5>_<ref|x86_64>.a` contains symbols na
 #endif /* !HQC_NAMESPACE_H */
 ```
 
+Per GPT-5 mini, the extra layer of indirection (`PQCHQC_NAMESPACE` calling `PQCHQC_CONCAT`, which then calls `PQCHQC_CONCAT_`) is necessary because macros are not expanded when pasted directly into `##`.
+
 The namespacing prefix is defined by the C pre-processing macro `PQCHQC_NAMESPACE_PREFIX`, which I will specify in the `compile_opts` field in the liboqs integration data sheets, such as shown below:
 
 ```yaml
