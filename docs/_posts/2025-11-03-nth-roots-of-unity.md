@@ -12,7 +12,9 @@ Let $$g \in F^\ast$$ be a generator.
 A **n-th root of unity** is an element $$x \in F^\ast$$ such that:
 
 $$
+\begin{equation}
 x^n = 1
+\end{equation}
 $$
 
 Any element can be represented as some $$j$$-th power of $$g$$ where $$1 \leq j \leq q-1$$.
