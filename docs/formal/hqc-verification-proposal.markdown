@@ -1,7 +1,6 @@
 ---
 layout: page
 title: Assembly-Level Formal Verification of HQC
-permalink: /hqc-verification/
 ---
 
 [proposal](/assets/hqc-verification-proposal.pdf)
