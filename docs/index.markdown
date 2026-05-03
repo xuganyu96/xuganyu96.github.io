@@ -6,3 +6,11 @@ layout: home
 ---
 
 <!-- TODO: move some of my abouts and sub-route information here -->
+<details>
+  <summary>
+  </summary>
+  <ul>
+    <li><a href="/formal">Formal verification</a></li>
+    <li><a href="/homelab">Home lab</a></li>
+  </ul>
+</details>

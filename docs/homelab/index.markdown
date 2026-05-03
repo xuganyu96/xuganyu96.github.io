@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Home Lab Setup
+title: Home lab
 ---
 
 # Prevent suspension on Fedora Desktop

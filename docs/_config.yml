@@ -38,6 +38,8 @@ plugins:
 # site.header_pages works with Minima 2.x
 # This setting has moved in Minima 3.x
 header_pages:
+  - formal/index.markdown
+  - homelab/index.markdown
   - about.markdown
 
 # Exclude from processing.
