@@ -27,13 +27,22 @@ prove (
 
 # Simple example
 
+$$
+\begin{equation*}
+    \forall n f.
+    n \le 2 \land n \ge 2
+    \implies 
+    f(2, 2) + n < f(n, n) + 7
+\end{equation*}
+$$
+
 ```ocaml
 prove (
-    `n <= 2 /\ n >= 2 ==> f(2, 2) + n < f(n, n) + 7`,
-    (REWRITE_TAC [LE_ANTISYM; GE])
+    `!n f. (n <= 2 /\  n >= 2) ==> (f(2, 2) + n < f(n, n) + 7)`,
+    STRIP_TAC THEN STRIP_TAC
+    THEN (REWRITE_TAC [LE_ANTISYM; GE])
     THEN DISCH_TAC
     THEN (ASM_REWRITE_TAC [])
-    THEN (REWRITE_TAC [LT_ADD_LCANCEL])
     THEN ARITH_TAC
 );;
 ```
