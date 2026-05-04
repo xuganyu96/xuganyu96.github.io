@@ -3,6 +3,8 @@ layout: page
 title: Home lab
 ---
 
+- [ ] Set up NGINX with cockpit
+
 # Prevent suspension on Fedora Desktop
 On Fedora 43, a default systemd configuration is located at `/usr/lib/systemd/logind.conf`.
 It starts with the following instruction:
