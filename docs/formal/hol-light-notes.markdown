@@ -46,3 +46,23 @@ prove (
     THEN ARITH_TAC
 );;
 ```
+
+# Simple non-linear real inequality
+
+$$
+\forall x, y \in \mathbb{R}.
+    0 < xy \implies (0 < x \iff 0 < y)
+$$
+
+```ocaml
+let root = `!x y:real. &0 < x * y ==> (&0 < x <=> &0 < y)`;;
+prove (
+    root,
+    REPEAT STRIP_TAC 
+    THEN EQ_TAC 
+    THEN STRIP_TAC
+    THEN RULE_ASSUM_TAC (ONCE_REWRITE_RULE [REAL_MUL_POS_LT])
+    THEN FIRST_X_ASSUM DISJ_CASES_TAC
+    THEN ASM_REAL_ARITH_TAC
+);;
+```
