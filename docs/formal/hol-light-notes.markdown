@@ -7,9 +7,9 @@ title: HOL Light notes
 - [Simple example](#simple-example)
 - [Simple non-linear real inequality](#simple-non-linear-real-inequality)
 - [Linear sum](#linear-sum)
-<!-- TODO: [Even integers](#even-integers) -->
-<!-- TODO: [Bug puzzle](#bug-puzzle) -->
-<!-- TODO: [Mutex](#mutex) -->
+- [Even numbers](#even-numbers)
+- [Bug puzzle](#bug-puzzle)
+- [Mutex](#mutex)
 
 
 # Trivial example
@@ -213,3 +213,202 @@ prove (
 ```
 
 <!-- TODO: sum of squares and sum of cubes -->
+
+# Even numbers
+
+```ocaml
+(* Inductive definition *)
+let EVEN_RULES, EVEN_INDUCT, EVEN_CASES = new_inductive_definition 
+    `E 0 /\ !n. E n ==> E (n + 2)`;;
+
+let goal = `!n. E n ==> ?k. n = 2 * k`;;
+
+g goal;;
+e (MATCH_MP_TAC EVEN_INDUCT THEN REPEAT STRIP_TAC);;
+
+(* The base case *)
+e (EXISTS_TAC `0` THEN ARITH_TAC);;
+
+(* The inductive step *)
+e (ASM_REWRITE_TAC [] THEN EXISTS_TAC `k + 1` THEN ARITH_TAC);;
+
+top_thm();;
+```
+
+# Bug puzzle
+
+```ocaml
+(* The bugs puzzle *)
+prioritize_real();;
+
+(* The three bugs can only move one at a time and the moving bug can only move
+   along the line parallel to the line joining the other two bugs
+ *)
+let rotations = [
+    (`xb:real`, `xa:real`); (`yb:real`,`ya:real`);
+    (`xc:real`, `xb:real`); (`yc:real`,`yb:real`);
+    (`xa:real`, `xc:real`); (`ya:real`,`yc:real`);
+    (`xb':real`, `xa':real`); (`yb':real`,`ya':real`);
+    (`xc':real`, `xb':real`); (`yc':real`,`yb':real`);
+    (`xa':real`, `xc':real`); (`ya':real`,`yc':real`);
+];;
+let a_move = `
+    ?k:real.
+    (xa' - xa) = k * (xc - xb) 
+    /\ (ya' - ya) = k * (yc - yb)
+    /\ yb' = yb /\ xb' = xb
+    /\ yc' = yc /\ xc' = xc
+`;;
+let b_move = subst rotations a_move;;
+let c_move = subst rotations b_move;;
+let one_move = mk_disj (mk_disj (a_move,b_move), c_move);;
+let move_def_lhs = `
+    (move:real#real#real#real#real#real->real#real#real#real#real#real->bool)
+        (xa,ya,xb,yb,xc,yc)
+        (xa',ya',xb',yb',xc',yc')`;;
+
+let MOVE_DEF = new_definition (mk_eq (move_def_lhs,one_move));;
+
+let REACH_RULES, REACH_INDUCT, REACH_CASES = new_inductive_definition `
+    (!p. reach p p)
+    /\ (!p q r. reach p q /\ move q r ==> reach p r)
+`;;
+
+(* oriented area: the determinant of [b - a; c - a] *)
+let SIGNEDAREA_DEF = new_definition `
+    signedarea (xa,ya,xb,yb,xc,yc:real) 
+    = (xb - xa) * (yc - ya) - (yb - ya) * (xc - xa)`;;
+
+let invariant = `!p q. move p q ==> (signedarea p = signedarea q)`;;
+
+g invariant;;
+(* NOTE:
+    I tried to begin with (REPEAT STRIP_TAC), which produced the following:
+            `{move p q} ?- signedarea p = signedarea q`
+    At which point (RULE_ASSUM_TAC (REWRITE_RULE [FORALL_PAIR_THM; ...])) and
+    (REWRITE_TAC [FORALL_PAIR_THM; ...]) will not rewrite move nor signedarea
+    but the steps below works.
+ *)
+e (REWRITE_TAC [FORALL_PAIR_THM; MOVE_DEF; SIGNEDAREA_DEF]);;
+e (CONV_TAC REAL_RING);;
+let MOVE_INVARIANT = top_thm();;
+
+g `!p q. reach p q ==> (signedarea p = signedarea q)`;;
+e (MATCH_MP_TAC REACH_INDUCT);;
+e (MESON_TAC [MOVE_INVARIANT]);;
+let REACH_INVARIANT = top_thm();;
+
+(* Starting at (0,0), (0,3), (3,0):
+   It is impossible to reach (0,0), (3,0), (0,3)
+   It is impossible to reach (1,2), (2,5), (-2,3)
+*)
+g `~(reach (&0,&0,&0,&3,&3,&0) (&0,&0,&3,&0,&0,&3))`;;
+e (REPEAT STRIP_TAC);;
+
+(* TODO: pay special attention to this *)
+e (FIRST_ASSUM (MP_TAC o (MATCH_MP REACH_INVARIANT)));;
+e (REWRITE_TAC [SIGNEDAREA_DEF] THEN REAL_ARITH_TAC);;
+let UNREACHABLE_1 = top_thm();;
+
+g `~(
+    reach (&0,&0,&0,&3,&3,&0) (&1,&2,&2,&5,-- &2,&3)
+    \/ reach (&0,&0,&0,&3,&3,&0) (&1,&2,-- &2,&3,&2,&5)
+    \/ reach (&0,&0,&0,&3,&3,&0) (&2,&5,&1,&2,-- &2,&3)
+    \/ reach (&0,&0,&0,&3,&3,&0) (&2,&5,-- &2,&3,&1,&2)
+    \/ reach (&0,&0,&0,&3,&3,&0) (-- &2,&3,&1,&2,&2,&5)
+    \/ reach (&0,&0,&0,&3,&3,&0) (-- &2,&3,&2,&5,&1,&2)
+)`;;
+e (
+    REPEAT STRIP_TAC
+        THEN FIRST_ASSUM (MP_TAC o (MATCH_MP REACH_INVARIANT))
+        THEN REWRITE_TAC [SIGNEDAREA_DEF]
+        THEN REAL_ARITH_TAC
+);;
+let UNREACHABLE_2 = top_thm();;
+```
+
+# Mutex
+
+```ocaml
+(* TODO: lock does not necessarily have to begin at 0, but not beginning at 0
+   will cause a deadlock
+*)
+let INIT_DEF = new_definition `init (pc1,pc2,lock) = (pc1 = 10 /\ pc2 = 10 /\ lock = 0)`;;
+let MUTEX_DEF = new_definition `mutex (pc1,pc2,lock:num) = (pc1 = 10 \/ pc2 = 10)`;;
+
+(* the set of possible state transitions *)
+let STEP_DEF = new_definition `
+    step (pc1,pc2,lock) (pc1',pc2',lock') = (
+    (pc1 = 10 /\ lock = 1 /\ pc1' = pc1 /\ pc2' = pc2 /\ lock' = lock)
+    \/ (pc1 = 10 /\ lock = 0 /\ pc1' = 20 /\ pc2' = pc2 /\ lock' = SUC lock)
+    \/ (pc1 = 20 /\ pc1' = 10 /\ pc2' = pc2 /\ lock' = PRE lock)
+    \/ (pc2 = 10 /\ lock = 1 /\ pc1' = pc1 /\ pc2' = pc2 /\ lock' = lock)
+    \/ (pc2 = 10 /\ lock = 0 /\ pc1' = pc1 /\ pc2' = 20 /\ lock' = SUC lock)
+    \/ (pc2 = 20 /\ pc1' = pc1 /\ pc2' = 10 /\ lock' = PRE lock))
+`;;
+
+(* q is reachable from p by steps *)
+let REACH_RULES,REACH_INDUCT,REACH_CASES = new_inductive_definition 
+    `(!p. reach p p) /\ (!p q r. reach p q /\ step q r ==> reach p r)`;;
+
+(* the thing we actually want to prove *)
+let goal = `!p q. init p /\ reach p q ==> mutex q`;;
+
+(* We actually need a stronger invariant than mutex itself.
+
+   The statement `step p q /\ mutex p ==> mutex q` is actually false. Here is
+   a counter example:
+   Starting state is (pc1=10, pc2=20, lock=0) and advancing on routine 1. After
+   executing label 10 on routine 1, the state becomes (pc1=20, pc2=20, lock=1),
+   so despite starting state satisfying mutex, final state fails mutex.
+
+   This counter example does not disprove the final result, however, because
+   the starting state itself is invalid: if pc2=20, then lock cannot be free.
+   The constraint "if one of pc1 and pc2 is at critical section implies lock
+   being held" is not encoded into the definition of mutex, hence we need a
+   stronger invariant:
+*)
+let LOCKED_DEF = new_definition 
+    `locked (pc1,pc2,lock) 
+    = (pc1=10 /\ pc2=10 \/ pc1=10 /\ lock=1 \/ pc2=10 /\ lock=1)`;;
+let step_invariant = `!p q. step p q ==> locked p ==> locked q`;;
+g step_invariant;;
+e (REWRITE_TAC [FORALL_PAIR_THM; STEP_DEF; LOCKED_DEF]);;
+e (CONV_TAC ARITH_RULE);; (* this will take a second *)
+let STEP_INVARIANT = top_thm();;
+
+let reach_invariant = `!p q. reach p q ==> locked p ==> locked q`;;
+g reach_invariant;;
+e (MATCH_MP_TAC REACH_INDUCT);;
+
+(*
+`(forall p. locked p ==> locked p) /\
+ (forall p q r.
+      (locked p ==> locked q) /\ step q r ==> locked p ==> locked r)`
+*)
+
+e CONJ_TAC;;
+(* the first subgoal `forall p. locked p ==> locked p` is trivial *)
+e (MESON_TAC []);;
+
+(* the second subgoal is
+   `forall p q r. (locked p ==> locked q) /\ step q r ==> locked p ==> locked r`
+*)
+e (MESON_TAC [STEP_INVARIANT]);;
+let REACH_INVARIANT = top_thm();;
+
+(* Prove that the initial condition satisfies LOCKED *)
+let INIT_LOCKED = prove(
+    `!p. init p ==> locked p`,
+    REWRITE_TAC [INIT_DEF; LOCKED_DEF; FORALL_PAIR_THM] 
+    THEN MESON_TAC []
+);;
+
+g goal;;
+e (REWRITE_TAC [INIT_LOCKED; REACH_INVARIANT; MUTEX_DEF; FORALL_PAIR_THM]);;
+e (REPEAT STRIP_TAC);;
+e (FIRST_ASSUM (MP_TAC o (MATCH_MP REACH_INVARIANT)));;
+e (FIRST_ASSUM (MP_TAC o (MATCH_MP INIT_LOCKED)));;
+e (MESON_TAC [LOCKED_DEF]);;
+top_thm();;
+```
