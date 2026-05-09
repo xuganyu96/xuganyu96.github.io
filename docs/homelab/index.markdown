@@ -3,7 +3,14 @@ layout: page
 title: Home lab
 ---
 
-- [ ] Set up NGINX with cockpit
+# Backup with restic
+
+```bash
+# Password can be stored as an environment variable in a file with 600 permission
+source ~/.restic.env
+restic -r ${RESTIC_REMOTE_URL} backup ${RESTIC_SRC}
+restic -r ${RESTIC_REMOTE_URL} forget --keep-last 1 --prune --dry-run
+```
 
 # Prevent suspension on Fedora Desktop
 On Fedora 43, a default systemd configuration is located at `/usr/lib/systemd/logind.conf`.
