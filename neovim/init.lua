@@ -354,6 +354,9 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
+-- NOTE: in a remote SSH session, yanking can interact with client clipboard
+--   if the session itself it inside a tmux session. The tmux session must run
+--   on the server side
 vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
