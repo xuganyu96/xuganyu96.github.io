@@ -1,7 +1,14 @@
 ---
 layout: page
-title: Install HOL Light on MacOS
+title: Install HOL Light
 ---
+
+Now a convenience script:
+
+```bash
+curl -fsSL https://xuganyu96.github.io/assets/install-hol.sh | bash
+```
+
 
 s2n-bignum requires the latest HOL Light from source ([arghh](https://github.com/awslabs/s2n-bignum/blob/c403fb04f45ed488b79c767fd9e83e60f439cb44/README.md?plain=1#L331)).
 
