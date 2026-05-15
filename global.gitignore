@@ -7,8 +7,7 @@
 wolfSSL-Manual.pdf
 .gitmessage
 
-# Per-project environment files can contain secrets, also a good place to
-# store repeatedly used snippets. Use `touch .$(git branch --show-current).env`
-# to create a per-branch env file
+# secrets and temporary files
 .*.env
-.devenv/
+.tmp/
+.build/
