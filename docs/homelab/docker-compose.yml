@@ -1,0 +1,13 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    restart: unless-stopped
+    ports:
+      - 13378:80
+    volumes:
+      - /home/brucexu/Shared/SelfHosting/audiobookshelf/audiobooks:/audiobooks
+      - /home/brucexu/Shared/SelfHosting/audiobookshelf/podcasts:/podcasts
+      - /home/brucexu/Shared/SelfHosting/audiobookshelf/config:/config
+      - /home/brucexu/Shared/SelfHosting/audiobookshelf/metadata:/metadata
+    environment:
+      - TZ=America/Toronto

@@ -3,6 +3,17 @@ layout: page
 title: Home lab
 ---
 
+The ThinkCentre is the main home server
+
+[`docker-compose.yml`](/homelab/docker-compose.yml)
+
+```bash
+# from xuganyu96.github.io/docs
+docker compose -f homelab/docker-compose.yml up -d
+docker compose -f homelab/docker-compose.yml logs -f
+docker compose -f homelab/docker-compose.yml down
+```
+
 # Backup with restic
 
 ```bash
