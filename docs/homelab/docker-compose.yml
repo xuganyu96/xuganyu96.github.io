@@ -1,4 +1,32 @@
+name: homelab
+
 services:
+  # TODO: Backrest, Immich
+
+  # OpenCloud:
+  #   https://docs.opencloud.eu/docs/admin/getting-started/container/docker
+  #   https://github.com/opencloud-eu/opencloud-compose/blob/main/docker-compose.yml
+  opencloud-server:
+    image: opencloudeu/opencloud-rolling:6.2.0
+    volumes:
+      - /home/brucexu/Shared/SelfHosting/opencloud/opencloud-config:/etc/opencloud
+      - /home/brucexu/Shared/SelfHosting/opencloud/opencloud-data:/var/lib/opencloud
+    ports:
+      - 9200:9200
+    environment:
+      OC_INSECURE: true
+      OC_URL: "https://ganyu-thinkcentre-m80q-fedora43.tailee7580.ts.net:9200"
+      PROXY_HTTP_ADDR: 0.0.0.0:9200
+      IDM_ADMIN_PASSWORD: "admin"
+    entrypoint:
+      - /bin/sh
+    # run opencloud init to initialize a configuration file with random secrets
+    # it will fail on subsequent runs, because the config file already exists
+    # therefore we ignore the error and then start the opencloud server
+    command: ["-c", "opencloud init || true; opencloud server"]
+
+  # audiobookshelf:
+  #   https://www.audiobookshelf.org/docs/#docker-compose-install
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
     restart: unless-stopped
