@@ -46,6 +46,27 @@ gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'no
 gsettings get org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type
 ```
 
+## GDM power settings
+The GNOME display manager (gdm) might also request suspend if the system is idling at the login screen, as such after a reboot, since SSH login does not count.
+We need to write a separate config file:
+
+```
+[org/gnome/settings-daemon/plugins/power]
+sleep-inactive-ac-timeout=0
+sleep-inactive-ac-type='nothing'
+sleep-inactive-battery-timeout=0
+sleep-inactive-battery-type='nothing'
+```
+
+Apply the config:
+
+```bash
+sudo cp 01-customize-suspend /etc/dconf/db/gdm.d/01-customize-suspend
+sudo dconf update
+# verify: this file should exist
+ls /etc/dconf/db/gdm
+```
+
 # Masking suspend
 Not recommended, only use as last resort, especially on laptop.
 
