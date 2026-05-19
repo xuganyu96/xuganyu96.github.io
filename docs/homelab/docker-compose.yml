@@ -1,7 +1,31 @@
 name: homelab
 
 services:
-  # TODO: Backrest, Immich
+  # TODO: Immich
+
+  # Backrest
+  backrest:
+    # TODO: v1.13 has SFTP issue: https://github.com/garethgeorge/backrest/issues/1227
+    # TODO: v1.12.1 uses root, so I need to run restic as sudo
+    image: ghcr.io/garethgeorge/backrest:v1.12.1
+    hostname: backrest
+    ports:
+      - "9898:9898"
+    volumes:
+      - /home/brucexu/Shared/SelfHosting/Backrest/data:/data
+      - /home/brucexu/Shared/SelfHosting/Backrest/config:/config
+      - /home/brucexu/Shared/SelfHosting/Backrest/cache:/cache
+      - /home/brucexu/Shared/SelfHosting/Backrest/tmp:/tmp
+      - /home/brucexu/Shared/SelfHosting/Backrest/rclone:/root/.config/rclone
+      - /home/brucexu/Shared:/userdata  # Mount local paths to backup
+      - /mnt/backup/Restic:/repos     # Mount local repos (optional for remote storage)
+    environment:
+      - BACKREST_DATA=/data
+      - BACKREST_CONFIG=/config/config.json
+      - XDG_CACHE_HOME=/cache
+      - TMPDIR=/tmp
+      - TZ=America/Los_Angeles
+    restart: unless-stopped
 
   # OpenCloud:
   #   https://docs.opencloud.eu/docs/admin/getting-started/container/docker
