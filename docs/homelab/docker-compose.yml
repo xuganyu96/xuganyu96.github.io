@@ -6,7 +6,9 @@ services:
   # Backrest
   backrest:
     # TODO: v1.13 has SFTP issue: https://github.com/garethgeorge/backrest/issues/1227
-    # TODO: v1.12.1 uses root, so I need to run restic as sudo
+    # TODO: v1.12.1 Backrest runs as root, so when it backs up to a local
+    # repository, the snapshot is owned by root. Interacting with these snapshots
+    # requires using sudo.
     image: ghcr.io/garethgeorge/backrest:v1.12.1
     hostname: backrest
     ports:
