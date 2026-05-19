@@ -41,6 +41,7 @@ sudo dnf update -y \
         cmake \
         nodejs \
         npm \
+        lldb \
     && sudo dnf groupinstall "Development Tools" -y \
     && sudo dnf install -y \
         zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel \
@@ -60,10 +61,10 @@ if [[ -f ~/.ssh/id_ed25519 ]]; then
     ssh-add ~/.ssh/id_ed25519
     printsuccess "Added ~/.ssh/id_ed25519"
 fi
-if [[ -f ~/.ssh/id_rsa ]]; then
-    ssh-add ~/.ssh/id_rsa
-    printsuccess "Added ~/.ssh/id_rsa"
-fi
+# if [[ -f ~/.ssh/id_rsa ]]; then
+#     ssh-add ~/.ssh/id_rsa
+#     printsuccess "Added ~/.ssh/id_rsa"
+# fi
 
 # Set up bash-it to have nice terminal
 printinfo "Installing bash-it" 
@@ -81,7 +82,8 @@ fi
 if [ -d /opt/nvim-linux-x86_64/bin ]; then
     printwarning "Neovim already installed"
 else
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    # https://github.com/neovim/neovim/releases/download/v0.11.7/nvim-linux-x86_64.tar.gz
+    curl -LO https://github.com/neovim/neovim/releases/download/v0.11.7/nvim-linux-x86_64.tar.gz
     sudo rm -rf /opt/nvim
     sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
     echo 'export PATH="/opt/nvim-linux-x86_64/bin:$PATH"' >> ~/.bashrc
@@ -128,33 +130,33 @@ else
     ln -s ~/xuganyu96.github.io/global.gitignore ~/.gitignore
     git config --global core.excludesFile "~/.gitignore"
     git config --global user.name "Ganyu (Bruce) Xu"
-    git config --global user.email "xuganyu@berkeley.edu"
+    git config --global user.email "g66xu@uwaterloo.ca"
     printsuccess "Installed xuganyu96.github.io"
     printinfo "Neovim config:       $HOME/.config/nvim"
     printinfo "Tmux config:         $HOME/.tmux.conf"
     printinfo "Global Git ignore:   $HOME/.gitignore"
 
-    # build code-server container
-    sudo docker build \
-        -t devbox:latest \
-        -f xuganyu96.github.io/devbox/code-server/Dockerfile \
-        xuganyu96.github.io/devbox/code-server
-
-    if command -v devbox >/dev/null 2>&1; then
-        printwarning "devbox already defined"
-    else
-        cat << EOF >> ~/.bashrc
-devbox() {
-    docker run -d \
-        --rm \
-        --name dev-container \
-        -v \$1:/home/devbox/project \
-        -v ~/.ssh:/home/devbox/.ssh \
-        -p 8080:8080 \
-        devbox:latest
-}
-export -f devbox
-EOF
-    fi
+#     # build code-server container
+#     sudo docker build \
+#         -t devbox:latest \
+#         -f xuganyu96.github.io/devbox/code-server/Dockerfile \
+#         xuganyu96.github.io/devbox/code-server
+#
+#     if command -v devbox >/dev/null 2>&1; then
+#         printwarning "devbox already defined"
+#     else
+#         cat << EOF >> ~/.bashrc
+# devbox() {
+#     docker run -d \
+#         --rm \
+#         --name dev-container \
+#         -v \$1:/home/devbox/project \
+#         -v ~/.ssh:/home/devbox/.ssh \
+#         -p 8080:8080 \
+#         devbox:latest
+# }
+# export -f devbox
+# EOF
+#     fi
 fi
 

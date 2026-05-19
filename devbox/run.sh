@@ -38,11 +38,11 @@ fi
 scp -i ${EC2_PEM_PATH} \
     amazon-linux-setup.sh \
     ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/ec2-user/setup.sh
-if [ -f ~/.ssh/id_rsa ]; then
-    scp -i ${EC2_PEM_PATH} \
-        ~/.ssh/id_rsa \
-        ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/ec2-user/.ssh/id_rsa
-fi
+# if [ -f ~/.ssh/id_rsa ]; then
+#     scp -i ${EC2_PEM_PATH} \
+#         ~/.ssh/id_rsa \
+#         ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/ec2-user/.ssh/id_rsa
+# fi
 if [ -f ~/.ssh/id_ed25519 ]; then
     scp -i ${EC2_PEM_PATH} \
         ~/.ssh/id_ed25519 \
