@@ -37,16 +37,16 @@ fi
 # TODO: figure out how to disable strict host name checking
 scp -i ${EC2_PEM_PATH} \
     amazon-linux-setup.sh \
-    ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/ec2-user/setup.sh
+    ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/${EC2_REMOTE_USER}/setup.sh
 # if [ -f ~/.ssh/id_rsa ]; then
 #     scp -i ${EC2_PEM_PATH} \
 #         ~/.ssh/id_rsa \
-#         ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/ec2-user/.ssh/id_rsa
+#         ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/${EC2_REMOTE_USER}/.ssh/id_rsa
 # fi
 if [ -f ~/.ssh/id_ed25519 ]; then
     scp -i ${EC2_PEM_PATH} \
         ~/.ssh/id_ed25519 \
-        ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/ec2-user/.ssh/id_ed25519
+        ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:/home/${EC2_REMOTE_USER}/.ssh/id_ed25519
 fi
 ssh -i ${EC2_PEM_PATH} \
     ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST} \

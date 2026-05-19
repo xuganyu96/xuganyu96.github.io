@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ -f ~/.setupcomplete ]]; then
+    echo "Found ~/.setupcomplete. Skipping setup."
+    exit 0
+fi
+
 if [[ -t 1 ]]; then
     RESET="\033[0m"
     BLUE="\033[1;34m"
@@ -68,14 +73,11 @@ fi
 
 # Set up bash-it to have nice terminal
 printinfo "Installing bash-it" 
-preferredtheme="clean" # robbyrussell is nice, too
 if [ -d ~/.bash_it ]; then
     printwarning "~/.bash_it already exists; skipping setup"
 else
     git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
     ~/.bash_it/install.sh --silent --append-to-config
-    cp ~/.bashrc ~/.bashrc.bak
-    sed -i "s/bobby/${preferredtheme}/g" ~/.bashrc
 fi
 
 # Install latest stable Neovim
@@ -128,6 +130,7 @@ else
     ln -s ~/xuganyu96.github.io/neovim ~/.config/nvim
     ln -s ~/xuganyu96.github.io/tmux.conf ~/.tmux.conf
     ln -s ~/xuganyu96.github.io/global.gitignore ~/.gitignore
+    cp ~/xuganyu96.github.io/bobby.theme.bash ~/.bash_it/themes/bobby/bobby.theme.bash
     git config --global core.excludesFile "~/.gitignore"
     git config --global user.name "Ganyu (Bruce) Xu"
     git config --global user.email "g66xu@uwaterloo.ca"
@@ -160,3 +163,4 @@ else
 #     fi
 fi
 
+touch ~/.setupcomplete
