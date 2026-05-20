@@ -52,3 +52,10 @@ ssh -i ${EC2_PEM_PATH} \
     ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST} \
     "chmod +x setup.sh && ./setup.sh"
 ssh -i ${EC2_PEM_PATH} -L 8080:${EC2_REMOTE_HOST}:8080 ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}
+
+# NOTE: to copy a git repository
+# rsync -azhr \
+#   --info=progress2 \
+#   --exclude ".venv/" \
+#   -e "ssh -i ${EC2_PEM_PATH}" \
+#   <src> ${EC2_REMOTE_USER}@${EC2_REMOTE_HOST}:<path>

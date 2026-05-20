@@ -164,5 +164,6 @@ else
 #     fi
 fi
 
+sudo hostnamectl set-hostname ec2-devbox
 echo "Setup completed in $SECONDS seconds"
 touch ~/.setupcomplete
