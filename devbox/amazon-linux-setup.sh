@@ -6,6 +6,7 @@ if [[ -f ~/.setupcomplete ]]; then
     exit 0
 fi
 
+SECONDS=0
 if [[ -t 1 ]]; then
     RESET="\033[0m"
     BLUE="\033[1;34m"
@@ -163,4 +164,5 @@ else
 #     fi
 fi
 
+echo "Setup completed in $SECONDS seconds"
 touch ~/.setupcomplete
