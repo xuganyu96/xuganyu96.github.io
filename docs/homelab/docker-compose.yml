@@ -2,13 +2,14 @@ name: homelab
 
 services:
   # TODO: Immich
+  # TODO: Joplin notes
 
   # Backrest
   backrest:
     # TODO: v1.13 has SFTP issue: https://github.com/garethgeorge/backrest/issues/1227
-    # TODO: v1.12.1 Backrest runs as root, so when it backs up to a local
-    # repository, the snapshot is owned by root. Interacting with these snapshots
-    # requires using sudo.
+    # NOTE: With v1.12.1 backrest seems to run as root, so when it backs up to
+    # a local path, the files are owned by root. This is more privilege than
+    # necessary. My workaround is to SFTP into itself using the regular user
     image: ghcr.io/garethgeorge/backrest:v1.12.1
     hostname: backrest
     ports:
