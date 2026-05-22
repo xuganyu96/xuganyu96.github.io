@@ -17,8 +17,8 @@ GIT_THEME_PROMPT_SUFFIX="${green?}|"
 RVM_THEME_PROMPT_PREFIX="|"
 RVM_THEME_PROMPT_SUFFIX="|"
 
-VIRTUALENV_THEME_PROMPT_PREFIX='('
-VIRTUALENV_THEME_PROMPT_SUFFIX=') '
+VIRTUALENV_THEME_PROMPT_PREFIX='|'
+VIRTUALENV_THEME_PROMPT_SUFFIX='| '
 
 function __bobby_clock() {
 	printf '%s' "$(clock_prompt) "
@@ -29,8 +29,8 @@ function __bobby_clock() {
 }
 
 function prompt_command() {
-	PS1="\n$(conda_or_venv_prompt)"
-	PS1+="${yellow?}$(ruby_version_prompt) "
+    PS1="\n${yellow?}$(python_version_prompt) "
+	# PS1+="${yellow?}$(ruby_version_prompt) "
 	PS1+="${purple?}\h "
 	PS1+="${reset_color?}in "
 	PS1+="${green?}\w\n"
