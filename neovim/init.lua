@@ -412,6 +412,14 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- color columns for Markdown files, too
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "Markdown",
+  callback = function()
+    vim.opt_local.colorcolumn = "80,100"
+  end,
+})
+
 -- commit message title at 50 characters, body at 72 characters
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "gitcommit",
@@ -724,3 +732,5 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- TODO: ":tab split" opens current buffer in new tab
