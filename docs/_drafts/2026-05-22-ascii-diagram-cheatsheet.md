@@ -3,6 +3,7 @@ layout: post
 title:  "ASCII diagram cheatsheet"
 date:   2026-05-22 11:59:11 -0400
 categories: other
+tags: ai-generated
 ---
 
 Here's a reference of commonly used Unicode box-drawing and arrow characters, organized by category.
