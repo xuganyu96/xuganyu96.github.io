@@ -39,7 +39,7 @@ plugins:
 # This setting has moved in Minima 3.x
 header_pages:
   - neovim.markdown
-  - formal/index.markdown
+  - code-based-crypto/index.markdown
   - homelab/index.markdown
   - about.markdown
 

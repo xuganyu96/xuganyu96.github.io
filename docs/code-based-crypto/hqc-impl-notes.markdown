@@ -3,8 +3,10 @@ layout: page
 title: HQC impl reading notes
 ---
 
-- `HQC_SEED_BYTES` is always 32 bytes. Salt is always 16 bytes.
-- `SECURITY_BYTES` is 16, 24, and 32 bytes for level 1, 3, and 5 parameters
+# What's missing:
+
+- [ ] $$k < n - d + 1$$, $$t = \lfloor(d-1)/2\rfloor$$
+- [ ] primitive root of finite field     
 
 ---
 
