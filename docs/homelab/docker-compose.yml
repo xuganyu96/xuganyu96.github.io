@@ -1,64 +1,22 @@
 name: homelab
 
 services:
-  # TODO: Immich
-  # TODO: Joplin notes
-
-  # Backrest
-  backrest:
-    # TODO: v1.13 has SFTP issue: https://github.com/garethgeorge/backrest/issues/1227
-    # NOTE: With v1.12.1 backrest seems to run as root, so when it backs up to
-    # a local path, the files are owned by root. This is more privilege than
-    # necessary. My workaround is to SFTP into itself using the regular user
-    image: ghcr.io/garethgeorge/backrest:v1.12.1
-    hostname: backrest
+  caddy:
+    image: caddy:2.11.3-alpine
+    user: "1000:1000"
     ports:
-      - "9898:9898"
+      - 80:80
+      - 443:443
     volumes:
-      - /home/brucexu/Shared/SelfHosting/Backrest/data:/data
-      - /home/brucexu/Shared/SelfHosting/Backrest/config:/config
-      - /home/brucexu/Shared/SelfHosting/Backrest/cache:/cache
-      - /home/brucexu/Shared/SelfHosting/Backrest/tmp:/tmp
-      - /home/brucexu/Shared/SelfHosting/Backrest/rclone:/root/.config/rclone
-      - /home/brucexu/Shared:/userdata  # Mount local paths to backup
-      - /mnt/backup/Restic:/repos     # Mount local repos (optional for remote storage)
-    environment:
-      - BACKREST_DATA=/data
-      - BACKREST_CONFIG=/config/config.json
-      - XDG_CACHE_HOME=/cache
-      - TMPDIR=/tmp
-      - TZ=America/Los_Angeles
-    restart: unless-stopped
-
-  # OpenCloud:
-  #   https://docs.opencloud.eu/docs/admin/getting-started/container/docker
-  #   https://github.com/opencloud-eu/opencloud-compose/blob/main/docker-compose.yml
-  opencloud-server:
-    image: opencloudeu/opencloud-rolling:6.2.0
-    volumes:
-      - /home/brucexu/Shared/SelfHosting/opencloud/opencloud-config:/etc/opencloud
-      - /home/brucexu/Shared/SelfHosting/opencloud/opencloud-data:/var/lib/opencloud
-    ports:
-      - 9200:9200
-    environment:
-      OC_INSECURE: true
-      OC_URL: "https://ganyu-thinkcentre-m80q-fedora43.tailee7580.ts.net:9200"
-      PROXY_HTTP_ADDR: 0.0.0.0:9200
-      IDM_ADMIN_PASSWORD: "admin"
-    entrypoint:
-      - /bin/sh
-    # run opencloud init to initialize a configuration file with random secrets
-    # it will fail on subsequent runs, because the config file already exists
-    # therefore we ignore the error and then start the opencloud server
-    command: ["-c", "opencloud init || true; opencloud server"]
-
-  # audiobookshelf:
-  #   https://www.audiobookshelf.org/docs/#docker-compose-install
+      - /home/brucexu/Shared/SelfHosting/caddy/conf:/etc/caddy
+      - /home/brucexu/Shared/SelfHosting/caddy/data:/data
+      - /home/brucexu/.ssl:/ssl:ro
+    networks:
+      - homelab
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
+    user: "1000:1000"
     restart: unless-stopped
-    ports:
-      - 13378:80
     volumes:
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/audiobooks:/audiobooks
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/podcasts:/podcasts
@@ -66,3 +24,8 @@ services:
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/metadata:/metadata
     environment:
       - TZ=America/Toronto
+    networks:
+      - homelab
+
+networks:
+  homelab:
