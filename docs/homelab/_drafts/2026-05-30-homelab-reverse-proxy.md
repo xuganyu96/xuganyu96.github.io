@@ -1,14 +1,10 @@
 ---
-layout: post
-title:  "Home lab: reverse proxy"
-date:   2026-05-30 15:40:26 -0400
-category: homelab
-tags: homelab linux caddy
+layout:     post
+title:      "Home lab: reverse proxy"
+date:       2026-05-30 15:40:26 -0400
 ---
 
 <!-- TODO: scrub all mentions of `brucexu` -->
-
-- [ ] Set up Caddy as a container or a system service
 
 # Generate certificates
 
