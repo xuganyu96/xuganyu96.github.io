@@ -81,12 +81,84 @@ static inline lfence(void) {
 
 ### Cache eviction
 
-<!-- TODO: talk about clflush -->
+The core of a cache timing side channel is the attacker's ability to distinguish
+between cache hit and cache miss. When a program asks for some data from the
+memory, it is possible that the requested data already resides in CPU cache,
+which is significantly faster to read than memory. We don't know exactly how
+the CPU decides to cache data, but we do know that recently accessed data is
+more likely to be cached than less recently accessed data.
+
+On x86_64, the `clflush` instruction invalidates the cache line that contains
+the linear address specified with the memory operand, so we can reliably evict
+some specified data from cache and reproduce a cache miss. On the other hand,
+we can use a volatile read to bring some data into the cache. Note though that
+the `volatile` keyword only instructs the compiler to not optimize the read
+instruction away and does not correlate with hardware behavior.
+
+```c
+static inline void clflush(volatile void *p) {
+    __asm__ volatile("clflush (%0)" : : "r"(p));
+}
+```
 
 ## Flush then reload
+
+With a CPU clock, memory/load fences, and cache eviction, we can build a simple
+probing program to demonstrate the timing difference between cache hit and cache
+miss:
+
+```c
+int main(void) {
+    uint8_t val = 0;
+    uint64_t start, stop, dur;
+    *(volatile char *)&val;
+
+    for (int i = 0; i < 10; i++) {
+        mfence();
+        start = rdtsc();
+        lfence();
+        *(volatile char *)&val;
+        mfence();
+        stop = rdtsc();
+        lfence();
+
+        printf("hit  = %lu, ", stop - start);
+
+        clflush((void *)&val);
+        mfence();
+        start = rdtsc();
+        lfence();
+        *(volatile char *)&val;
+        mfence();
+        stop = rdtsc();
+        lfence();
+
+        printf("miss = %lu\n", stop - start);
+    }
+
+    return 0;
+}
+```
+
+On my ThinkPad X1, the program produced the following output:
+
+```bash
+cc -O3 main.c -o main.out && main.out
+hit  = 104, miss = 374
+hit  = 104, miss = 380
+hit  = 106, miss = 376
+hit  = 108, miss = 386
+hit  = 106, miss = 380
+hit  = 106, miss = 382
+hit  = 106, miss = 376
+hit  = 108, miss = 376
+hit  = 106, miss = 378
+hit  = 110, miss = 380
+```
 
 ## Statistical test
 
 ## References
 
+- [x86_64 instruction reference](https://www.felixcloutier.com/x86/)
 - [Intel® 64 and IA-32 Architectures Software Developer’s Manual](https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4)
