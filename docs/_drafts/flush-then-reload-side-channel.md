@@ -97,7 +97,7 @@ instruction away and does not correlate with hardware behavior.
 
 ```c
 static inline void clflush(volatile void *p) {
-    __asm__ volatile("clflush (%0)" : : "r"(p));
+    __asm__ volatile("clflush (%0)" : : "r"(p) : "memory");
 }
 ```
 
@@ -108,55 +108,107 @@ probing program to demonstrate the timing difference between cache hit and cache
 miss:
 
 ```c
+static inline uint64_t probe(void *p) {
+    volatile char sink;
+    uint64_t start, stop, dur;
+
+    mfence();
+    lfence();
+    start = rdtsc();
+    lfence();
+
+    sink = *(volatile char *)p;
+    (void)sink;
+
+    lfence();
+    stop = rdtsc();
+    lfence();
+
+    dur = stop - start;
+    return dur;
+}
+
 int main(void) {
     uint8_t val = 0;
     uint64_t start, stop, dur;
     *(volatile char *)&val;
 
     for (int i = 0; i < 10; i++) {
-        mfence();
-        start = rdtsc();
-        lfence();
-        *(volatile char *)&val;
-        mfence();
-        stop = rdtsc();
-        lfence();
-
-        printf("hit  = %lu, ", stop - start);
+        dur = probe(&val);
+        printf("hit  = %4lu, ", dur);
 
         clflush((void *)&val);
         mfence();
-        start = rdtsc();
-        lfence();
-        *(volatile char *)&val;
-        mfence();
-        stop = rdtsc();
-        lfence();
-
-        printf("miss = %lu\n", stop - start);
+        dur = probe(&val);
+        printf("miss = %4lu\n", dur);
     }
 
     return 0;
 }
 ```
 
-On my ThinkPad X1, the program produced the following output:
+On my ThinkPad X1, the program produced the following output, which (loosely)
+confirms that a cache miss indeed takes longer to execute than a cache hit.
 
 ```bash
 cc -O3 main.c -o main.out && main.out
-hit  = 104, miss = 374
-hit  = 104, miss = 380
-hit  = 106, miss = 376
-hit  = 108, miss = 386
-hit  = 106, miss = 380
-hit  = 106, miss = 382
-hit  = 106, miss = 376
-hit  = 108, miss = 376
-hit  = 106, miss = 378
-hit  = 110, miss = 380
+hit  =   40, miss =  280
+hit  =   38, miss =  252
+hit  =   38, miss =  250
+hit  =   40, miss =  250
+hit  =   40, miss =  254
+hit  =   38, miss =  406
+hit  =   40, miss =  246
+hit  =   40, miss =  254
+hit  =   42, miss =  252
+hit  =   40, miss =  250
 ```
 
+## Application to side channel attacks on FO-transformed KEMs
+
+Modern key encapsulation mechanisms (KEM) commonly deploy the Fujisaki-Okamoto
+transformation to convert a passively secure encryption scheme into an actively
+secure encryption scheme. The core technique used in the transformation is
+called *re-encryption*: in the decryption subroutine, the ciphertext is first
+decrypted, then the decryption is encrypted under the same encryption key,
+whose output is compared with the input ciphertext. If the re-encryption is
+identical to the input ciphertext, then the input ciphertext is considered
+valid, so the true secret is returned. If the re-encryption is not identical
+to the input ciphertext, then the input ciphertext is considered to have been
+tempered with, and a fake pseudorandom secret will be returned. The security
+model requires that the attacker cannot tell the fake secret from the true
+secret.
+
+The fake secret is pseudorandomly derived from a secret value (called implicit
+rejection) embedded in the secret key. In a faulty implementation, it is
+possible that when the ciphertext is valid, the program will not execute the
+branch computing the fake secret, so that region of the secret key is not read,
+whereas if the ciphertext is not valid, then this region of the secret key is
+read. If an attacker can force cache eviction on the secret key, run
+decryption, and probe the location of implicit rejection with sufficient
+precision, then it may be able to distinguish valid ciphertext from invalid
+ciphertext. This amounts to a plaintext-checking oracle (PCO) and violates
+the security model.
+
+We can write a simple program that automates this procedure by taking advantage
+of the common API shared across all post-quantum KEMs submitted to the NIST
+Post-Quantum Cryptography standardization project:
+
+```c
+int crypto_kem_keypair(uint8_t *pk, uint8_t *sk);
+int crypto_kem_enc(uint8_t *ct, uint8_t *ss, const uint8_t *pk);
+int crypto_kem_dec(uint8_t *ss, const uint8_t *ct, const uint8_t *sk);
+```
+
+<!-- write the test -->
+
 ## Statistical test
+
+In the example above, the timing difference between cache hit and cache miss is
+highly distinguishable. In real world examples, however, the difference may not
+be as visible. For more rigorous tests, we will require statistical methods.
+
+<!-- TODO: modify the program so user can supply its own routine and locs -->
 
 ## References
 
