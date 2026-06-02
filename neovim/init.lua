@@ -414,7 +414,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- color columns for Markdown files, too
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "Markdown",
+  pattern = "markdown",
   callback = function()
     vim.opt_local.colorcolumn = "80,100"
   end,
