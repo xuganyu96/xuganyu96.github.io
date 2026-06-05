@@ -200,7 +200,9 @@ int crypto_kem_enc(uint8_t *ct, uint8_t *ss, const uint8_t *pk);
 int crypto_kem_dec(uint8_t *ss, const uint8_t *ct, const uint8_t *sk);
 ```
 
-<!-- write the test -->
+Each epoch generates a fresh keypair. Within each round of an epoch, generate
+a new ciphertext, randomly decide ciphertext corruption, flush the decryption
+key, then probe the experimental location and the control location.
 
 ## Statistical test
 
