@@ -125,3 +125,66 @@ For the external code, HQC uses **Reed-Solomon code** over $$\mathop{GF}(2^8)$$
 with dimension 32.
 
 <!-- Review Reed-Solomon code -->
+
+---
+
+## Reed-Solomon decoding
+
+Let $$\mathbb{F}$$ be some finite field of characteristics $$2$$ and order $$q$$.
+Let $$\alpha$$ be a primitive root of $$\mathbb{F}$$. Let $$n$$ be the chosen
+code length, $$\delta$$ be the chosen error-correcting capacity such that
+$$2 \delta < n$$, then we know the minimal distance to be $$d = 2 \delta + 1$$
+and the message length to be $$k = n - 2\delta$$.
+
+Define the **generating polynomial** by 
+
+$$
+g(x) = (x-\alpha)(x-\alpha^2)\ldots(x-\alpha^{2\delta})
+$$
+
+It's easy to see that $$\deg(g) = 2\delta$$. For an input message
+$$m(x)\in\mathbb{F}[x]$$ where $$\deg(m) < k$$, the encoding procedure returns
+a polynomial $$c(x)\in\mathbb{F}[x]$$ such that $$\deg(c) < n$$:
+
+$$
+c(x) = m(x) \cdot x^{n-k} + (m(x) \cdot x^{n-k} \mod g(x))
+$$
+
+Observe that $$g(x) \mid c(x)$$, so for $$1 \leq i \leq 2\delta$$,
+$$c(\alpha^i) = 0$$.
+
+Suppose that the received transmission is $$r(x)\in\mathbb{F}[x]$$ such that
+$$\deg(r) < n$$. We know that the received transmission includes the codeword
+and some errors: $$r(x) = c(x) + e(x)$$. Assume that there are exactly $$t$$
+errors, which means that exactly $$t$$ coefficients in $$e(x)$$ are non-zero.
+Denote the set of locations by:
+
+$$
+J = \left\{
+    j \in \{0, 1, \ldots, n-1\} \mid e_j \neq 0
+\right\}
+$$
+
+Observe that for $$1 \leq i \leq 2\delta$$,
+$$r(\alpha^i) = c(\alpha^i) + e(\alpha^i) = e(\alpha^i)$$, so we can compute
+the syndrome:
+
+$$
+S_i = r(\alpha^i) = e(\alpha^i) = \sum_{j\in J}e_j \cdot (\alpha^i)^j
+$$
+
+We want to build a (slightly modified) error-locating polynomial $$\sigma(x)$$:
+
+$$
+\sigma(x) = \prod_{j\in J}(1 + \alpha^j x)
+$$
+
+Such that $$\sigma(\alpha^j) = 0$$ if and only if $$j$$ is a location of
+non-zero error.
+
+The Berlekamp-Massey algorithm can construct
+$$\sigma(x) = \sigma_0 + \sigma_1 x + \ldots + \sigma_t x^t$$ by the coefficients
+$$\sigma_0, \ldots, \sigma_t$$. What relationship exists between these coefficients
+and the syndromes $$S_i$$ so the BM algorithm applies?
+
+Hint: Newton's identity??
