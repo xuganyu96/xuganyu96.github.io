@@ -3,9 +3,11 @@
 name: homelab
 
 services:
-  # TODO: v1.13 has SFTP issue: https://github.com/garethgeorge/backrest/issues/1227
   caddy:
-    image: caddy:2.11.3-alpine
+    # image: caddy:2.11.3-alpine
+    build:
+      context: .
+      dockerfile: caddy.Dockerfile
     user: "1000:1000"
     restart: unless-stopped
     environment:
