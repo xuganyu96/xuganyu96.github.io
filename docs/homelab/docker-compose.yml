@@ -3,6 +3,8 @@
 name: homelab
 
 services:
+  # TODO: Immich
+  # TODO: Backrest
   caddy:
     # image: caddy:2.11.3-alpine
     build:
@@ -34,36 +36,6 @@ services:
       - TZ=America/Toronto
     networks:
       - homelab
-
-  # NOTE: Because Backrest does not support BASE_URL and has all these other
-  # problems listed below, I think it is not ready for deployment in my setup
-  # yet, and I will use restic as from the system for now.
-  #
-  # backrest:
-  #   image: ghcr.io/garethgeorge/backrest:v1.12.1
-  #   user: "1000:1000"
-  #   restart: unless-stopped
-  #   hostname: "thinkcentre.tailee7580.ts.net/backrest"
-  #   depends_on:
-  #     - caddy
-  #   ports:
-  #     - "9898:9898"
-  #   networks:
-  #     - homelab
-  #   volumes:
-  #     - /home/brucexu/Shared/SelfHosting/backrest/data:/data
-  #     - /home/brucexu/Shared/SelfHosting/backrest/config:/config
-  #     - /home/brucexu/Shared/SelfHosting/backrest/cache:/cache
-  #     - /home/brucexu/Shared/SelfHosting/backrest/tmp:/tmp
-  #     - /etc/passwd:/etc/passwd:ro
-  #     # - /home/brucexu/Shared/SelfHosting/backrest/rclone:/root/.config/rclone
-  #     - /home/brucexu/Shared:/userdata
-  #   environment:
-  #     - BACKREST_DATA=/data
-  #     - BACKREST_CONFIG=/config/config.json
-  #     - XDG_CACHE_HOME=/cache
-  #     - TMPDIR=/tmp
-  #     - TZ=America/Los_Angeles
 
 networks:
   homelab:
