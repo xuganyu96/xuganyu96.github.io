@@ -5,7 +5,9 @@ title: Home lab
 
 ## Quick start
 
-[`docker-compose.yml`](/homelab/docker-compose.yml)
+- [`docker-compose.yml`](/homelab/docker-compose.yml)
+- [Status](https://status.thinkcentre.crustaceanlab.com)
+- [Audiobookshelf](https://audiobooks.thinkcentre.crustaceanlab.com)
 
 ```bash
 # from xuganyu96.github.io/docs
