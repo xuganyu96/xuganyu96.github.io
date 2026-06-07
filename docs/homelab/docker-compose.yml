@@ -1,3 +1,5 @@
+# docker compose --env-file ~/Shared/SelfHosting/.env up
+
 name: homelab
 
 services:
@@ -6,6 +8,8 @@ services:
     image: caddy:2.11.3-alpine
     user: "1000:1000"
     restart: unless-stopped
+    environment:
+      - CADDY_CLOUDFLARE_TOKEN=${CADDY_CLOUDFLARE_TOKEN}
     networks:
       - homelab
     ports:
