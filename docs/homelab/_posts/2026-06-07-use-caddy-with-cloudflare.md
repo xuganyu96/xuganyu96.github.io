@@ -184,7 +184,7 @@ the DNS challenge:
 {"msg":"releasing lock","identifier":"REDACTED"}
 ```
 
-Now navigate to [https://status.thinkcentre.crustaceanlab.com] and inspect the
+Now navigate to <https://status.thinkcentre.crustaceanlab.com> and inspect the
 certificate, which should have "subject name" set to
 `status.thinkcentre.crustaceanlab.com`. Finally, we can clean up the Caddyfile
 and servce all services under subdomains instead of subpaths:
