@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Code-based cryptography
+title: Cryptography
 ---
 
 - [HQC reading notes](./hqc-impl-notes)

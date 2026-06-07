@@ -38,8 +38,7 @@ plugins:
 # site.header_pages works with Minima 2.x
 # This setting has moved in Minima 3.x
 header_pages:
-  - neovim.markdown
-  - code-based-crypto/index.markdown
+  - cryptography/index.markdown
   - homelab/index.markdown
   - about.markdown
 

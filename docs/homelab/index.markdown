@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Home lab
+title: Homelab
 ---
 
 ## Quick start
