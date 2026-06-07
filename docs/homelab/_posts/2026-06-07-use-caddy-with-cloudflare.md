@@ -187,7 +187,10 @@ the DNS challenge:
 Now navigate to <https://status.thinkcentre.crustaceanlab.com> and inspect the
 certificate, which should have "subject name" set to
 `status.thinkcentre.crustaceanlab.com`. Finally, we can clean up the Caddyfile
-and servce all services under subdomains instead of subpaths:
+and servce all services under subdomains instead of subpaths. I will also add
+a directive `*.thinkcentre.crustaceanlab.com` so that Caddy only needs to solve
+the DNS challenge once to obtain a wildcard certificate that can be served for
+all subdomains.
 
 ```caddyfile
 (tailscalecert) {
@@ -206,6 +209,10 @@ thinkcentre.tailee7580.ts.net {
         respond "Ok"
     }
     import tailscalecert
+}
+
+*.thinkcentre.crustaceanlab.com {
+    import cloudflare
 }
 
 status.thinkcentre.crustaceanlab.com {
