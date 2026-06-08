@@ -8,6 +8,7 @@ title: Homelab
 - [`docker-compose.yml`](/homelab/docker-compose.yml)
 - [Status](https://status.thinkcentre.crustaceanlab.com)
 - [Audiobookshelf](https://audiobooks.thinkcentre.crustaceanlab.com)
+- [Backrest](https://backrest.thinkcentre.crustaceanlab.com)
 
 ```bash
 # from xuganyu96.github.io/docs

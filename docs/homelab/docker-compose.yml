@@ -20,6 +20,31 @@ services:
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/podcasts:/podcasts
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/config:/config
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/metadata:/metadata
+  backrest:
+    depends_on:
+      - caddy
+    environment:
+      - BACKREST_DATA=/data
+      - BACKREST_CONFIG=/config/config.json
+      - XDG_CACHE_HOME=/cache
+      - TMPDIR=/tmp
+      - TZ=America/Toronto
+    hostname: "backrest.thinkcentre.crustaceanlab.com"
+    image: ghcr.io/garethgeorge/backrest:v1.12.1
+    networks:
+      - homelab
+    # ports:
+    #   - "9898:9898"
+    restart: unless-stopped
+    user: "1000:1000"
+    volumes:
+      - /home/brucexu/Shared/SelfHosting/backrest/data:/data
+      - /home/brucexu/Shared/SelfHosting/backrest/config:/config
+      - /home/brucexu/Shared/SelfHosting/backrest/cache:/cache
+      - /home/brucexu/Shared/SelfHosting/backrest/tmp:/tmp
+      - /etc/passwd:/etc/passwd:ro
+      # - /home/brucexu/Shared/SelfHosting/backrest/rclone:/root/.config/rclone
+      - /home/brucexu/Shared:/userdata
   caddy:
     # image: caddy:2.11.3-alpine
     build:
