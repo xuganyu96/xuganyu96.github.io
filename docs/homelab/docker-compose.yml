@@ -5,37 +5,39 @@ name: homelab
 services:
   # TODO: Immich
   # TODO: Backrest
-  caddy:
-    # image: caddy:2.11.3-alpine
-    build:
-      context: .
-      dockerfile: caddy.Dockerfile
-    user: "1000:1000"
-    restart: unless-stopped
+  audiobookshelf:
+    depends_on:
+      - caddy
     environment:
-      - CADDY_CLOUDFLARE_TOKEN=${CADDY_CLOUDFLARE_TOKEN}
+      - TZ=America/Toronto
+    image: ghcr.io/advplyr/audiobookshelf:latest
     networks:
       - homelab
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - /home/brucexu/Shared/SelfHosting/caddy/conf:/etc/caddy
-      - /home/brucexu/Shared/SelfHosting/caddy/data:/data
-      - /home/brucexu/.ssl:/ssl:ro
-  audiobookshelf:
-    image: ghcr.io/advplyr/audiobookshelf:latest
-    user: "1000:1000"
     restart: unless-stopped
+    user: "1000:1000"
     volumes:
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/audiobooks:/audiobooks
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/podcasts:/podcasts
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/config:/config
       - /home/brucexu/Shared/SelfHosting/audiobookshelf/metadata:/metadata
+  caddy:
+    # image: caddy:2.11.3-alpine
+    build:
+      context: .
+      dockerfile: caddy.Dockerfile
     environment:
-      - TZ=America/Toronto
+      - CADDY_CLOUDFLARE_TOKEN=${CADDY_CLOUDFLARE_TOKEN}
     networks:
       - homelab
+    user: "1000:1000"
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    volumes:
+      - /home/brucexu/Shared/SelfHosting/caddy/conf:/etc/caddy
+      - /home/brucexu/Shared/SelfHosting/caddy/data:/data
+      - /home/brucexu/.ssl:/ssl:ro
 
 networks:
   homelab:
