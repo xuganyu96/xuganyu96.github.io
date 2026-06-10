@@ -157,7 +157,7 @@ Suppose that the received transmission is $$r(x)\in\mathbb{F}[x]$$ such that
 $$\deg(r) < n$$. We know that the received transmission includes the codeword
 and some errors: $$r(x) = c(x) + e(x)$$. Assume that there are exactly $$t$$
 errors, which means that exactly $$t$$ coefficients in $$e(x)$$ are non-zero.
-Denote the set of locations by:
+Denote the set of error locations by:
 
 $$
 J = \left\{
@@ -173,18 +173,50 @@ $$
 S_i = r(\alpha^i) = e(\alpha^i) = \sum_{j\in J}e_j \cdot (\alpha^i)^j
 $$
 
-We want to build a (slightly modified) error-locating polynomial $$\sigma(x)$$:
+This is equivalent to the following:
 
 $$
-\sigma(x) = \prod_{j\in J}(1 + \alpha^j x)
+% reference with \ref{eq:rs-syndrome}
+\begin{equation}\label{eq:rs-syndrome}
+\begin{bmatrix}
+    S_1 \\
+    S_2 \\
+    \ldots \\
+    S_{2\delta}
+\end{bmatrix} = 
+\begin{bmatrix}
+    \alpha^{j_1} & \alpha^{j_2} & \ldots & \alpha^{j_t} \\
+    (\alpha^{j_1})^2 & (\alpha^{j_2})^2 & \ldots & (\alpha^{j_t})^2 \\
+    \ldots & \ldots & & \ldots \\
+    (\alpha^{j_1})^{2\delta} & (\alpha^{j_2})^{2\delta} & \ldots & (\alpha^{j_t})^{2\delta} \\
+\end{bmatrix}
+\begin{bmatrix}
+    e_{j_1} \\
+    e_{j_2} \\
+    \ldots \\
+    e_{j_t}
+\end{bmatrix}
+\end{equation}
 $$
 
-Such that $$\sigma(\alpha^j) = 0$$ if and only if $$j$$ is a location of
-non-zero error.
+We claim that given $$S_1, S_2, \ldots, S_{2\delta}$$, there exists a minimal
+linear feedback shift register (LFSR) of size $$t \leq \delta$$ with
+coefficients $$\sigma_1, \sigma_2, \ldots, \sigma_t$$ such that for
+$$t < l \leq 2\delta$$:
 
-The Berlekamp-Massey algorithm can construct
-$$\sigma(x) = \sigma_0 + \sigma_1 x + \ldots + \sigma_t x^t$$ by the coefficients
-$$\sigma_0, \ldots, \sigma_t$$. What relationship exists between these coefficients
-and the syndromes $$S_i$$ so the BM algorithm applies?
+$$
+\begin{equation}
+S_l = \sum_{i=1}^t S_{l-i}\sigma_i
+\end{equation}
+$$
 
-Hint: Newton's identity??
+The polynomial
+$$\sigma(x) = 1 + \sigma_1 x + \sigma_2 x^2 + \ldots \sigma_t x^t$$
+is the **error-locating polynomial**. In other words, for
+$$0 \leq j \leq n-1$$:
+
+$$
+\begin{equation}
+    \sigma(\alpha^{-j}) = 0 \iff e_j \neq 0
+\end{equation}
+$$

@@ -11,8 +11,42 @@ title: HOL Light notes
 - [Bug puzzle](#bug-puzzle)
 - [Mutex](#mutex)
 
+## Installation
 
-# Trivial example
+Now a convenience script:
+
+```bash
+curl -fsSL https://xuganyu96.github.io/assets/install-hol.sh | bash
+```
+
+
+s2n-bignum requires the latest HOL Light from source ([arghh](https://github.com/awslabs/s2n-bignum/blob/c403fb04f45ed488b79c767fd9e83e60f439cb44/README.md?plain=1#L331)).
+
+```bash
+# Create new switch
+opam switch create hol-light-latest 5.4.0
+opam switch hol-light-latest
+eval $(opam env)
+which ocaml  # should return ~/.opam/hol-light-latest/bin/ocaml
+
+# Install dependencies: zarith, ledit, and camlp5
+opam update
+opam install -y zarith ledit
+opam pin -y add camlp5 8.04.00
+opam list
+export CAMLP5LIB="$HOME/.opam/hol-light-latest/lib/camlp5"
+
+# Build HOL Light
+git clone git@github.com:jrh13/hol-light.git && cd hol-light
+HOLLIGHT_USE_MODULE=1 make
+./hol.sh
+
+# Export HOLLIGHT_DIR in shell, add hol.sh to path
+export HOLLIGHT_DIR="/path/to/hol-light"
+export PATH="$PATH:$HOLLIGHT_DIR"
+```
+
+## Trivial example
 
 ```
 let A_DEF = new_basic_definition `A = T`;;
@@ -34,7 +68,7 @@ prove (
 );;
 ```
 
-# Simple example
+## Simple example
 
 $$
 \begin{equation*}
@@ -56,7 +90,7 @@ prove (
 );;
 ```
 
-# Simple non-linear real inequality
+## Simple non-linear real inequality
 
 $$
 \forall x, y \in \mathbb{R}.
@@ -76,13 +110,13 @@ prove (
 );;
 ```
 
-# Linear sum
+## Linear sum
 
 $$
 \forall n \in \mathbb{N}. \sum_{i=1}^n i = \frac{n (n + 1)}{2}
 $$
 
-## Formalization
+### Formalization
 We begin with formalizing the statement.
 There are two key ingredients in the formalization: summation and linear range.
 HOL Light has a built-in function for expressing summation `nsum: (A->bool)->(A->num)->num`.
@@ -126,7 +160,7 @@ Putting everything together:
 let root = `!n. nsum (1..n) (\i. i) = (n * (n + 1)) DIV 2`;;
 ```
 
-## Proof
+### Proof
 This is a classic of inductive proof, which breaks the result into a base case and an inductive step.
 HOL Light has a built-in `INDUCT_TAC` which will break a goal with form `!n. P[n]` into two subgoals: the base case `P[n -> 0]` (`n` is substituted with `0`) and the inductive step `P[n] |- P[n -> SUC n]`.
 The base case will be the top subgoal in the new goal state.
@@ -214,7 +248,7 @@ prove (
 
 <!-- TODO: sum of squares and sum of cubes -->
 
-# Even numbers
+## Even numbers
 
 ```ocaml
 (* Inductive definition *)
@@ -235,7 +269,7 @@ e (ASM_REWRITE_TAC [] THEN EXISTS_TAC `k + 1` THEN ARITH_TAC);;
 top_thm();;
 ```
 
-# Bug puzzle
+## Bug puzzle
 
 ```ocaml
 (* The bugs puzzle *)
@@ -327,7 +361,7 @@ e (
 let UNREACHABLE_2 = top_thm();;
 ```
 
-# Mutex
+## Mutex
 
 ```ocaml
 (* TODO: lock does not necessarily have to begin at 0, but not beginning at 0
