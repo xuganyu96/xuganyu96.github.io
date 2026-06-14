@@ -1,66 +1,12 @@
-# docker compose --env-file ~/Shared/SelfHosting/.env up
+---
+layout: post
+title: Setting up Immich
+date: 2026-06-13 20:45:00 -0400
+---
 
-name: homelab
+## Adding Immich containers to my main compose file
 
-services:
-  audiobookshelf:
-    depends_on:
-      - caddy
-    environment:
-      - TZ=America/Toronto
-    image: ghcr.io/advplyr/audiobookshelf:latest
-    networks:
-      - homelab
-    restart: unless-stopped
-    user: "1000:1000"
-    volumes:
-      - /home/brucexu/Shared/SelfHosting/audiobookshelf/audiobooks:/audiobooks
-      - /home/brucexu/Shared/SelfHosting/audiobookshelf/podcasts:/podcasts
-      - /home/brucexu/Shared/SelfHosting/audiobookshelf/config:/config
-      - /home/brucexu/Shared/SelfHosting/audiobookshelf/metadata:/metadata
-  backrest:
-    depends_on:
-      - caddy
-    environment:
-      - BACKREST_DATA=/data
-      - BACKREST_CONFIG=/config/config.json
-      - XDG_CACHE_HOME=/cache
-      - TMPDIR=/tmp
-      - TZ=America/Toronto
-    hostname: "backrest.thinkcentre.crustaceanlab.com"
-    image: ghcr.io/garethgeorge/backrest:v1.12.1
-    networks:
-      - homelab
-    # ports:
-    #   - "9898:9898"
-    restart: unless-stopped
-    user: "1000:1000"
-    volumes:
-      - /home/brucexu/Shared/SelfHosting/backrest/data:/data
-      - /home/brucexu/Shared/SelfHosting/backrest/config:/config
-      - /home/brucexu/Shared/SelfHosting/backrest/cache:/cache
-      - /home/brucexu/Shared/SelfHosting/backrest/tmp:/tmp
-      - /etc/passwd:/etc/passwd:ro
-      # - /home/brucexu/Shared/SelfHosting/backrest/rclone:/root/.config/rclone
-      - /home/brucexu/Shared:/userdata
-  caddy:
-    # image: caddy:2.11.3-alpine
-    build:
-      context: .
-      dockerfile: caddy.Dockerfile
-    environment:
-      - CADDY_CLOUDFLARE_TOKEN=${CADDY_CLOUDFLARE_TOKEN}
-    networks:
-      - homelab
-    user: "1000:1000"
-    ports:
-      - 80:80
-      - 443:443
-    restart: unless-stopped
-    volumes:
-      - /home/brucexu/Shared/SelfHosting/caddy/conf:/etc/caddy
-      - /home/brucexu/Shared/SelfHosting/caddy/data:/data
-      - /home/brucexu/.ssl:/ssl:ro
+```yaml
   immich-server:
     container_name: immich_server
     user: "1000:1000"
@@ -83,6 +29,7 @@ services:
       disable: false
   immich-machine-learning:
     container_name: immich_machine_learning
+    # NOTE: need to run as root; will report error with user 1000
     networks:
       - homelab
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
@@ -125,6 +72,54 @@ services:
 
 volumes:
   model-cache:
+```
 
-networks:
-  homelab:
+## Reverse proxy
+
+```caddyfile
+(tailscalecert) {
+    tls /ssl/thinkcentre.cert /ssl/thinkcentre.key
+}
+
+(cloudflare) {
+    tls {
+        dns cloudflare {env.CADDY_CLOUDFLARE_TOKEN}
+        resolvers 1.1.1.1
+    }
+}
+
+thinkcentre.tailee7580.ts.net {
+    handle_path /health {
+        respond "Ok"
+    }
+    import tailscalecert
+}
+
+*.thinkcentre.crustaceanlab.com {
+    import cloudflare
+}
+
+status.thinkcentre.crustaceanlab.com {
+    respond "Ok"
+    import cloudflare
+}
+
+audiobooks.thinkcentre.crustaceanlab.com {
+    reverse_proxy audiobookshelf:80
+    import cloudflare
+}
+
+backrest.thinkcentre.crustaceanlab.com {
+    reverse_proxy backrest:9898
+    import cloudflare
+}
+
+immich.thinkcentre.crustaceanlab.com {
+    reverse_proxy immich_server:2283
+    import cloudflare
+}
+```
+
+## References
+
+- [Install Immich with Docker Compose](https://docs.immich.app/install/docker-compose/)
