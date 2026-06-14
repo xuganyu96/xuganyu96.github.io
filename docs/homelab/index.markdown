@@ -9,6 +9,7 @@ title: Homelab
 - [Status](https://status.thinkcentre.crustaceanlab.com)
 - [Audiobookshelf](https://audiobooks.thinkcentre.crustaceanlab.com)
 - [Backrest](https://backrest.thinkcentre.crustaceanlab.com)
+- [Immich](https://immich.thinkcentre.crustaceanlab.com)
 
 ```bash
 # from xuganyu96.github.io/docs
