@@ -1,7 +1,7 @@
 ---
 layout: post
-title: The Berlekamp-Massey algorithm
-date: 2026-06-19 16:33:44 -0400
+title: The Berlekamp-Massey algorithm (1)
+date: 2026-06-22
 ---
 
 ## Definitions
@@ -227,3 +227,138 @@ $$
 L^{(m+1)} = \max(L^{(m)}, m+1-L^{(m)}) = m+1-L^{(m)}
 \end{equation}
 $$
+
+We claim that the $$\sigma^{(n+1)}$$ in Equation $$\ref{eq:sigma-n+1}$$ is the
+connection polynomial of a valid shortest LFSR that generates $$S^{(n+1)}$$:
+
+$$
+\begin{equation}\label{eq:sigma-n+1}
+\sigma^{(n+1)}(x)
+= \sigma^{(n)}(x) - d_{n+1}d_{m+1}^{-1}x^{n-m}\sigma^{(m)}(x)
+\end{equation}
+$$
+
+We will prove by showing that:
+
+$$
+\begin{equation}\label{eq:sigma-n+1-valid}
+(L^{(n+1)} < j \leq n + 1)
+\implies
+\sum_{i=0}^{L^{(n+1)}} \sigma^{(n+1)}_i S_{j-i} = 0
+\end{equation}
+$$
+
+First expand the RHS of Equation $$\ref{eq:sigma-n+1}$$:
+
+$$
+\begin{equation}\label{eq:expand}
+\begin{aligned}
+\sigma^{(n+1)}(x)
+&= \left(
+    \sum_{i=0}^{L^{(n)}} \sigma^{(n)}_i x^i
+\right)
+- d_{n+1}d_{m+1}^{-1}x^{n-m}\left(
+    \sum_{i=0}^{L^{(m)}} \sigma^{(m)}_i x^i
+\right) \\
+&= \left(
+    \sum_{i=0}^{L^{(n)}} \sigma^{(n)}_i x^i
+\right)
+- d_{n+1}d_{m+1}^{-1}\left(
+    \sum_{i=0}^{L^{(m)}} \sigma^{(m)}_i x^{i+n-m}
+\right) \\
+\end{aligned}
+\end{equation}
+$$
+
+The RHS of Equation $$\ref{eq:expand}$$ shows us to break down
+$$\sigma^{(n+1)}_i$$ using coefficients of $$\sigma^{(n)}$$, $$\sigma^{(m)}$$,
+$$d_{n+1}$$, and $$d_{m+1}$$:
+
+- For $$0\leq i \leq L^{(n)}$$, add $$\sigma^{(n)}_i$$
+- For $$n-m \leq i \leq L^{(m)} + n - m$$, add
+$$-d_{n+1}d_{m+1}^{-1}\sigma^{(m)}_{i-(n-m)}$$
+
+In other words, for $$L^{(n+1)} < j \leq n + 1$$:
+
+$$
+\begin{equation}\label{eq:sigma-n+1-lfsr}
+\begin{aligned}
+\sum_{i=0}^{L^{(n+1)}} \sigma^{(n+1)}_i S_{j-i}
+&= \left(
+    \sum_{i=0}^{L^{(n)}} \sigma^{(n)}_i S_{j-i}
+\right)
+- d_{n+1}d_{m+1}^{-1}\left(
+    \sum_{i=0}^{L^{(m)}} \sigma^{(m)}_i S_{j - (n-m) - i}
+\right)
+\end{aligned}
+\end{equation}
+$$
+
+If $$L^{(n+1)} < j < n + 1$$, then it's easy to see that $$L^{(n)} < j \leq n$$.
+By the inductive hypothesis we have:
+
+$$
+\begin{equation}\label{eq:sigma-n-zero}
+(L^{(n+1)} < j < n + 1) \implies \sum_{i=0}^{L^{(n)}} \sigma^{(n)}_i S_{j-i} = 0
+\end{equation}
+$$
+
+Also by the definition of $$m$$ and Equation $$\ref{eq:lemma-1-1}$$, we have
+
+$$
+L^{(n+1)} \geq n+1-L^{(n)} = n+1-L^{(m+1)} = n+1-(m+1-L^{(m)}) = n-m+L^{(m)}
+$$
+
+This implies that $$L^{(m)} \leq L^{(n+1)} - (n-m)$$, and consequently that
+
+$$
+L^{(m)} \leq L^{(n+1)} - (n-m) < j - (n-m) < m + 1
+$$
+
+Because $$j-(n-m)$$ falls in the range of $$\sigma^{(m)}$$, we have 
+
+$$
+\begin{equation}\label{eq:sigma-m-zero}
+(L^{(n+1)} < j < n + 1) \implies 
+\sum_{i=0}^{L^{(m)}} \sigma^{(m)}_i S_{j - (n-m) - i} = 0
+\end{equation}
+$$
+
+If $$j = n+1$$, then $$j - (n-m) = m+1$$. From the definition of $$d_{n+1}$$ and
+$$d_{m+1}$$, we have:
+
+$$
+\begin{equation}\label{eq:sigma-n-dn+1}
+(j = n + 1) \implies \sum_{i=0}^{L^{(n)}} \sigma^{(n)}_i S_{j-i} = d_{n+1}
+\end{equation}
+$$
+
+$$
+\begin{equation}\label{eq:sigma-m-dm+1}
+(j = n + 1) \implies \sum_{i=0}^{L^{(m)}} \sigma^{(m)}_i S_{j-(n-m)-i} = d_{m+1}
+\end{equation}
+$$
+
+Combining equations $$\ref{eq:sigma-n+1-lfsr}$$, $$\ref{eq:sigma-n-zero}$$,
+$$\ref{eq:sigma-m-zero}$$, $$\ref{eq:sigma-n-dn+1}$$, and
+$$\ref{eq:sigma-m-dm+1}$$ gives us the desired result in Equation
+$$\ref{eq:sigma-n+1-valid}$$.
+
+By the definition of connection polynomial, we know that
+
+$$\deg(\sigma^{(n)}) \leq L^{(n)}$$
+
+and that
+
+$$
+\deg(x^{n-m}\sigma^{(m)}) \leq n-m+L^{(m)} = n-m+(m+1-L^{(m+1)}) = n+1-L^{(n)}
+$$
+
+The degree of $$\sigma^{(n+1)}$$ is the maximum between $$\deg(\sigma^{(n)})$$
+and $$\deg(x^{n-m}\sigma^{(m)})$$, thus:
+
+$$
+L^{(n+1)} = \max(L^{(n)}, n+1-L^{(n)})
+$$
+
+This concludes the proof of Equation $$\ref{eq:theorem-1}$$.
