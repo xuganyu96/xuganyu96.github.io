@@ -8,6 +8,7 @@ title: Homelab
 - [`docker-compose.yml`](/homelab/docker-compose.yml)
 - [Status](https://status.thinkcentre.crustaceanlab.com)
 - [Audiobookshelf](https://audiobooks.thinkcentre.crustaceanlab.com)
+- [Copyparty](https://copyparty.thinkcentre.crustaceanlab.com)
 - [Backrest](https://backrest.thinkcentre.crustaceanlab.com)
 - [Immich](https://immich.thinkcentre.crustaceanlab.com)
 

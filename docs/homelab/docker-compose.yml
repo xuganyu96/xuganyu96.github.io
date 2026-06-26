@@ -61,6 +61,21 @@ services:
       - /home/brucexu/Shared/SelfHosting/caddy/conf:/etc/caddy
       - /home/brucexu/Shared/SelfHosting/caddy/data:/data
       - /home/brucexu/.ssl:/ssl:ro
+  copyparty:
+    image: ghcr.io/9001/copyparty-ac
+    user: "1000:1000"
+    networks:
+      - homelab
+    volumes:
+      - /home/brucexu:/w
+      - /home/brucexu/Shared/SelfHosting/copyparty/config:/cfg
+    healthcheck:
+      # hide it from logs with "/._" so it matches the default --lf-url filter 
+      test: ["CMD-SHELL", "wget --spider -q 127.0.0.1:3923/?reset=/._"]
+      interval: 1m
+      timeout: 2s
+      retries: 5
+      start_period: 15s
   immich-server:
     container_name: immich_server
     user: "1000:1000"
