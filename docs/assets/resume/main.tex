@@ -140,7 +140,7 @@
         \LenToUnit{\paperwidth-2 cm-0 cm+0.05cm},
         \LenToUnit{\paperheight-1.0 cm}
     ){\vtop{{\null}\makebox[0pt][c]{
-        \small\color{gray}\textit{Last updated in July 2024}\hspace{\widthof{Last updated in July 2024}}
+        \small\color{gray}\textit{Last updated in Jun 2026}\hspace{\widthof{Last updated in Jun 2026}}
     }}}%
   }%
 }%
@@ -182,23 +182,23 @@
         \mbox{\hrefWithoutArrow{tel:+1-604-329-5922}{+1-604-329-5822}}%
         \kern 5.0 pt%
         \AND%
-        % \kern 5.0 pt%
-        % \mbox{\hrefWithoutArrow{https://yourwebsite.com/}{yourwebsite.com}}%
-        % \kern 5.0 pt%
-        % \AND%
         \kern 5.0 pt%
-        \mbox{\hrefWithoutArrow{https://linkedin.com/in/ganyu-bruce-xu}{linkedin.com/in/ganyu-bruce-xu}}%
+        \mbox{\hrefWithoutArrow{https://xuganyu96.github.io/}{xuganyu96.github.io}}%
         \kern 5.0 pt%
         \AND%
         \kern 5.0 pt%
-        \mbox{\hrefWithoutArrow{https://github.com/xuganyu96}{github.com/xuganyu96}}%
+        \mbox{\hrefWithoutArrow{https://linkedin.com/in/ganyu-bruce-xu}{LinkedIn}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://github.com/xuganyu96}{GitHub}}%
     \end{header}
 
     \vspace{5 pt - 0.3 cm}
 
     \section{Education}
         \begin{twocolentry}{
-            Expecting August 2025
+            Sep 2023 -- Aug 2025
         }
         \textbf{U of Waterloo}, MASc in Electrical and Computer Engineering,
         GPA 94.6/100
@@ -209,7 +209,7 @@
         \vspace{0.10 cm}
 
         \begin{twocolentry}{
-            Sep 2015 – May 2019
+            Sep 2015 -- May 2019
         }
         \textbf{U of California, Berkeley}, BA in Mathematics and Statistics,
         GPA: 3.464/4.0
@@ -227,34 +227,54 @@
         \end{onecolentry}
         \vspace{0.2 cm}
         \begin{onecolentry}
-            \textbf{Web development:} Flask, Docker, AWS serverless stack, HTML/CSS, Linux, Apache Airflow, PostgreSQL/MySQL
+            \textbf{Low-level/system programming:} Embedded systems, valgrind, gdb/lldb, constant-time programming
         \end{onecolentry}
+        % \begin{onecolentry}
+        %     \textbf{Web development:} Flask, Docker, AWS serverless stack, Linux admin, Apache Airflow, PostgreSQL/MySQL
+        % \end{onecolentry}
 
     \section{Experience}
         \begin{twocolentry}{
-            May, 2024 - Present
+            Aug 2025 -- Present
         }
-            \textbf{Graduate research assistant}, University of Waterloo -- Waterloo, Ontario, Canada
+            \textbf{Research Associate}, \href{https://openquantumsafe.org/}{Open Quantum Safe} -- Waterloo, Ontario, Canada
         \end{twocolentry}
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Designed and implemented a post-quantum key encapsulation mechanism based on ML-KEM with an alternative CCA transformation, achieving IND-1CCA security and reducing decapsulation time by more than 50\%
+                \item Core maintainer of \href{https://github.com/open-quantum-safe/liboqs}{\textbf{liboqs}}, an open-source C library for quantum-resistant cryptographic algorithms.
+                \item Triaged and fixed security vulnerabilities such as out-of-bounds memory access \href{https://github.com/open-quantum-safe/liboqs/pull/2266}{(\#2266)}, cache timing side channel \href{https://github.com/open-quantum-safe/liboqs/pull/2431}{(\#2431)}, and incorrect AVX512VL SHA3 implementation \href{https://github.com/open-quantum-safe/liboqs/pull/2442}{(\#2442)}
+                \item Maintained liboqs testing infrastructure on GitHub Actions: expanding test coverage, reducing test runtime, and improving test reliability
+                \item Engaged an international community of cryptography researchers and open-source contributors through code reviews, GitHub discussions, and community calls
             \end{highlights}
         \end{onecolentry}
         \vspace{0.2 cm}
 
+        % \begin{twocolentry}{
+        %     May 2024 - May 2025
+        % }
+        %     \textbf{Graduate research assistant}, University of Waterloo -- Waterloo, Ontario, Canada
+        % \end{twocolentry}
+        % \vspace{0.10 cm}
+        % \begin{onecolentry}
+        %     \begin{highlights}
+        %         \item Designed and implemented a post-quantum key encapsulation mechanism based on ML-KEM with an alternative CCA transformation, achieving IND-1CCA security and reducing decapsulation time by more than 50\%
+        %     \end{highlights}
+        % \end{onecolentry}
+        % \vspace{0.2 cm}
+
         \begin{twocolentry}{
-            July 2019 - Sep 2023
+            Jul 2019 -- Sep 2023
         }
             \textbf{Senior data engineer}, \href{https://www.leantaas.com}{LeanTaaS Inc.} -- Santa Clara, CA, United States
         \end{twocolentry}
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Overhauled nightly data ingestion and preprocessing pipeline: migrated CRON jobs on a single EC2 server to an \textbf{Apache Airflow} cluster on \textbf{AWS Elastic Container Service}
-                \item Designed and implemented serverless and cost-effective data warehouse. Raw data is parsed and written to AWS S3 in columnar format (\textbf{Apache Parquet}), then queried using distributed SQL query engine \textbf{AWS Athena}
-                \item Improved data pipeline observability by using \textbf{DataDog} for service health monitoring and log aggregation; shortened production outage response time by connecting DataDog health checks with \textbf{PagerDuty}
+                % \item Overhauled nightly data ingestion and preprocessing pipeline: migrated CRON jobs on a single EC2 server to an \textbf{Apache Airflow} cluster on \textbf{AWS Elastic Container Service}
+                % \item Designed and implemented serverless and cost-effective data warehouse. Raw data is parsed and written to AWS S3 in columnar format (\textbf{Apache Parquet}), then queried using distributed SQL query engine \textbf{AWS Athena}
+                \item Deployed and maintained distributed Apache Airflow cluster on AWS Elastic Container Service.
+                \item Improved data pipeline observability and production outage response time w/ DataDog and PagerDuty
                 % \item Implemented data analytics that helped hospital admins identify inefficiency in elective surgery scheduling
                 \item Mentored junior developers through project design review, pair programming, and technical workshops
             \end{highlights}
@@ -289,8 +309,9 @@
         \vspace{0.1cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Integrated post-quantum cryptography schemes into \href{https://github.com/xuganyu96/wolfssl}{\bf WolfSSL} and benchmarked handshake on Pi Pico 2 W
-                \item Implemented KEM certificate chain generation and KEMTLS handshake control flow on top of WolfSSL
+                \item Designed and implemented a post-quantum key encapsulation mechanism based on ML-KEM with an alternative CCA transformation, achieving IND-1CCA security and reducing decapsulation time by more than 50\%
+                \item Expanded WolfSSL's support for post-quantum PKI and TLS handshake. Benchmarked performance on Pi Pico 2
+                \item Implemented KEMTLS on WolfSSL, including KEM-based certificate generation and authentication protocol
             \end{highlights}
         \end{onecolentry}
         \vspace{0.3cm}
@@ -301,30 +322,30 @@
         \end{twocolentry}
         \vspace{0.1cm}
         \begin{onecolentry}
-            RustCrypto is a collection of common cryptographic primitives implemented in pure Rust.
+            % RustCrypto is a collection of common cryptographic primitives implemented in pure Rust.
             \vspace{0.1cm}
 
-            In November 2023, \href{https://people.redhat.com/~hkario/marvin/}{\emph{a timing variability side channel}} was discovered for major RSA implementations including \href{https://github.com/RustCrypto/RSA}{\textbf{RustCrypto/RSA}}. I participated in the effort to mitigate this side channel vulnerability by migrating dependency on generic big integer library to constant-time big integer library \href{https://github.com/RustCrypto/crypto-bigint}{\textbf{RustCrypto/crypto-bigint}}. Specifically:
+            % In November 2023, \href{https://people.redhat.com/~hkario/marvin/}{\emph{a timing variability side channel}} was discovered in \href{https://github.com/RustCrypto/RSA}{\textbf{RustCrypto/RSA}}. I contributed to the mitigation effort to migrate big integer arithmetics to \href{https://github.com/RustCrypto/crypto-bigint}{\textbf{constant-time implementations}}. Specifically:
 
             \begin{highlights}
                 % \item \href{https://github.com/RustCrypto/crypto-bigint/pulls?q=is%3Apr+is%3Aclosed+author%3Axuganyu96++is%3Amerged}{Implemented \textbf{finite field arithmetics} for heap-allocated big integers}
-                \item \href{https://github.com/entropyxyz/crypto-primes/pull/40}{Ported stack-only random prime generation to heap-allocated big integers}
-                \item \href{https://github.com/RustCrypto/RSA/pull/400}{Integrated Marvin toolkit for detecting timing variability in RSA implementation} 
+                % \item \href{https://github.com/RustCrypto/RSA/pull/400}{Integrated Marvin toolkit for detecting timing variability in RSA implementation} 
+                \item Contributed to Marvin Attack mitigation in RustCrypto/RSA: ported random prime generation to constant-time heap-allocated integers and integrated Marvin test harness for timing variability detection
             \end{highlights}
         \end{onecolentry}
         \vspace{0.3cm}
 
-        % \begin{twocolentry}
-        %     {\href{https://github.com/rustls/rustls}{github.com/rustls/rustls}}
-        %     \textbf{rustls}
-        % \end{twocolentry}
-        % \vspace{0.1cm}
-        % \begin{onecolentry}
-        %     \begin{highlights}
-        %        \item \href{https://github.com/rustls/rustls/pull/1328}{Identified incorrect TLS termination at google.com and redirected the example binaries to connect to other correct TLS server implementations} 
-        %     \end{highlights}
-        % \end{onecolentry}
-        % \vspace{0.2cm}
+        \begin{twocolentry}
+            {\href{https://github.com/rustls/rustls}{github.com/rustls/rustls}}
+            \textbf{rustls}
+        \end{twocolentry}
+        \vspace{0.1cm}
+        \begin{onecolentry}
+            \begin{highlights}
+               \item \href{https://github.com/rustls/rustls/pull/1328}{Diagnosed incorrect TLS termination in demo client and redirected example binaries to a conformant server} 
+            \end{highlights}
+        \end{onecolentry}
+        \vspace{0.2cm}
 
         \begin{twocolentry}
             {\href{https://github.com/apache/airflow}{github.com/apache/airflow}}
@@ -333,9 +354,9 @@
         \vspace{0.1cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item \href{https://github.com/aelzeiny/airflow-aws-executors/tree/master}{\textbf{\texttt{AirflowFargateExecutor}}}: an alternative task executor that launches one ephemeral worker container per task instance. Ephemeral workers save users from paying for idle worker when task load is low. Hosting workers on serverless container orchestration like AWS Fargate simplifies massive task parallelism
+                \item Built \href{https://github.com/aelzeiny/airflow-aws-executors/tree/master}{\textbf{\texttt{AirflowFargateExecutor}}}, a task executor that launches ephemeral Fargate containers per task for cost-efficient parallelism
                 \item \href{https://github.com/apache/airflow/issues/32706}{Fixed improper exception handling in python multiprocessing that causes critical process to become zombie instead of exiting upon database disconnect}
-                \item \href{https://github.com/apache/airflow/pull/32385}{Fixed data structure serialization that causes frontend to crash when said data structure cannot be serialized into JSON}
+                % \item \href{https://github.com/apache/airflow/pull/32385}{Fixed data structure serialization that causes frontend to crash when said data structure cannot be serialized into JSON}
                 \item \href{https://github.com/apache/airflow/pull/31836}{Implemented user-specified database check retries in the CLI command \texttt{\textbf{airflow db check}}}
             \end{highlights}
         \end{onecolentry}
