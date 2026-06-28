@@ -9,6 +9,7 @@ title: Homelab
 - [Status](https://status.thinkcentre.crustaceanlab.com)
 - [Audiobookshelf](https://audiobooks.thinkcentre.crustaceanlab.com)
 - [Copyparty](https://copyparty.thinkcentre.crustaceanlab.com)
+- [Dockhand](https://dockhand.thinkcentre.crustaceanlab.com)
 - [Backrest](https://backrest.thinkcentre.crustaceanlab.com)
 - [Immich](https://immich.thinkcentre.crustaceanlab.com)
 

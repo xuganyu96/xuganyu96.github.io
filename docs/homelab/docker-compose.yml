@@ -77,6 +77,20 @@ services:
       timeout: 2s
       retries: 5
       start_period: 15s
+  dockhand:
+    image: fnsys/dockhand:latest
+    # container_name: dockhand
+    restart: unless-stopped
+    networks:
+      - homelab
+    user: "1000:1000"
+    group_add:
+      - "969"  # Replace with your host's Docker GID
+    # ports:
+    #   - "3000:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/brucexu/Shared/SelfHosting/dockhand/appdata:/app/data
   immich-server:
     container_name: immich_server
     user: "1000:1000"
