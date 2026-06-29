@@ -3,14 +3,17 @@ layout: page
 title: Homelab
 ---
 
+TODO:
+
+- Caddy and Audiobookshelf need health checks
+
 ## Quick start
 
-- [`docker-compose.yml`](/homelab/docker-compose.yml)
-- [Status](https://status.thinkcentre.crustaceanlab.com)
+- [Caddy Status](https://status.thinkcentre.crustaceanlab.com)
 - [Audiobookshelf](https://audiobooks.thinkcentre.crustaceanlab.com)
+- [Backrest](https://backrest.thinkcentre.crustaceanlab.com)
 - [Copyparty](https://copyparty.thinkcentre.crustaceanlab.com)
 - [Dockhand](https://dockhand.thinkcentre.crustaceanlab.com)
-- [Backrest](https://backrest.thinkcentre.crustaceanlab.com)
 - [Immich](https://immich.thinkcentre.crustaceanlab.com)
 
 ```bash
