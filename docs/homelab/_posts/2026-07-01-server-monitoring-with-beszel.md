@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  Server monitoring with Beszel
+date: 2026-07-01 12:21:12 -0400
 ---
 
 I want to know CPU, RAM, disk, and network usage on my main server and backup
@@ -30,7 +31,7 @@ docker run -d --rm \
 ```
 
 Inspect the container's log messages with `docker logs -f beszel`, then visit
-<http://thinkcentre.<REDACTED>.ts.net:8090> using a browser, which should show
+<http://thinkcentre.REDACTED.ts.net:8090> using a browser, which should show
 a screen for creating the admin account. After logging in, we should see an
 empty dashboard. Click "Add System" and copy the docker run command, though
 there are a few items to modify:
