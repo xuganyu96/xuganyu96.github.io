@@ -125,7 +125,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/brucexu/Shared/SelfHosting/dockhand/appdata:/app/data
-  # TODO: upgrade to immich 3
   immich-server:
     container_name: immich_server
     user: "1000:1000"
