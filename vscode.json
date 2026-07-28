@@ -26,7 +26,8 @@
             "comments": "off",
             "strings": "off"
         },
-        "editor.autoClosingBrackets": "never"
+        "editor.autoClosingBrackets": "never",
+        "editor.tabSize": 2
     },
     "[json]": {
         "editor.quickSuggestions": {
