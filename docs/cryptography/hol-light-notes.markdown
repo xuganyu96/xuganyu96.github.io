@@ -24,20 +24,23 @@ s2n-bignum requires the latest HOL Light from source ([arghh](https://github.com
 
 ```bash
 # Create new switch
-opam switch create hol-light-latest 5.4.0
-opam switch hol-light-latest
-eval $(opam env)
-which ocaml  # should return ~/.opam/hol-light-latest/bin/ocaml
+opam switch create hol-light-b19af69 5.4.1
+opam switch set hol-light-b19af69
+which ocaml  # should return ~/.opam/hol-light-b19af69/bin/ocaml
 
-# Install dependencies: zarith, ledit, and camlp5
+# Install dependencies: zarith, ledit, and camlp5.
+# Building ledit depends on camlp5, so CAMLP5LIB must be set correctly.
+# Otherwise, you might run into error:
+# "Error while loading "pa_extend.cmo": file not found in path"
 opam update
-opam install -y zarith ledit
 opam pin -y add camlp5 8.04.00
+export CAMLP5LIB="$HOME/.opam/hol-light-b19af69/lib/camlp5"
+opam install -y zarith ledit  # zarith@1.14, ledit@2.08
 opam list
-export CAMLP5LIB="$HOME/.opam/hol-light-latest/lib/camlp5"
 
 # Build HOL Light
 git clone git@github.com:jrh13/hol-light.git && cd hol-light
+git checkout b19af69
 HOLLIGHT_USE_MODULE=1 make
 ./hol.sh
 
