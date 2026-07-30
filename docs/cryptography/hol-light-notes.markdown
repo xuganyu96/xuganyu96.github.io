@@ -13,11 +13,7 @@ title: HOL Light notes
 
 ## Installation
 
-Now a convenience script:
-
-```bash
-curl -fsSL https://xuganyu96.github.io/assets/install-hol.sh | bash
-```
+Check [s2n-bignum's ci.yml](https://github.com/awslabs/s2n-bignum/blob/main/.github/workflows/ci.yml) for the latest installation steps.
 
 
 s2n-bignum requires the latest HOL Light from source ([arghh](https://github.com/awslabs/s2n-bignum/blob/c403fb04f45ed488b79c767fd9e83e60f439cb44/README.md?plain=1#L331)).
