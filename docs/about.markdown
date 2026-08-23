@@ -11,6 +11,8 @@ I graduated from the <bold style="font-weight:bold; color: #5D0096; padding-left
 Prior to grad school, I was a data engineer at [LeanTaaS](https://leantaas.com). I finished my Bachelor's at the University of California at Berkeley with double majors in Mathematics and Statistics.
 
 # Random stuff
+- My dotfiles
+  - [.clang-format](/assets/clang-format)
 - [Install pre-built Neovim on MacOS](/neovim)
 - [34-key layout](/assets/34-key-layout.pdf)
 - [How many days since I re-wrote my Neovim config?](/rewrite.html)
