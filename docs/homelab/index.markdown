@@ -15,9 +15,9 @@ title: Homelab
 
 ```bash
 # from xuganyu96.github.io/docs
-docker compose -f homelab/docker-compose.yml up -d
-docker compose -f homelab/docker-compose.yml logs -f
-docker compose -f homelab/docker-compose.yml down
+docker compose -f homelab/docker-compose.yml --env-file /path/to/.env up -d
+docker compose -f homelab/docker-compose.yml --env-file /path/to/.env logs -f
+docker compose -f homelab/docker-compose.yml --env-file /path/to/.env down
 ```
 
 ## Guides
