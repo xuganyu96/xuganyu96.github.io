@@ -23,10 +23,35 @@ docker compose -f homelab/docker-compose.yml --env-file /path/to/.env down
 ## Guides
 
 - [Prevent Fedora Desktop w/ GNOME from automatically suspending]({% post_url 2026-05-18-prevent-gnome-auto-suspend %})
+- [File sync with `rsync`](#file-sync-with-rsync)
 - [Backup with restic](#backup-with-restic)
 - [Format external SSD](#format-external-ssd-as-bulk-cloud-storage-on-fedora-linux)
 
-## Backup with restic
+### File sync with `rsync`
+
+A masochist way to manually manage file syncing between remote and local:
+
+```bash
+rsync --verbose --info=progress2 -azhru     \
+    --exclude ".DS_Store"                   \
+    --exclude ".rumdl_cache"                \
+    "<src>"                                 \
+    "<dst>"                                 \
+    --dry-run
+```
+
+**Notes:**
+
+- `-azhru` specifies archive mode (`-a`), compression (`-z`), human-readable
+  output (`-h`), and skipping files that are newer at destination (`-u`). The
+  recursive flag (`-r`) is probably redundant.
+- When syncing directories, pay attention to trailing slashes. The source
+  directory should have a trailing slash, but the destination directory should
+  not have the trailing slash. Otherwise `rysnc` might copy the entire source
+  directory into the destination directory instead of individually updating the
+  files.
+
+### Backup with restic
 
 ```bash
 # Password can be stored as an environment variable in a file with 600 permission
@@ -35,7 +60,7 @@ restic -r ${RESTIC_REMOTE_URL} backup ${RESTIC_SRC}
 restic -r ${RESTIC_REMOTE_URL} forget --keep-last 1 --prune --dry-run
 ```
 
-## Format external SSD as bulk cloud storage on Fedora Linux
+### Format external SSD as bulk cloud storage on Fedora Linux
 
 Start with formatting the SSD:
 
