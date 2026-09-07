@@ -1,0 +1,6 @@
+SelfHosting/
+Photos/
+Media/
+.DS_Store
+.rumdl_cache/
+.venv/
