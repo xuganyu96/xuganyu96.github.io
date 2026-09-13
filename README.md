@@ -1,5 +1,8 @@
 # xuganyu96.github.io
-My personal website: xuganyu96.github.io
+My personal website: <https://xuganyu96.github.io>
+
+- [ ] Use `ffmpeg` to encode/compress videos
+- [ ] Some kind of torrent client?
 
 ## Managing dot files
 Refresh Neovim config, tmux config, and global gitignore:
