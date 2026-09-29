@@ -203,9 +203,6 @@
         \textbf{U of Waterloo}, MASc in Electrical and Computer Engineering,
         GPA 94.6/100
         \end{twocolentry}
-        \begin{onecolentry}
-            \emph{Courses:} public-key cryptography, applied cryptography, post-quantum cryptography
-        \end{onecolentry}
         \vspace{0.10 cm}
 
         \begin{twocolentry}{
@@ -221,13 +218,13 @@
         \begin{onecolentry}
             \textbf{Programming languages:} C, Python 3, Rust, Bash, SQL
         \end{onecolentry}
-        \vspace{0.2 cm}
+        \vspace{0.1 cm}
         \begin{onecolentry}
-            \textbf{Cryptography:} Post Quantum Cryptography, Public Key Infrastructure, Transport Layer Security
+            \textbf{Cryptography:} Post Quantum Cryptography, Public Key Infrastructure (PKI), Transport Layer Security (TLS)
         \end{onecolentry}
-        \vspace{0.2 cm}
+        \vspace{0.1 cm}
         \begin{onecolentry}
-            \textbf{Low-level/system programming:} Valgrind, gdb/lldb, constant-time programming, Address Sanitizer, fuzzing
+            \textbf{Systems:} Linux/Unix, memory safety (AddressSanitizer), secret-dependent branching detection (Valgrind memcheck), fuzzing
         \end{onecolentry}
         % \begin{onecolentry}
         %     \textbf{Web development:} Flask, Docker, AWS serverless stack, Linux admin, Apache Airflow, PostgreSQL/MySQL
@@ -242,10 +239,20 @@
         \vspace{0.10 cm}
         \begin{onecolentry}
             \begin{highlights}
-                \item Core maintainer of \href{https://github.com/open-quantum-safe/liboqs}{\textbf{liboqs}}, an open-source C library for quantum-resistant cryptographic algorithms.
-                \item Triaged and fixed security vulnerabilities such as out-of-bounds memory access \href{https://github.com/open-quantum-safe/liboqs/pull/2266}{(\#2266)}, cache timing side channel \href{https://github.com/open-quantum-safe/liboqs/pull/2431}{(\#2431)}, and incorrect AVX512VL SHA3 implementation \href{https://github.com/open-quantum-safe/liboqs/pull/2442}{(\#2442)}
-                \item Maintained liboqs testing infrastructure on GitHub Actions: expanding test coverage, reducing test runtime, and improving test reliability
-                \item Engaged an international community of cryptography researchers and open-source contributors through code reviews, GitHub discussions, and community calls
+                \item Core maintainer of \href{https://github.com/open-quantum-safe/liboqs}{\textbf{liboqs}},
+                an open-source C library for quantum-resistant cryptographic algorithms.
+                \item Adapted reference cryptographic implementations for integration
+                into liboqs: symmetric primitive shimming, memory
+                safety, constant-time validation, fuzzing, and correctness tests
+                (NIST KAT, ACVP vectors, Wycheproof).
+                \item Triaged and remediated security vulnerabilities and C/Assembly
+                implementation errors, including compiler-induced cache-timing
+                side channel, incorrect incremental absorption in SHA-3 vectorization,
+                and under-allocation for AES key schedule.
+                \item Maintained continuous integration pipeline on GitHub Actions,
+                leveraging static analyzers (CodeQL) and coding agents to automate
+                repetitive maintenanc and uphold code quality.
+                \item Led release process and coordinated vulnerability response through GitHub Security Advisories.
             \end{highlights}
         \end{onecolentry}
         \vspace{0.2 cm}
@@ -335,17 +342,17 @@
         \end{onecolentry}
         \vspace{0.3cm}
 
-        \begin{twocolentry}
-            {\href{https://github.com/rustls/rustls}{github.com/rustls/rustls}}
-            \textbf{rustls}
-        \end{twocolentry}
-        \vspace{0.1cm}
-        \begin{onecolentry}
-            \begin{highlights}
-               \item \href{https://github.com/rustls/rustls/issues/1327}{Traced demo client panic to incorrect TLS termination where the server closes the TCP connection before sending \texttt{close\_notify}}
-            \end{highlights}
-        \end{onecolentry}
-        \vspace{0.2cm}
+        % \begin{twocolentry}
+        %     {\href{https://github.com/rustls/rustls}{github.com/rustls/rustls}}
+        %     \textbf{rustls}
+        % \end{twocolentry}
+        % \vspace{0.1cm}
+        % \begin{onecolentry}
+        %     \begin{highlights}
+        %        \item \href{https://github.com/rustls/rustls/issues/1327}{Traced demo client panic to incorrect TLS termination where the server closes the TCP connection before sending \texttt{close\_notify}}
+        %     \end{highlights}
+        % \end{onecolentry}
+        % \vspace{0.2cm}
 
         \begin{twocolentry}
             {\href{https://github.com/apache/airflow}{github.com/apache/airflow}}
