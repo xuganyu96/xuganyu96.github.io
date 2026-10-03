@@ -12,4 +12,7 @@ sudo tar -C /opt -xzvf nvim-macos-arm64.tar.gz
 export PATH="$PATH:/opt/nvim-macos-arm64/bin"
 ```
 
-I chose to install Neovim from pre-built archive instead of Homebrew because I want to stick with v0.11 with my current `init.lua`.
+I chose to install Neovim from pre-built archive instead of Homebrew because I
+want to stick with v0.11 with my current `init.lua`.
+
+- `J` means "join" and is the opposite of wrapping, such as with `gqq`
