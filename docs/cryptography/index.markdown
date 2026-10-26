@@ -5,6 +5,35 @@ title: Cryptography
 
 ## Journals
 
+### Oct 26, 2026
+
+Bit-masked buffer equality test implementation:
+
+- Inputs are byte buffers `uint8_t *`, use a `uint8_t diff` to track byte-by-byte
+  difference: `diff |= lhs[i] ^ rhs[i]`
+- Promote `uint8_t diff` to a signed integer. `int` is guaranteed to be at least
+  16-bit wide, though on many modern 64-bit systems, `int` is 32-bit wide
+- If the two buffers are equal, then `diff` must be `0`, so the promoted signed integer
+  is also `0`. Otherwise, the promoted integer must be positive. We can subtract 1
+  from the promoted integer and set its most significant bit to 1 if `diff` is 0 and
+  0 if `diff` is not 0
+- With signed integer, right shifts are "arithmetic shift", and will preserve the
+  most significant bit
+
+```c
+/**
+ * @brief return 0 if two buffers are identical, else return -1
+ */
+int ct_eq(uint8_t *a, uint8_t *b, size_t len) {
+    int selector = 0;
+    for (size_t i = 0; i < len; i++) {
+        selector |= a[i] ^ b[i];
+    }
+    selector = ~((selector - 1) >> (sizeof(selector) * 8 - 1));
+    return selector;
+}
+```
+
 ### Oct 25, 2026
 
 Here is a snippet from FrodoKEM-640 reference implementation, compiled for ARM64
@@ -19,7 +48,6 @@ ldr     q0, [x8]
 - `w8` is the lower 32 bits of the 64-bit register `x8`
 - `w8` holds the `int selector` output from constant time equality check between
   re-encryption and input ciphertext. It is 0 if two buffers are equal and -1 otherwise
-- **TODO**: independently reproduce `int cteq(uint8_t *, uint8_t *, size_t)`
 
 `csel` loads the value in `x12` into `x8` if the condition is true. `lt` denotes
 "signed less than", which is true iff `w8` is less than 0. `ldr` denotes "Load Register."
