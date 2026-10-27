@@ -5,6 +5,119 @@ title: Cryptography
 
 ## Journals
 
+### Oct 27, 2026
+
+What happens if I compile two object files where each object file has a symbol with
+the same name but does different thing?
+
+```c
+// liblucky.h
+int get_lucky();
+
+// lucky1.c
+int get_lucky() {
+    return 1;
+}
+
+// lucky2.c
+int get_lucky() {
+    return 2;
+}
+```
+
+Compile into static library and inspect.
+
+```bash
+cc -g -c lucky1.c lucky2.c
+ar -rcs liblucky.a lucky1.o lucky2.o
+objdump -d liblucky.a
+```
+
+The archive (static library) contains both symbols:
+
+```asm
+liblucky.a(lucky1.o):	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000000000000 <ltmp0>:
+       0: 52800020     	mov	w0, #0x1                ; =1
+       4: d65f03c0     	ret
+
+liblucky.a(lucky2.o):	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000000000000 <ltmp0>:
+       0: 52800040     	mov	w0, #0x2                ; =2
+       4: d65f03c0     	ret
+```
+
+Add a binary and link against it:
+
+```c
+// main.c
+#include <stdio.h>
+#include "liblucky.h"
+
+int main(void) {
+    printf("Lucky number %d\n", get_lucky());
+    return 0;
+}
+```
+
+```bash
+cc -g -o main.out main.c liblucky.a
+objdump -d main.out
+```
+
+```asm
+main.out:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000100000460 <_main>:
+100000460: d10083ff    	sub	sp, sp, #0x20
+100000464: a9017bfd    	stp	x29, x30, [sp, #0x10]
+100000468: 910043fd    	add	x29, sp, #0x10
+10000046c: 52800008    	mov	w8, #0x0                ; =0
+100000470: b9000be8    	str	w8, [sp, #0x8]
+100000474: b81fc3bf    	stur	wzr, [x29, #-0x4]
+100000478: 9400000b    	bl	0x1000004a4 <_get_lucky>
+10000047c: 910003e9    	mov	x9, sp
+100000480: aa0003e8    	mov	x8, x0
+100000484: f9000128    	str	x8, [x9]
+100000488: 90000000    	adrp	x0, 0x100000000 <_printf+0x100000000>
+10000048c: 9112e000    	add	x0, x0, #0x4b8
+100000490: 94000007    	bl	0x1000004ac <_printf+0x1000004ac>
+100000494: b9400be0    	ldr	w0, [sp, #0x8]
+100000498: a9417bfd    	ldp	x29, x30, [sp, #0x10]
+10000049c: 910083ff    	add	sp, sp, #0x20
+1000004a0: d65f03c0    	ret
+
+00000001000004a4 <_get_lucky>:
+1000004a4: 52800020    	mov	w0, #0x1                ; =1
+1000004a8: d65f03c0    	ret
+
+Disassembly of section __TEXT,__stubs:
+
+00000001000004ac <__stubs>:
+1000004ac: 90000030    	adrp	x16, 0x100004000 <_printf+0x100004000>
+1000004b0: f9400210    	ldr	x16, [x16]
+1000004b4: d61f0200    	br	x16
+```
+
+I guess that the first matching symbol is used and the other one is discarded. If
+true, then swapping the order will get `main` to print 2:
+
+```bash
+rm liblucky.a
+ar -rcs liblucky.a lucky2.o lucky1.o
+cc -g -o main.out main.c liblucky.a
+```
+
+Hence the need for namespacing.
+
 ### Oct 26, 2026
 
 Bit-masked buffer equality test implementation:
