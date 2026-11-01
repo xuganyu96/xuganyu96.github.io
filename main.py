@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 
-# NOTE: the assessment explicitly asks for 2048-bit keypair, so key bits are hardcoded
+# The assessment explicitly asks for 2048-bit keypair, so key bits are hardcoded
 DEFAULT_RSA_PUBLIC_EXPONENT = 65537
 MINIMUM_RSA_KEY_SIZE = 2048
 OAEP_PADDING = padding.OAEP(
@@ -145,6 +145,40 @@ def run_sha256sum(args: argparse.Namespace):
     sha256sum(args.file)
 
 
+def run_encrypt(args: argparse.Namespace):
+    with open(args.file, "rb") as f:
+        plaintext = f.read()
+    with open(args.pubkey, "rb") as f:
+        pubkey = serialization.load_pem_public_key(f.read())
+        if not isinstance(pubkey, rsa.RSAPublicKey):
+            raise TypeError(f"{args.pubkey} is not valid RSA key")
+
+    lines = []
+    for key, val in encrypt_data(plaintext, pubkey).serialize().items():
+        lines.append(f"{key}:{val}\n")
+
+    with open(args.out, "w", encoding="utf-8") as f:
+        f.writelines(lines)
+
+
+def run_decrypt(args: argparse.Namespace):
+    with open(args.ciphertext) as f:
+        h_ct = {}
+        for line in f.readlines():
+            key, val = tuple(line.split(":"))
+            h_ct[key] = val
+        h_ct = HybridCiphertext.deserialize(h_ct)
+    with open(args.privkey, "rb") as f:
+        privkey = serialization.load_pem_private_key(f.read(), password=None)
+        if not isinstance(privkey, rsa.RSAPrivateKey):
+            raise TypeError(f"{args.privkey} is not valid RSA private key")
+
+    plaintext = decrypt_data(h_ct, privkey)
+
+    with open(args.out, "wb") as f:
+        f.write(plaintext)
+
+
 def run_unittest(_):
     unittest.main(module="__main__", argv=["foo"], exit=False)
 
@@ -154,7 +188,7 @@ def get_argparser() -> argparse.ArgumentParser:
         prog="RSA File Encryptor",
         description="A collection of tools for file encryption using RSA",
     )
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(required=True)
     keygen_parser = subparsers.add_parser("rsakeygen")
     keygen_parser.add_argument(
         "--pubkey",
@@ -175,7 +209,23 @@ def get_argparser() -> argparse.ArgumentParser:
     sha256sum_parser.set_defaults(func=run_sha256sum)
 
     encrypt_parser = subparsers.add_parser("encrypt")
+    encrypt_parser.add_argument("file", type=str, help="Path to input plaintext file")
+    encrypt_parser.add_argument(
+        "pubkey", type=str, help="Path to input public key file"
+    )
+    encrypt_parser.add_argument("out", type=str, help="Path to output ciphertext file")
+    encrypt_parser.set_defaults(func=run_encrypt)
+
     decrypt_parser = subparsers.add_parser("decrypt")
+    decrypt_parser.add_argument(
+        "ciphertext", type=str, help="Path to input ciphertext file"
+    )
+    decrypt_parser.add_argument(
+        "privkey", type=str, help="Path to input private key file"
+    )
+    decrypt_parser.add_argument("out", type=str, help="Path to output decrypted file")
+    decrypt_parser.set_defaults(func=run_decrypt)
+
     unittest_parser = subparsers.add_parser("unittest")
     unittest_parser.set_defaults(func=run_unittest)
 
@@ -186,5 +236,3 @@ if __name__ == "__main__":
     parser = get_argparser()
     args = parser.parse_args()
     args.func(args)
-    # rsa_keygen()
-    # sha256sum("./CodingExercise.JPG")
