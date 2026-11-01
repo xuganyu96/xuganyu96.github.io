@@ -4,6 +4,7 @@ set -euo pipefail
 
 mkdir -p artifacts
 ./main.py rsakeygen --pubkey artifacts/pubkey.pem --privkey artifacts/privkey.pem
+chmod 600 artifacts/privkey.pem
 ./main.py encrypt CodingExercise.JPG artifacts/pubkey.pem artifacts/ciphertext.txt
 ./main.py decrypt artifacts/ciphertext.txt artifacts/privkey.pem artifacts/decryption.jpg
 

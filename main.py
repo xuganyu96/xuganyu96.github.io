@@ -71,7 +71,6 @@ class HybridCiphertext:
     VALID_FIELDS = ("encrypted_symkey", "encrypted_data", "nonce")
 
     def __init__(self, encrypted_symkey: bytes, encrypted_data: bytes, nonce: bytes):
-        # TODO: assumed AAD to be the bytes of encrypted_symkey
         self.encrypted_symkey = encrypted_symkey
         self.encrypted_data = encrypted_data
         self.nonce = nonce
