@@ -3,7 +3,6 @@ import base64
 import hashlib
 import os
 import unittest
-from typing import TextIO
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
@@ -73,36 +72,31 @@ class HybridCiphertext:
         self.encrypted_data = encrypted_data
         self.nonce = nonce
 
-    def encode(self) -> str:
-        encrypted_symkey_b64str = base64.b64encode(self.encrypted_symkey)
-        encrypted_data_b64str = base64.b64encode(self.encrypted_data)
-        nonce_b64str = base64.b64encode(self.nonce)
-        return "\n".join(
-            [
-                f"encrypted_symkey:{encrypted_symkey_b64str}",
-                f"encrypted_data:{encrypted_data_b64str}",
-                f"nonce:{nonce_b64str}",
-            ]
-        )
+    def serialize(self) -> dict[str, str]:
+        encrypted_symkey_b64str = base64.b64encode(self.encrypted_symkey).decode()
+        encrypted_data_b64str = base64.b64encode(self.encrypted_data).decode()
+        nonce_b64str = base64.b64encode(self.nonce).decode()
+        return {
+            "encrypted_symkey": f"{encrypted_symkey_b64str}",
+            "encrypted_data": f"{encrypted_data_b64str}",
+            "nonce": f"{nonce_b64str}",
+        }
 
     @staticmethod
-    def decode_str(f: TextIO) -> HybridCiphertext:
-        file_data: dict[str, bytes] = {}
-        for line in f.readlines():
-            key, val = tuple(line.split(":"))
-            if key not in HybridCiphertext.VALID_FIELDS:
-                raise KeyError(f"Invalid field {key}")
-            val = base64.b64decode(val, validate=True)
-            file_data[key] = val
+    def deserialize(data: dict[str, str]) -> HybridCiphertext:
+        """
+        :param data: mapping from field name to base64-encoded value
+        """
         for key in HybridCiphertext.VALID_FIELDS:
-            if key not in file_data:
-                raise KeyError(f"Missing field {key}")
-        # TODO: no additional validation is needed; if any of the data is malformed
-        # we can catch them at decryption
+            if key not in data:
+                raise KeyError(f"Missing key {key}")
+        for key in data.keys():
+            if key not in HybridCiphertext.VALID_FIELDS:
+                raise KeyError(f"Invalid key {key}")
         return HybridCiphertext(
-            file_data["encrypted_symkey"],
-            file_data["encrypted_data"],
-            file_data["nonce"],
+            base64.b64decode(data["encrypted_symkey"]),
+            base64.b64decode(data["encrypted_data"]),
+            base64.b64decode(data["nonce"]),
         )
 
 
@@ -135,6 +129,8 @@ class TestFileEncryption(unittest.TestCase):
         )
         pubkey = privkey.public_key()
         h_ct = encrypt_data(plaintext, pubkey)
+        raw_data = h_ct.serialize()
+        h_ct = HybridCiphertext.deserialize(raw_data)
         decryption = decrypt_data(h_ct, privkey)
         self.assertEqual(plaintext, decryption)
 
