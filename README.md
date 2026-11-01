@@ -17,6 +17,14 @@ Requirements:
 ## Getting started
 
 ```bash
+main.py rsakeygen [--pubkey file.pem] [--privkey file.pem] [--key-bits ...] [--modulus ...]
+main.py sha256sum <file>
+main.py encrypt <input> <pubkey.pem> <output>
+main.py decrypt <input> <privkey.pem> <output>
+main.py tests
+```
+
+```bash
 openssl pkey -in privkey.pem -text -noout
 openssl pkey -pubin -in pubkey.pem -text -noout
 ```

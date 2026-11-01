@@ -1,4 +1,5 @@
 from __future__ import annotations
+import argparse
 import base64
 import hashlib
 import os
@@ -135,7 +136,29 @@ class TestFileEncryption(unittest.TestCase):
         self.assertEqual(plaintext, decryption)
 
 
+def run_unittest(_):
+    unittest.main(module="__main__", argv=["foo"], exit=False)
+
+
+def get_argparser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="RSA File Encryptor",
+        description="A collection of tools for file encryption using RSA",
+    )
+    subparsers = parser.add_subparsers()
+    keygen_parser = subparsers.add_parser("rsakeygen")
+    sha256sum_parser = subparsers.add_parser("sha256sum")
+    encrypt_parser = subparsers.add_parser("encrypt")
+    decrypt_parser = subparsers.add_parser("decrypt")
+    unittest_parser = subparsers.add_parser("unittest")
+    unittest_parser.set_defaults(func=run_unittest)
+
+    return parser
+
+
 if __name__ == "__main__":
-    unittest.main()
-    rsa_keygen()
-    sha256sum("./CodingExercise.JPG")
+    parser = get_argparser()
+    args = parser.parse_args()
+    args.func(args)
+    # rsa_keygen()
+    # sha256sum("./CodingExercise.JPG")
