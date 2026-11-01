@@ -9,25 +9,65 @@ Requirements:
   library can be used to generate all keys and hashes).
 - [x] Application to generate SHA-256 hash of the attached file. No signing is needed.
   Just print hash in HEX encoding to standard output.
-- [ ] Application that will encrypt and decrypt the file using the RSA key pair
+- [x] Application that will encrypt and decrypt the file using the RSA key pair
   generated.
-- [ ] Send us public and private key, along with original and encrypted files so
+- [x] Send us public and private key, along with original and encrypted files so
   we can confirm the contents of the file is the same as the file encrypted.
 
 ## Getting started
 
+This project requires [`pyca/cryptography`](https://cryptography.io/en/latest/):
+
 ```bash
-main.py rsakeygen [--pubkey file.pem] [--privkey file.pem]
-main.py sha256sum <file>
-main.py encrypt <input> <pubkey.pem> <output>
-main.py decrypt <input> <privkey.pem> <output>
-main.py tests
+pip install -r requirements.txt
 ```
+
+To generate RSA keypair, run the `rsakeygen` command. By default, public key will
+be written to `pubkey.pem`, and private key will be written to `privkey.pem`, but
+you can use `--pubkey/--privkey` to change output paths.
+
+```bash
+python main.py rsakeygen [--pubkey file.pem] [--privkey file.pem]
+```
+
+The keypair files follow standard PKCS8 format and can be manually inspected with
+OpenSSL:
 
 ```bash
 openssl pkey -in privkey.pem -text -noout
 openssl pkey -pubin -in pubkey.pem -text -noout
 ```
+
+To compute SHA-256 checksum, run the `sha256sum` command. The output should align
+with Linux/MacOS' built-in `sha256sum` command. The SHA-256 checksum of [CodingExercise.JPG](./CodingExercise.JPG)
+is `fa1bed1a61ca81be4d6ecbfe3a75523213a5e399b9db9dd74cfd65303d9c3cc4`.
+
+
+```bash
+python main.py sha256sum CodingExercise.JPG
+# check against reference implementation
+sha256sum CodingExercise.JPG
+```
+
+Use the `encrypt` and `decrypt` command to encrypt and decrypt files. You can check
+decryption is correct using SHA-256 checksum:
+
+```bash
+python main.py encrypt CodingExercise.JPG pubkey.pem ciphertext.txt
+python main.py decrypt ciphertext.txt privkey.pem decryption.jpg
+
+python main.py sha256sum CodingExercise.JPG
+python main.py sha256sum decryption.jpg
+```
+
+Last but not least, the `unittest` command runs some tests:
+
+```bash
+python main.py unittest
+```
+
+The `artifacts/` subdirectory contains pre-generated public key, private key, ciphertext,
+and decryption using the [`artifacts.sh`](./artifacts.sh) script.
 
 ## Design rationale
 
@@ -57,7 +97,16 @@ over hexadecimal because it is more space efficient. An encrypted blob will look
 this:
 
 ```text
-encryptedkey:<base64>
-nonce:<base64-text>
-ciphertext:<base64>
+encrypted_symkey:<base64 string>
+encrypted_data:<base64 string>
+nonce:<base64 string>
 ```
+
+## AI Usage Disclosure
+
+All code and documentation are written **without** AI assistance, except:
+
+- I used ChatGPT as a second opinion on the design of hybrid RSA encryption, specifically
+  for using encrypted symmetric key for associated data in the AES-256-GCM encryption
+  to provide key binding property.
+- Proofreading `README.md` for typos
