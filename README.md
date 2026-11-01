@@ -78,23 +78,20 @@ with `pyca/cryptography`'s runtime behavior, which will raise `ValueError("Encry
 The commonly accepted strategy is to deploy hybrid encryption: encrypt bulk data with
 a randomly generated symmetric key, then encrypt the symmetric key with RSA.
 
-For symmetric cipher, I chose to AES-GCM with 256-bit key. The nonce will be randomly
-generated from `os.urandom`. The associated data field will be left empty. I chose
-AES-GCM because it provides both confidentiality and integrity. The latter is especially
-important because it allows the decrypting party to detect whether the symmetric ciphertext
-has been tempered with in transit.
+For symmetric cipher, I chose AES-256-GCM with randomly generated nonce. AES-256-GCM
+provides authenticated encryption with associated data (AEAD), which provides confidentiality
+over the plaintext and integrity over both the (unauthenticated) AES ciphertext and
+the associated data. This allows the decryptor to detect if the authenticated ciphertext
+has been tampered with. I also chose to include the encrypted AES key for the associated
+data to provide integrity for the encrypted AES key, though without other authentication
+schemes (i.e. digital signatures and PKI) to establish the identity of the sender,
+this cannot prevent man-in-the-middle attacks that replace the original ciphertext
+with an entirely new one.
 
-The symmetric key will be encrypted by RSA public key using OAEP. Because RSA-OAEP
-is already known to be IND-CCA secure, the encrypted symmetric key does not need to
-be separately authenticated.
-
-The hybrid ciphertext consists of these parts: an RSA ciphertext, symmetric nonce,
-symmetric ciphertext, and associated data. I chose to encode all binary data into
-strings using Base64 encoding so that it is easy to serialize and deserialize into
-files. Working with raw bytes means I need to implement some kind of binary-safe encoding
-scheme (e.g. DER), which I find to be a poor use of the limited time. I chose Base64
-over hexadecimal because it is more space efficient. An encrypted blob will look like
-this:
+The hybrid ciphertext consists of these parts: the encrypted AES key in the form of
+an RSA ciphertext, the AEAD ciphertext, and the AEAD nonce. I chose to encode binary
+data using base64 encoding to provide a ciphertext format that is easy to inspect
+and parse. An encrypted file would look something like this:
 
 ```text
 encrypted_symkey:<base64 string>

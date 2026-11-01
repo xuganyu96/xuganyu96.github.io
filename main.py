@@ -109,9 +109,6 @@ def encrypt_data(data: bytes, pubkey: rsa.RSAPublicKey) -> HybridCiphertext:
     cipher = AESGCM(symkey)
     nonce = os.urandom(AESGCM_NONCE_BYTES)
     encrypted_symkey = pubkey.encrypt(symkey, OAEP_PADDING)
-    # TODO: an attacker could use a different AES key, encrypt it under the known RSA public key,
-    # and use this wrong AES key to compute a different tag on the ciphertext + AAD? This
-    # means that encrypted key should be in AAD to be authenticated?
     encrypted_data = cipher.encrypt(nonce, data, encrypted_symkey)
 
     return HybridCiphertext(encrypted_symkey, encrypted_data, nonce)
