@@ -1,5 +1,9 @@
+from __future__ import annotations
+import base64
 import hashlib
 import os
+import unittest
+from typing import TextIO
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
@@ -12,7 +16,7 @@ OAEP_PADDING = padding.OAEP(
 )
 # AES-GCM supports 128-bit and 192-bit key, too, but the performance gains are negligible
 # on desktop platforms. There is no need to trade security.
-SYM_KEY_BITLENGTH = 256
+SYMKEY_BITLENGTH = 256
 AESGCM_NONCE_BYTES = 12
 
 
@@ -60,34 +64,82 @@ def sha256sum(path: str):
     print(digesthex)
 
 
-if __name__ == "__main__":
-    rsa_keygen()
-    sha256sum("./CodingExercise.JPG")
+class HybridCiphertext:
+    VALID_FIELDS = ("encrypted_symkey", "encrypted_data", "nonce")
 
-    # RSA keypair with 2048 bytes + SHA-256 hashing + OAEP can encrypt at most
-    # 190 bytes of data (256 bytes of key - 2 * 32 bytes hashes - 2 bytes)
-    longmsg = b" " * 1024
+    def __init__(self, encrypted_symkey: bytes, encrypted_data: bytes, nonce: bytes):
+        # TODO: assumed AAD to be the bytes of encrypted_symkey
+        self.encrypted_symkey = encrypted_symkey
+        self.encrypted_data = encrypted_data
+        self.nonce = nonce
 
-    # keypair
-    privkey = rsa.generate_private_key(DEFAULT_RSA_PUBLIC_EXPONENT, MINIMUM_RSA_KEY_SIZE)
-    pubkey = privkey.public_key()
+    def encode(self) -> str:
+        encrypted_symkey_b64str = base64.b64encode(self.encrypted_symkey)
+        encrypted_data_b64str = base64.b64encode(self.encrypted_data)
+        nonce_b64str = base64.b64encode(self.nonce)
+        return "\n".join(
+            [
+                f"encrypted_symkey:{encrypted_symkey_b64str}",
+                f"encrypted_data:{encrypted_data_b64str}",
+                f"nonce:{nonce_b64str}",
+            ]
+        )
 
-    # encryption
-    aeskey = AESGCM.generate_key(SYM_KEY_BITLENGTH)
-    cipher = AESGCM(aeskey)
+    @staticmethod
+    def decode_str(f: TextIO) -> HybridCiphertext:
+        file_data: dict[str, bytes] = {}
+        for line in f.readlines():
+            key, val = tuple(line.split(":"))
+            if key not in HybridCiphertext.VALID_FIELDS:
+                raise KeyError(f"Invalid field {key}")
+            val = base64.b64decode(val, validate=True)
+            file_data[key] = val
+        for key in HybridCiphertext.VALID_FIELDS:
+            if key not in file_data:
+                raise KeyError(f"Missing field {key}")
+        # TODO: no additional validation is needed; if any of the data is malformed
+        # we can catch them at decryption
+        return HybridCiphertext(
+            file_data["encrypted_symkey"],
+            file_data["encrypted_data"],
+            file_data["nonce"],
+        )
+
+
+def encrypt_data(data: bytes, pubkey: rsa.RSAPublicKey) -> HybridCiphertext:
+    symkey = AESGCM.generate_key(SYMKEY_BITLENGTH)
+    cipher = AESGCM(symkey)
     nonce = os.urandom(AESGCM_NONCE_BYTES)
+    encrypted_symkey = pubkey.encrypt(symkey, OAEP_PADDING)
     # TODO: an attacker could use a different AES key, encrypt it under the known RSA public key,
     # and use this wrong AES key to compute a different tag on the ciphertext + AAD? This
     # means that encrypted key should be in AAD to be authenticated?
-    encrypted_msg = cipher.encrypt(nonce, longmsg, b"")
-    encrypted_aeskey = pubkey.encrypt(aeskey, OAEP_PADDING)
+    encrypted_data = cipher.encrypt(nonce, data, encrypted_symkey)
 
-    # decryption: encrypted_key + nonce + ciphertext + AD
-    decrypted_aeskey = privkey.decrypt(encrypted_aeskey, OAEP_PADDING)
-    cipher = AESGCM(decrypted_aeskey)
-    decrypted_msg = cipher.decrypt(nonce, encrypted_msg, b"")
-
-    if decrypted_msg != longmsg:
-        print("ERROR: decryption failed")
+    return HybridCiphertext(encrypted_symkey, encrypted_data, nonce)
 
 
+def decrypt_data(h_ct: HybridCiphertext, privkey: rsa.RSAPrivateKey) -> bytes:
+    symkey = privkey.decrypt(h_ct.encrypted_symkey, OAEP_PADDING)
+    cipher = AESGCM(symkey)
+    decryption = cipher.decrypt(h_ct.nonce, h_ct.encrypted_data, h_ct.encrypted_symkey)
+
+    return decryption
+
+
+class TestFileEncryption(unittest.TestCase):
+    def test_hybrid_encryption_roundtrip(self):
+        plaintext = b" " * 1024
+        privkey = rsa.generate_private_key(
+            DEFAULT_RSA_PUBLIC_EXPONENT, MINIMUM_RSA_KEY_SIZE
+        )
+        pubkey = privkey.public_key()
+        h_ct = encrypt_data(plaintext, pubkey)
+        decryption = decrypt_data(h_ct, privkey)
+        self.assertEqual(plaintext, decryption)
+
+
+if __name__ == "__main__":
+    unittest.main()
+    rsa_keygen()
+    sha256sum("./CodingExercise.JPG")

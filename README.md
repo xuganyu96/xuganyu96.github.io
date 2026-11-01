@@ -52,5 +52,4 @@ this:
 encryptedkey:<base64>
 nonce:<base64-text>
 ciphertext:<base64>
-ad:<base64>
 ```
