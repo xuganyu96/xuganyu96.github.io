@@ -98,9 +98,9 @@ class HybridCiphertext:
             if key not in HybridCiphertext.VALID_FIELDS:
                 raise KeyError(f"Invalid key {key}")
         return HybridCiphertext(
-            base64.b64decode(data["encrypted_symkey"]),
-            base64.b64decode(data["encrypted_data"]),
-            base64.b64decode(data["nonce"]),
+            base64.b64decode(data["encrypted_symkey"].strip(), validate=True),
+            base64.b64decode(data["encrypted_data"].strip(), validate=True),
+            base64.b64decode(data["nonce"].strip(), validate=True),
         )
 
 
@@ -182,7 +182,7 @@ def run_decrypt(args: argparse.Namespace):
 
 
 def run_unittest(_):
-    unittest.main(module="__main__", argv=["foo"], exit=False)
+    unittest.main(module="__main__", argv=["foo"])
 
 
 def get_argparser() -> argparse.ArgumentParser:
