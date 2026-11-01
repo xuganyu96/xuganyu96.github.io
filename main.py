@@ -9,6 +9,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 
+# NOTE: the assessment explicitly asks for 2048-bit keypair, so key bits are hardcoded
 DEFAULT_RSA_PUBLIC_EXPONENT = 65537
 MINIMUM_RSA_KEY_SIZE = 2048
 OAEP_PADDING = padding.OAEP(
@@ -21,11 +22,11 @@ AESGCM_NONCE_BYTES = 12
 
 
 def rsa_keygen(
+    privkey_filename: str,
+    pubkey_filename: str,
     public_exponent: int = DEFAULT_RSA_PUBLIC_EXPONENT,
     key_size: int = MINIMUM_RSA_KEY_SIZE,
     password: bytes | None = None,
-    privkey_filename: str = "privkey.pem",
-    pubkey_filename: str = "pubkey.pem",
 ):
     """Generate an RSA keypair following the input parameters, then write private
     key and public key to separate PEM file
@@ -136,6 +137,10 @@ class TestFileEncryption(unittest.TestCase):
         self.assertEqual(plaintext, decryption)
 
 
+def run_keygen(args: argparse.Namespace):
+    rsa_keygen(args.privkey, args.pubkey)
+
+
 def run_unittest(_):
     unittest.main(module="__main__", argv=["foo"], exit=False)
 
@@ -147,6 +152,20 @@ def get_argparser() -> argparse.ArgumentParser:
     )
     subparsers = parser.add_subparsers()
     keygen_parser = subparsers.add_parser("rsakeygen")
+    keygen_parser.add_argument(
+        "--pubkey",
+        type=str,
+        help="Path to output public key file. Defaults to pubkey.pem",
+        default="pubkey.pem",
+    )
+    keygen_parser.add_argument(
+        "--privkey",
+        type=str,
+        help="Path to output private key file. Defaults to privkey.pem",
+        default="privkey.pem",
+    )
+    keygen_parser.set_defaults(func=run_keygen)
+
     sha256sum_parser = subparsers.add_parser("sha256sum")
     encrypt_parser = subparsers.add_parser("encrypt")
     decrypt_parser = subparsers.add_parser("decrypt")
