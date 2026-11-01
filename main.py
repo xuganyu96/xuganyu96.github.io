@@ -141,6 +141,10 @@ def run_keygen(args: argparse.Namespace):
     rsa_keygen(args.privkey, args.pubkey)
 
 
+def run_sha256sum(args: argparse.Namespace):
+    sha256sum(args.file)
+
+
 def run_unittest(_):
     unittest.main(module="__main__", argv=["foo"], exit=False)
 
@@ -167,6 +171,9 @@ def get_argparser() -> argparse.ArgumentParser:
     keygen_parser.set_defaults(func=run_keygen)
 
     sha256sum_parser = subparsers.add_parser("sha256sum")
+    sha256sum_parser.add_argument("file", type=str, help="Path to the input file")
+    sha256sum_parser.set_defaults(func=run_sha256sum)
+
     encrypt_parser = subparsers.add_parser("encrypt")
     decrypt_parser = subparsers.add_parser("decrypt")
     unittest_parser = subparsers.add_parser("unittest")
