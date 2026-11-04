@@ -16,7 +16,7 @@ sudo dnf update -y \
     && sudo dnf groupinstall -y "Development Tools" \
     && sudo dnf install -y zlib-devel bzip2 bzip2-devel readline-devel sqlite \
         sqlite-devel tk-devel libffi-devel xz-devel openssl-devel ninja-build \
-        valgrind-devel zstd-devel \
+        valgrind-devel zstd-devel java-21-amazon-corretto-devel \
     && sudo systemctl enable docker \
     && sudo systemctl start docker \
     && sudo usermod -aG docker "$USER" \
