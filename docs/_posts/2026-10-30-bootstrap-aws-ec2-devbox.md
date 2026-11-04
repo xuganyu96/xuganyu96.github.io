@@ -48,18 +48,23 @@ is the default package manager. Notably, Docker is installed with dnf, unlike wi
 Fedora Workstation edition, where I need to [manage external rpm repository](https://docs.docker.com/engine/install/fedora/).
 
 ```bash
-sudo dnf update -y \
-    && sudo dnf install -y git docker gcc clang cmake nodejs npm lldb \
-    && sudo dnf groupinstall -y "Development Tools" \
-    && sudo dnf install -y zlib-devel bzip2 bzip2-devel readline-devel sqlite \
-        sqlite-devel tk-devel libffi-devel xz-devel openssl-devel ninja-build \
-        valgrind-devel \
-    && sudo systemctl enable docker \
-    && sudo systemctl start docker \
-    && sudo usermod -aG docker "$USER" \
-    && sudo docker run hello-world \
-    && sudo chsh -s $(which zsh) $USER
+sudo dnf update -y
+sudo dnf install -y git docker gcc clang cmake nodejs npm lldb
+sudo dnf groupinstall -y "Development Tools"
+sudo dnf install -y zlib-devel bzip2 bzip2-devel ncurses-devel readline-devel sqlite \
+    sqlite-devel tk-devel libffi-devel xz-devel openssl-devel pkgconf-pkg-config \
+    ninja-build valgrind-devel libzstd-devel java-21-amazon-corretto-devel
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod -aG docker "$USER"
+sudo docker run hello-world
 ```
+
+Keep these commands separate so the script's `set -e` stops on a failed package
+transaction. Failures inside an `&&` chain can otherwise let the script continue
+without installing Python's build dependencies. Amazon Linux 2023 calls the Zstandard
+development package `libzstd-devel`, not `zstd-devel`; see the
+[AWS package list](https://docs.aws.amazon.com/linux/al2023/release-notes/all-packages-AL2023.12.html).
 
 Amazon Linux ships bash by default. I want to switch to zsh and install Oh My Zsh:
 
@@ -113,5 +118,23 @@ curl https://sh.rustup.rs -sSf | sh -s -- -y \
     && source ~/.cargo/env \
     && cargo install ripgrep
 ```
+
+If Python was built before its development libraries were installed, installing the
+libraries alone will not repair the interpreter. For missing `bz2`, `curses`,
+`ctypes`, `readline`, or `sqlite3` extensions, install the headers and rebuild the
+affected version, following pyenv's
+[build dependency guidance](https://github.com/pyenv/pyenv/wiki#suggested-build-environment):
+
+```bash
+sudo dnf install -y gcc make patch pkgconf-pkg-config zlib-devel bzip2-devel \
+    ncurses-devel libffi-devel readline-devel sqlite-devel openssl-devel \
+    xz-devel tk-devel libzstd-devel
+pyenv install --force 3.14.10
+"$(pyenv root)/versions/3.14.10/bin/python" -c \
+    'import bz2, curses, ctypes, readline, sqlite3, ssl, lzma, tkinter, compression.zstd'
+```
+
+Run these recovery commands directly on an existing instance: the bootstrap's
+completion log prevents rerunning the full script.
 
 The complete script can be found at [`assets/aws-bootstrap.sh`](/assets/aws-bootstrap.sh).

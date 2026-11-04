@@ -11,16 +11,18 @@ if [ -f ${BOOTSTRAP_LOG_PATH} ]; then
 fi
 
 # [System Packages + Docker]
-sudo dnf update -y \
-    && sudo dnf install -y git docker gcc clang cmake nodejs npm lldb \
-    && sudo dnf groupinstall -y "Development Tools" \
-    && sudo dnf install -y zlib-devel bzip2 bzip2-devel readline-devel sqlite \
-        sqlite-devel tk-devel libffi-devel xz-devel openssl-devel ninja-build \
-        valgrind-devel zstd-devel java-21-amazon-corretto-devel \
-    && sudo systemctl enable docker \
-    && sudo systemctl start docker \
-    && sudo usermod -aG docker "$USER" \
-    && sudo docker run hello-world
+# Keep these commands separate so set -e stops on any failed transaction.
+sudo dnf update -y
+sudo dnf install -y git docker gcc clang cmake nodejs npm lldb
+sudo dnf groupinstall -y "Development Tools"
+# Headers and pkg-config are needed when pyenv builds Python's extensions.
+sudo dnf install -y zlib-devel bzip2 bzip2-devel ncurses-devel readline-devel sqlite \
+    sqlite-devel tk-devel libffi-devel xz-devel openssl-devel pkgconf-pkg-config \
+    ninja-build valgrind-devel libzstd-devel java-21-amazon-corretto-devel
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod -aG docker "$USER"
+sudo docker run hello-world
 
 # [zsh + Oh-My-Zsh]
 sudo dnf install -y zsh util-linux-user \
