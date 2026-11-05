@@ -33,6 +33,12 @@ import javax.crypto.spec.PSource;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Main {
+
+    public static final int MINIMUM_RSA_KEYSIZE = 2048;
+    public static final int AES256GCM_KEY_BITS = 256;
+    public static final int AES256GCM_TAG_BITS = 128;
+    public static final int AES256GCM_NONCE_BYTES = 12;
+
     public enum PemHeaderType {
         PublicKey, PrivateKey;
 
@@ -44,11 +50,6 @@ public class Main {
             };
         }
     }
-
-    public static final int MINIMUM_RSA_KEYSIZE = 2048;
-    public static final int AES256GCM_KEY_BITS = 256;
-    public static final int AES256GCM_TAG_BITS = 128;
-    public static final int AES256GCM_NONCE_BYTES = 12;
 
     /**
      * Encode input DER bytes with Base64 encoding, and wrap with PEM header, footer
@@ -83,15 +84,15 @@ public class Main {
             try (FileWriter writer = new FileWriter(privKeyPath)) {
                 writer.write(derToPem(privKey.getEncoded(), PemHeaderType.PrivateKey));
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new UncheckedIOException("Failed to write private key", e);
             }
             try (FileWriter writer = new FileWriter(pubKeyPath)) {
                 writer.write(derToPem(pubKey.getEncoded(), PemHeaderType.PublicKey));
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new UncheckedIOException("Failed to write public key", e);
             }
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("RSA not available", e);
         }
     }
 
@@ -103,10 +104,10 @@ public class Main {
                 byte digest[] = digester.digest(data);
                 System.out.println(HexFormat.of().formatHex(digest));
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new UncheckedIOException("Failed to read " + inPath, e);
             }
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(algName + " not available", e);
         }
     }
 
@@ -134,11 +135,11 @@ public class Main {
             KeyFactory factory = KeyFactory.getInstance("RSA");
             return factory.generatePrivate(keySpec);
         } catch (IOException e) {
-            throw new UncheckedIOException("Failed to read RSA public key: " + privKeyPath, e);
+            throw new UncheckedIOException("Failed to read RSA private key: " + privKeyPath, e);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("RSA algorithm is unavailable", e);
         } catch (InvalidKeySpecException e) {
-            throw new IllegalArgumentException("Invalid RSA public key: " + privKeyPath, e);
+            throw new IllegalArgumentException("Invalid RSA private key: " + privKeyPath, e);
         }
     }
 
@@ -165,18 +166,9 @@ public class Main {
 
             HybridCiphertext hCt = new HybridCiphertext(encryptedSymKey, encryptedData, nonce);
             return hCt.encodeToString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("AES-GCM is not available", e);
-        } catch (NoSuchPaddingException e) {
-            throw new IllegalStateException("AES-GCM-NoPadding is not available", e);
-        } catch (InvalidAlgorithmParameterException e) {
-            throw new IllegalStateException("AES-256-GCM w/ 128-bit tag is not available", e);
-        } catch (InvalidKeyException e) {
-            throw new IllegalStateException("AES-256-GCM w/ 128-bit tag is not available", e);
-        } catch (BadPaddingException e) {
-            throw new IllegalStateException("AES-256-GCM w/ 128-bit tag is not available", e);
-        } catch (IllegalBlockSizeException e) {
-            throw new IllegalStateException("Unexpected IllegalBlockSizeException", e);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException
+                | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+            throw new IllegalStateException("Crypto configuration error", e);
         }
     }
 
@@ -261,8 +253,9 @@ public class Main {
             aesGcm.init(Cipher.DECRYPT_MODE, symKey, aesGcmSpec);
             aesGcm.updateAAD(hCt.encryptedSymKey);
             return aesGcm.doFinal(hCt.encryptedData);
-        } catch (Exception e) { // TODO: better exception handling?
-            throw new IllegalStateException("Panic!", e);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException
+                | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+            throw new IllegalStateException("Crypto configuration error", e);
         }
     }
 

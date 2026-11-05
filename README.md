@@ -44,7 +44,6 @@ align with Linux/MacOS' built-in `sha256sum` command. The SHA-256 checksum of
 [CodingExercise.JPG](./CodingExercise.JPG) is
 `fa1bed1a61ca81be4d6ecbfe3a75523213a5e399b9db9dd74cfd65303d9c3cc4`.
 
-
 ```bash
 python main.py sha256sum CodingExercise.JPG
 # check against reference implementation
@@ -70,6 +69,29 @@ python main.py unittest
 
 The `artifacts/` subdirectory contains pre-generated public key, private key,
 ciphertext, and decryption using the [`artifacts.sh`](./artifacts.sh) script.
+
+### Getting started with Java
+
+```bash
+# Compile the program
+javac Main.java
+
+# Generate RSA key pair
+java Main rsakeygen .tmp/privkey.pem .tmp/pubkey.pem
+
+# Inspect key pair with OpenSSL
+openssl pkey -pubin -in .tmp/pubkey.pem -text -noout
+openssl pkey -in .tmp/privkey.pem -text -noout
+
+# Encrypt the file
+java Main encrypt CodingExercise.JPG .tmp/pubkey.pem .tmp/ciphertext.txt
+
+# Decrypt the file
+java Main decrypt .tmp/ciphertext.txt .tmp/privkey.pem .tmp/decryption.jpg
+
+# Check decryption matching plaintext
+sha256sum CodingExercise.JPG .tmp/decryption.jpg
+```
 
 ## Design rationale
 
