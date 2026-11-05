@@ -77,20 +77,20 @@ ciphertext, and decryption using the [`artifacts.sh`](./artifacts.sh) script.
 javac Main.java
 
 # Generate RSA key pair
-java Main rsakeygen .tmp/privkey.pem .tmp/pubkey.pem
+java Main rsakeygen artifacts/privkey.pem artifacts/pubkey.pem
 
 # Inspect key pair with OpenSSL
-openssl pkey -pubin -in .tmp/pubkey.pem -text -noout
-openssl pkey -in .tmp/privkey.pem -text -noout
+openssl pkey -pubin -in artifacts/pubkey.pem -text -noout
+openssl pkey -in artifacts/privkey.pem -text -noout
 
 # Encrypt the file
-java Main encrypt CodingExercise.JPG .tmp/pubkey.pem .tmp/ciphertext.txt
+java Main encrypt CodingExercise.JPG artifacts/pubkey.pem artifacts/ciphertext.txt
 
 # Decrypt the file
-java Main decrypt .tmp/ciphertext.txt .tmp/privkey.pem .tmp/decryption.jpg
+java Main decrypt artifacts/ciphertext.txt artifacts/privkey.pem artifacts/decryption.jpg
 
 # Check decryption matching plaintext
-sha256sum CodingExercise.JPG .tmp/decryption.jpg
+sha256sum CodingExercise.JPG artifacts/decryption.jpg
 ```
 
 ## Design rationale

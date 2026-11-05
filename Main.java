@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -19,8 +20,8 @@ import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.EnumSet;
 import java.util.HexFormat;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -91,8 +92,14 @@ public class Main {
             } catch (IOException e) {
                 throw new UncheckedIOException("Failed to write public key", e);
             }
+
+            Files.setPosixFilePermissions(Path.of(privKeyPath), EnumSet.of(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE));
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("RSA not available", e);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to set permission 600 to " + privKeyPath, e);
         }
     }
 
