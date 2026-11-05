@@ -23,6 +23,7 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.MGF1ParameterSpec;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.HexFormat;
@@ -36,6 +37,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.OAEPParameterSpec;
 import javax.crypto.spec.PSource;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Main {
     public enum PemHeaderType {
@@ -131,6 +133,22 @@ public class Main {
         }
     }
 
+    private static PrivateKey loadRsaPrivateKey(String privKeyPath) {
+        try {
+            String pem = Files.readString(Path.of(privKeyPath));
+            byte der[] = pemToDer(pem, PemHeaderType.PrivateKey);
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(der);
+            KeyFactory factory = KeyFactory.getInstance("RSA");
+            return factory.generatePrivate(keySpec);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to read RSA public key: " + privKeyPath, e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("RSA algorithm is unavailable", e);
+        } catch (InvalidKeySpecException e) {
+            throw new IllegalArgumentException("Invalid RSA public key: " + privKeyPath, e);
+        }
+    }
+
     private static String rsaHybridEncrypt(PublicKey pubKey, byte data[]) {
         try {
             Cipher aesGcm = Cipher.getInstance("AES/GCM/NoPadding");
@@ -144,20 +162,16 @@ public class Main {
                     PSource.PSpecified.DEFAULT);
             rsaOaep.init(Cipher.ENCRYPT_MODE, pubKey, oaepSpec);
             byte encryptedSymKey[] = rsaOaep.doFinal(symKeyRaw);
-            String encryptedSymKeyB64String = Base64.getEncoder().encodeToString(encryptedSymKey);
 
             byte nonce[] = new byte[AES256GCM_NONCE_BYTES];
             SecureRandom.getInstanceStrong().nextBytes(nonce);
-            String nonceB64String = Base64.getEncoder().encodeToString(nonce);
-            GCMParameterSpec spec = new GCMParameterSpec(AES256GCM_TAG_BITS, nonce);
-            aesGcm.init(Cipher.ENCRYPT_MODE, symKey, spec);
+            GCMParameterSpec aesGcmSpec = new GCMParameterSpec(AES256GCM_TAG_BITS, nonce);
+            aesGcm.init(Cipher.ENCRYPT_MODE, symKey, aesGcmSpec);
             aesGcm.updateAAD(encryptedSymKey);
             byte encryptedData[] = aesGcm.doFinal(data);
-            String encryptedDataB64String = Base64.getEncoder().encodeToString(encryptedData);
 
-            return "encrypted_symkey:" + encryptedSymKeyB64String + "\n"
-                    + "encrypted_data:" + encryptedDataB64String + "\n"
-                    + "nonce:" + nonceB64String + "\n";
+            HybridCiphertext hCt = new HybridCiphertext(encryptedSymKey, encryptedData, nonce);
+            return hCt.encodeToString();
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("AES-GCM is not available", e);
         } catch (NoSuchPaddingException e) {
@@ -180,11 +194,94 @@ public class Main {
             String ciphertextString = rsaHybridEncrypt(pubKey, data);
             Files.writeString(Path.of(ciphertextPath), ciphertextString);
         } catch (IOException e) {
-            throw new UncheckedIOException("Failed to read input file: " + inPath, e);
+            throw new UncheckedIOException("Unexpected IOException", e);
+        }
+    }
+
+    static class HybridCiphertext {
+        public static final String encryptedSymKeyPrefix = "encrypted_symkey:";
+        public static final String encryptedDataPrefix = "encrypted_data:";
+        public static final String noncePrefix = "nonce:";
+
+        byte[] encryptedSymKey;
+        byte[] encryptedData;
+        byte[] nonce;
+
+        public HybridCiphertext(byte[] encryptedSymKey,
+                byte[] encryptedData,
+                byte[] nonce) {
+            this.encryptedSymKey = encryptedSymKey;
+            this.encryptedData = encryptedData;
+            this.nonce = nonce;
+        }
+
+        public String encodeToString() {
+            String encryptedDataB64String = Base64.getEncoder().encodeToString(this.encryptedData);
+            String nonceB64String = Base64.getEncoder().encodeToString(this.nonce);
+            String encryptedSymKeyB64String = Base64.getEncoder().encodeToString(this.encryptedSymKey);
+            return HybridCiphertext.encryptedSymKeyPrefix + encryptedSymKeyB64String + "\n"
+                    + HybridCiphertext.encryptedDataPrefix + encryptedDataB64String + "\n"
+                    + HybridCiphertext.noncePrefix + nonceB64String + "\n";
+        }
+
+        public static HybridCiphertext decodeFromString(String ciphertextString) {
+            String[] lines = ciphertextString.split("\\s+");
+            if (lines.length != 3) {
+                throw new IllegalArgumentException("Ciphertext string corrupted");
+            }
+            byte[] encryptedSymKey = null;
+            byte[] encryptedData = null;
+            byte[] nonce = null;
+
+            for (String line : lines) {
+                if (line.startsWith(HybridCiphertext.encryptedSymKeyPrefix)) {
+                    encryptedSymKey = Base64.getDecoder().decode(line.split(":")[1]);
+                } else if (line.startsWith(HybridCiphertext.encryptedDataPrefix)) {
+                    encryptedData = Base64.getDecoder().decode(line.split(":")[1]);
+                } else if (line.startsWith(HybridCiphertext.noncePrefix)) {
+                    nonce = Base64.getDecoder().decode(line.split(":")[1]);
+                } else {
+                    throw new IllegalArgumentException("Invalid line " + line);
+                }
+            }
+
+            if (encryptedSymKey == null || encryptedData == null || nonce == null) {
+                throw new IllegalArgumentException("Ciphertext string missing necessary field");
+            }
+            return new HybridCiphertext(encryptedSymKey, encryptedData, nonce);
+        }
+    }
+
+    private static byte[] rsaHybridDecrypt(PrivateKey privKey, String ciphertextString) {
+        HybridCiphertext hCt = HybridCiphertext.decodeFromString(ciphertextString);
+
+        try {
+            Cipher rsaOaep = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+            OAEPParameterSpec oaepSpec = new OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256,
+                    PSource.PSpecified.DEFAULT);
+            rsaOaep.init(Cipher.DECRYPT_MODE, privKey, oaepSpec);
+            byte symKeyRaw[] = rsaOaep.doFinal(hCt.encryptedSymKey);
+
+            Cipher aesGcm = Cipher.getInstance("AES/GCM/NoPadding");
+            SecretKey symKey = new SecretKeySpec(symKeyRaw, "AES");
+            GCMParameterSpec aesGcmSpec = new GCMParameterSpec(AES256GCM_TAG_BITS, hCt.nonce);
+            aesGcm.init(Cipher.DECRYPT_MODE, symKey, aesGcmSpec);
+            aesGcm.updateAAD(hCt.encryptedSymKey);
+            return aesGcm.doFinal(hCt.encryptedData);
+        } catch (Exception e) { // TODO: better exception handling?
+            throw new IllegalStateException("Panic!", e);
         }
     }
 
     private static void rsaFileDecrypt(String decryptionPath, String privKeyPath, String ciphertextPath) {
+        PrivateKey privKey = loadRsaPrivateKey(privKeyPath);
+        try {
+            String ciphertextString = Files.readString(Path.of(ciphertextPath));
+            byte decryption[] = rsaHybridDecrypt(privKey, ciphertextString);
+            Files.write(Path.of(decryptionPath), decryption);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Unexpected IOException", e);
+        }
     }
 
     public static void main(String args[]) {
