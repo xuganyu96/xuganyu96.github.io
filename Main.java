@@ -67,8 +67,8 @@ public class Main {
      * Strip PEM header and footer, then base64 decode PEM into DER
      */
     private static byte[] pemToDer(String pem, PemHeaderType header) {
-        String pemString = pem.replace("-----BEGIN " + header + "-----\n", "")
-                .replace("-----END " + header + "-----\n", "")
+        String pemString = pem.replace("-----BEGIN " + header + "-----", "")
+                .replace("-----END " + header + "-----", "")
                 .strip();
         Base64.Decoder b64Decoder = Base64.getMimeDecoder();
         return b64Decoder.decode(pemString);
