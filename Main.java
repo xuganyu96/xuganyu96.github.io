@@ -1,10 +1,3 @@
-
-/**
- * - [ ] Generate RSA keypair
- * - [ ] Hash a file
- * - [ ] Encrypt a file, then decrypt the file
- */
-
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -285,9 +278,49 @@ public class Main {
     }
 
     public static void main(String args[]) {
-        rsaKeyGen(".tmp/privkey.pem", ".tmp/pubkey.pem", MINIMUM_RSA_KEYSIZE);
-        fileDigest("CodingExercise.JPG", "SHA-256");
-        rsaFileEncrypt(".tmp/ciphertext.txt", ".tmp/pubkey.pem", "CodingExercise.JPG");
-        rsaFileDecrypt(".tmp/decryption.jpg", ".tmp/privkey.pem", ".tmp/ciphertext.txt");
+        if (args.length == 0) {
+            System.out.println("Usage: java Main <rsakeygen|sha256sum|encrypt|decrypt>");
+            System.exit(1);
+        }
+        switch (args[0]) {
+            case "rsakeygen" -> {
+                if (args.length != 3) {
+                    System.out.println("Usage: java Main rsakeygen <privkey.pem> <pubkey.pem>");
+                    System.exit(1);
+                }
+                rsaKeyGen(args[1], args[2], MINIMUM_RSA_KEYSIZE);
+            }
+            case "sha256sum" -> {
+                if (args.length != 2) {
+                    System.out.println("Usage: java Main sha256sum <input>");
+                    System.exit(1);
+                }
+                fileDigest(args[1], "SHA-256");
+            }
+            case "encrypt" -> {
+                if (args.length != 4) {
+                    System.out.println("Usage: java Main encrypt <data> <pubkey> <ciphertext>");
+                    System.exit(1);
+                }
+                String ciphertextPath = args[3];
+                String pubKeyPath = args[2];
+                String inPath = args[1];
+                rsaFileEncrypt(ciphertextPath, pubKeyPath, inPath);
+            }
+            case "decrypt" -> {
+                if (args.length != 4) {
+                    System.out.println("Usage: java Main decrypt <ciphertext> <privkey> <decryption>");
+                    System.exit(1);
+                }
+                String ciphertextPath = args[1];
+                String privKeyPath = args[2];
+                String decryptionPath = args[3];
+                rsaFileDecrypt(decryptionPath, privKeyPath, ciphertextPath);
+            }
+            default -> {
+                System.out.println("Invalid command " + args[0]);
+                System.exit(1);
+            }
+        }
     }
 }
