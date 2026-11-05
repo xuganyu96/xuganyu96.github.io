@@ -1,5 +1,9 @@
 # Coding assessment
 
+**Update:** I wrote the coding assessment with [Python](./main.py) first, then
+with [Java](./Main.java). Check [Getting started with Java](#getting-started-with-java)
+for running the Java program.
+
 This is the coding assessment submission from Ganyu (Bruce) Xu for Software
 Development Engineer, Chip Product Security at AMD.
 
@@ -71,6 +75,8 @@ The `artifacts/` subdirectory contains pre-generated public key, private key,
 ciphertext, and decryption using the [`artifacts.sh`](./artifacts.sh) script.
 
 ### Getting started with Java
+
+`Main.java` was developed using OpenJDK 25 and requires Java 21.
 
 ```bash
 # Compile the program

@@ -87,15 +87,15 @@ public class Main {
             } catch (IOException e) {
                 throw new UncheckedIOException("Failed to write private key", e);
             }
+            Files.setPosixFilePermissions(Path.of(privKeyPath), EnumSet.of(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE));
+
             try (FileWriter writer = new FileWriter(pubKeyPath)) {
                 writer.write(derToPem(pubKey.getEncoded(), PemHeaderType.PublicKey));
             } catch (IOException e) {
                 throw new UncheckedIOException("Failed to write public key", e);
             }
-
-            Files.setPosixFilePermissions(Path.of(privKeyPath), EnumSet.of(
-                    PosixFilePermission.OWNER_READ,
-                    PosixFilePermission.OWNER_WRITE));
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("RSA not available", e);
         } catch (IOException e) {
